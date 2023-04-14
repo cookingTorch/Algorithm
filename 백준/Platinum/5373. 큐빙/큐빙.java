@@ -10,7 +10,6 @@ public class Main {
 	static String[][][] cube = new String[6][3][3];
 	static String[][][] copiedCube = new String[6][3][3];
 	static int U = 0, D = 1, F = 2, B = 3, L = 4, R = 5;
-	static int[][] clockwise = new int[][] {{B, R, F, L, B}, {F, R, B, L, F}, {U, R, D, L, U}, {U, L, D, R, U}, {U, F, D, B, U}, {U, B, D, F, U}};
 	
 	private static void rotate(int face, char direction) {
 		
