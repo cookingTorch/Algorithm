@@ -14,7 +14,7 @@ public class Main {
 		String str;
 		StringTokenizer st;
 		
-		int n, m, k, n2, m2, i, j, p, q, temp, flag = 1, cnt = 0;
+		int n, m, k, n2, m2, i, j, temp, flag = 1, cnt = 0;
 		int[][] originalArray, array1, array2, stack1, stack2;
 		
 		str = br.readLine();
