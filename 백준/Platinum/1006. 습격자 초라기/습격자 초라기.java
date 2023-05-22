@@ -13,36 +13,34 @@ public class Main {
 	
 	// DP
 	private static int[] findMin(int idx) {
-		if (idx > 1) {
-			
-			// 재귀
-			if (min[idx - 1][0] == 0) {
-				min[idx - 1] = Arrays.copyOf(findMin(idx - 1), 3);
-			}
-			if (idx > 2 && min[idx - 2][0] == 0) {
-				min[idx - 2] = Arrays.copyOf(findMin(idx - 2), 3);
-			}
-			
-			// [i, i-1]
-			min[idx][1] = min[idx - 1][0] + 1;
-			if (enemies[idx - 1][0] + enemies[idx][0] <= w) {
-				min[idx][1] = Math.min(min[idx][1], min[idx - 1][2] + 1);
-			}
-			
-			// [i-1, i]
-			min[idx][2] = min[idx - 1][0] + 1;
-			if (enemies[idx - 1][1] + enemies[idx][1] <= w) {
-				min[idx][2] = Math.min(min[idx][2], min[idx - 1][1] + 1);
-			}
-			
-			// [i, i]
-			min[idx][0] = Math.min(min[idx][1] + 1, min[idx][2] + 1);
-			if (enemies[idx][0] + enemies[idx][1] <= w) {
-				min[idx][0] = Math.min(min[idx][0], min[idx - 1][0] + 1);
-			}
-			if (enemies[idx - 1][0] + enemies[idx][0] <= w && enemies[idx - 1][1] + enemies[idx][1] <= w) {
-				min[idx][0] = Math.min(min[idx][0], min[idx - 2][0] + 2);
-			}
+		
+		// 재귀
+		if (idx > 2 && min[idx - 1][0] == 0) {
+			min[idx - 1] = Arrays.copyOf(findMin(idx - 1), 3);
+		}
+		if (idx > 3 && min[idx - 2][0] == 0) {
+			min[idx - 2] = Arrays.copyOf(findMin(idx - 2), 3);
+		}
+		
+		// [i, i-1]
+		min[idx][1] = min[idx - 1][0] + 1;
+		if (enemies[idx - 1][0] + enemies[idx][0] <= w) {
+			min[idx][1] = Math.min(min[idx][1], min[idx - 1][2] + 1);
+		}
+		
+		// [i-1, i]
+		min[idx][2] = min[idx - 1][0] + 1;
+		if (enemies[idx - 1][1] + enemies[idx][1] <= w) {
+			min[idx][2] = Math.min(min[idx][2], min[idx - 1][1] + 1);
+		}
+		
+		// [i, i]
+		min[idx][0] = Math.min(min[idx][1] + 1, min[idx][2] + 1);
+		if (enemies[idx][0] + enemies[idx][1] <= w) {
+			min[idx][0] = Math.min(min[idx][0], min[idx - 1][0] + 1);
+		}
+		if (enemies[idx - 1][0] + enemies[idx][0] <= w && enemies[idx - 1][1] + enemies[idx][1] <= w) {
+			min[idx][0] = Math.min(min[idx][0], min[idx - 2][0] + 2);
 		}
 		
 		return min[idx];
