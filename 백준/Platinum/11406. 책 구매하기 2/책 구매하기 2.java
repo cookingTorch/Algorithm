@@ -47,7 +47,7 @@ public class Main {
 		}
 	}
 	
-	// 증가경로 탐색
+	// 증가 경로 탐색
 	private static boolean bfs(int source, int sink) {
 		int curr;
 		Queue<Integer> queue = new LinkedList<>();
@@ -108,7 +108,7 @@ public class Main {
 		}
 		st = new StringTokenizer(br.readLine());
 		for (i = 1; i <= n; i++) {
-			addAdj(0, i, Integer.parseInt(st.nextToken()));
+			addAdj(source, i, Integer.parseInt(st.nextToken()));
 		}
 		st = new StringTokenizer(br.readLine());
 		for (i = n + 1; i <= n + m; i++) {
