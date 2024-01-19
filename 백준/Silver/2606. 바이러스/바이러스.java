@@ -1,50 +1,47 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static int dfs(ArrayList<ArrayList<Integer>> adj, boolean[] visited, int node) {
-        int next, size, cnt, i;
-
-        cnt = 1;
-        size = adj.get(node).size();
-        for (i = 0; i < size; i++) {
-            next = adj.get(node).get(i);
-            if (!visited[next]) {
-                visited[next] = true;
-                cnt += dfs(adj, visited, next);
-            }
-        }
-        return cnt;
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder sb = new StringBuilder();
-        StringTokenizer st;
-
-        int computer, network, node1, node2, i;
-        boolean[] visited;
-        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
-
-        computer = Integer.parseInt(br.readLine());
-        network = Integer.parseInt(br.readLine());
-        for (i = 0; i <= computer; i++)
-            adj.add(new ArrayList<>());
-        for (i = 0; i < network; i++) {
-            st = new StringTokenizer(br.readLine());
-            node1 = Integer.parseInt(st.nextToken());
-            node2 = Integer.parseInt(st.nextToken());
-            adj.get(node1).add(node2);
-            adj.get(node2).add(node1);
-        }
-        visited = new boolean[computer + 1];
-        visited[1] = true;
-        sb.append(dfs(adj, visited, 1) - 1);
-
-        bw.write(sb.toString());
-        bw.flush();
-        bw.close();
-    }
+	private static boolean[] visited;
+	private static ArrayList<ArrayList<Integer>> adj;
+	
+	private static int virus(int com) {
+		int val;
+		
+		if (visited[com]) {
+			return 0;
+		}
+		visited[com] = true;
+		val = 1;
+		for (int next : adj.get(com)) {
+			val += virus(next);
+		}
+		return val;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		
+		int comCnt, adjCnt, com1, com2, i;
+		
+		comCnt = Integer.parseInt(br.readLine());
+		adjCnt = Integer.parseInt(br.readLine());
+		adj = new ArrayList<>();
+		for (i = 0; i < comCnt; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (i = 0; i < adjCnt; i++) {
+			st = new StringTokenizer(br.readLine());
+			com1 = Integer.parseInt(st.nextToken()) - 1;
+			com2 = Integer.parseInt(st.nextToken()) - 1;
+			adj.get(com1).add(com2);
+			adj.get(com2).add(com1);
+		}
+		visited = new boolean[comCnt];
+		System.out.print(virus(0) - 1);
+	}
 }
