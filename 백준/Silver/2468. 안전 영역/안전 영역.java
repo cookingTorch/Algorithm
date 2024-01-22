@@ -39,20 +39,26 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		
-		int max, ans, i, j;
+		int max, second, ans, i, j;
 		
 		n = Integer.parseInt(br.readLine());
 		city = new int[n][n];
 		max = 0;
+		second = -1;
 		for (i = 0; i < n; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (j = 0; j < n; j++) {
 				city[i][j] = Integer.parseInt(st.nextToken());
-				max = Math.max(max, city[i][j]);
+				if (city[i][j] > max) {
+					second = max;
+					max = city[i][j];
+				} else if (second < city[i][j] && city[i][j] < max) {
+					second = city[i][j];
+				}
 			}
 		}
-		ans = 0;
-		for (i = 0; i < max; i++) {
+		ans = 1;
+		for (i = 0; i <= second; i++) {
 			ans = Math.max(ans, safe(i));
 		}
 		System.out.println(ans);
