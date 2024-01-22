@@ -58,7 +58,7 @@ public class Main {
 			}
 		}
 		ans = 1;
-		for (i = 0; i <= second; i++) {
+		for (i = 1; i <= second; i++) {
 			ans = Math.max(ans, safe(i));
 		}
 		System.out.println(ans);
