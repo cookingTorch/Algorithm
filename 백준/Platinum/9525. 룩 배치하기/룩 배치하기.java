@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 
 public class Main {
 	private static boolean[] visited;
@@ -30,10 +29,9 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringBuilder sb = new StringBuilder();
-		StringTokenizer st;
 		
-		int n, m, cnt, ans, i, j;
-		int[][] row, col;
+		int n, cnt, ans, i, j;
+		int[][] row;
 		char[][] board;
 		String str;
 		
@@ -57,16 +55,14 @@ public class Main {
 				row[i][j] = cnt;
 			}
 		}
-		col = new int[n][n];
 		cnt = -1;
 		for (j = 0; j < n; j++) {
 			for (i = 0; i < n; i++) {
 				if ((i == 0 || board[i - 1][j] == 'X') && board[i][j] == '.') {
 					cnt++;
 				}
-				col[i][j] = cnt;
 				if (board[i][j] == '.') {
-					adj.get(row[i][j]).add(col[i][j]);
+					adj.get(row[i][j]).add(cnt);
 				}
 			}
 		}
