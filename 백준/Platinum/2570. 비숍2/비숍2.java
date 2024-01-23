@@ -33,7 +33,7 @@ public class Main {
 		StringTokenizer st;
 		
 		int n, m, cnt, ans, start, i, j;
-		int[][] row, col;
+		int[][] row;
 		boolean[][] board;
 		
 		n = Integer.parseInt(br.readLine());
@@ -72,19 +72,16 @@ public class Main {
 				j++;
 			}
 		}
-		col = new int[n][n];
 		cnt = -1;
 		for (start = 0; start < n; start++) {
 			i = 0;
 			j = start;
 			while (i < n && j >= 0) {
 				if ((i == 0 || board[i - 1][j + 1] == true) && board[i][j] == false) {
-					adj.add(new ArrayList<>());
 					cnt++;
 				}
-				col[i][j] = cnt;
 				if (board[i][j] == false) {
-					adj.get(row[i][j]).add(col[i][j]);
+					adj.get(row[i][j]).add(cnt);
 				}
 				i++;
 				j--;
@@ -95,12 +92,10 @@ public class Main {
 			j = n - 1;
 			while (i < n && j >= 0) {
 				if ((j == n - 1 || board[i - 1][j + 1] == true) && board[i][j] == false) {
-					adj.add(new ArrayList<>());
 					cnt++;
 				}
-				col[i][j] = cnt;
 				if (board[i][j] == false) {
-					adj.get(row[i][j]).add(col[i][j]);
+					adj.get(row[i][j]).add(cnt);
 				}
 				i++;
 				j--;
