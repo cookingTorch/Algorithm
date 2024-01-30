@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -72,17 +71,17 @@ public class Main {
 		satisfaction = new int[size + 1][n + 2][n + 2];
 		seat = new int[n + 2][n + 2];
 		empty = new int[n + 2][n + 2];
-		Arrays.fill(empty[1], 3);
-		empty[1][1] = 2;
-		empty[1][n] = 2;
-		for (i = 2; i < n; i++) {
-			Arrays.fill(empty[i], 4);
-			empty[i][1] = 3;
-			empty[i][n] = 3;
+		for (i = 1; i <= n; i++) {
+			for (j = 1; j <= n; j++) {
+				if ((i == 1 && (j == 1 || j == n)) || (i == n && (j == 1 || j == n))) {
+					empty[i][j] = 2;
+				} else if (i == 1 || j == 1 || i == n || j == n) {
+					empty[i][j] = 3;
+				} else {
+					empty[i][j] = 4;
+				}
+			}
 		}
-		Arrays.fill(empty[n], 3);
-		empty[n][1] = 2;
-		empty[n][n] = 2;
 		for (int num : order) {
 			arrange(num);
 		}
