@@ -6,15 +6,54 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
+	private static int n;
+	private static int[][] seat, empty;
+	private static int[][][] satisfaction;
+	private static ArrayList<ArrayList<Integer>> adj;
+	
+	private static void arrange(int num) {
+		int max, temp, i, j, x, y;
+		
+		max = -1;
+		temp = -1;
+		x = 0;
+		y = 0;
+		for (i = 1; i <= n; i++) {
+			for (j = 1; j <= n; j++) {
+				if (seat[i][j] != 0) {
+					continue;
+				}
+				if (satisfaction[num][i][j] > max) {
+					x = i;
+					y = j;
+					max = satisfaction[num][i][j];
+					temp = empty[i][j];
+				} else if (satisfaction[num][i][j] == max && empty[i][j] > temp) {
+					x = i;
+					y = j;
+					temp = empty[i][j];
+				}
+			}
+		}
+		seat[x][y] = num;
+		for (int other : adj.get(num)) {
+			satisfaction[other][x - 1][y]++;
+			satisfaction[other][x + 1][y]++;
+			satisfaction[other][x][y - 1]++;
+			satisfaction[other][x][y + 1]++;
+		}
+		empty[x - 1][y]--;
+		empty[x + 1][y]--;
+		empty[x][y - 1]--;
+		empty[x][y + 1]--;
+	}
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		
-		int n, size, max, temp, ans, i, j, x, y;
+		int size, ans, i, j;
 		int[] order;
-		int[][] seat, empty;
-		int[][][] satisfaction;
-		ArrayList<ArrayList<Integer>> adj;
 		
 		n = Integer.parseInt(br.readLine());
 		size = n * n;
@@ -31,6 +70,7 @@ public class Main {
 			}
 		}
 		satisfaction = new int[size + 1][n + 2][n + 2];
+		seat = new int[n + 2][n + 2];
 		empty = new int[n + 2][n + 2];
 		Arrays.fill(empty[1], 3);
 		empty[1][1] = 2;
@@ -43,40 +83,8 @@ public class Main {
 		Arrays.fill(empty[n], 3);
 		empty[n][1] = 2;
 		empty[n][n] = 2;
-		seat = new int[n + 2][n + 2];
 		for (int num : order) {
-			max = -1;
-			temp = -1;
-			x = 0;
-			y = 0;
-			for (i = 1; i <= n; i++) {
-				for (j = 1; j <= n; j++) {
-					if (seat[i][j] != 0) {
-						continue;
-					}
-					if (satisfaction[num][i][j] > max) {
-						x = i;
-						y = j;
-						max = satisfaction[num][i][j];
-						temp = empty[i][j];
-					} else if (satisfaction[num][i][j] == max && empty[i][j] > temp) {
-						x = i;
-						y = j;
-						temp = empty[i][j];
-					}
-				}
-			}
-			seat[x][y] = num;
-			for (int other : adj.get(num)) {
-				satisfaction[other][x - 1][y]++;
-				satisfaction[other][x + 1][y]++;
-				satisfaction[other][x][y - 1]++;
-				satisfaction[other][x][y + 1]++;
-			}
-			empty[x - 1][y]--;
-			empty[x + 1][y]--;
-			empty[x][y - 1]--;
-			empty[x][y + 1]--;
+			arrange(num);
 		}
 		ans = 0;
 		for (i = 1; i <= n; i++) {
