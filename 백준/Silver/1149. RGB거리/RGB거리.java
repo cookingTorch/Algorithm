@@ -1,40 +1,51 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-
-	public static void main(String[] args) throws IOException {
+	private static final int INF = Integer.MAX_VALUE;
+	
+	private static int[][] dp;
+	private static int[][] cost;
+	
+	private static int getDp(int x, int y) {
+		int i;
 		
+		if (dp[x][y] != INF) {
+			return dp[x][y];
+		}
+		for (i = 0; i < 3; i++) {
+			if (i == y) {
+				continue;
+			}
+			dp[x][y] = Math.min(dp[x][y], getDp(x - 1, i) + cost[x][y]);
+		}
+		return dp[x][y];
+	}
+	
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String str;
 		StringTokenizer st;
 		
-		int n, i, j;
-		int[][] cost;
+		int n, ans, i;
 		
-		str = br.readLine();
-		n = Integer.parseInt(str);
-		
+		n = Integer.parseInt(br.readLine());
 		cost = new int[n][3];
-		
 		for (i = 0; i < n; i++) {
-			str = br.readLine();
-			st = new StringTokenizer(str, " ");
-			for (j = 0; j < 3; j++) {
-				cost[i][j] = Integer.parseInt(st.nextToken());
-			}
+			st = new StringTokenizer(br.readLine());
+			cost[i][0] = Integer.parseInt(st.nextToken());
+			cost[i][1] = Integer.parseInt(st.nextToken());
+			cost[i][2] = Integer.parseInt(st.nextToken());
 		}
-		
-		for (i = 1; i < n; i++) {
-			cost[i][0] += Math.min(cost[i - 1][1], cost[i - 1][2]);
-			cost[i][1] += Math.min(cost[i - 1][2], cost[i - 1][0]);
-			cost[i][2] += Math.min(cost[i - 1][0], cost[i - 1][1]);
+		dp = new int[n][3];
+		for (i = 0; i < n; i++) {
+			Arrays.fill(dp[i], INF);
 		}
-		
-		System.out.println(Math.min(Math.min(cost[n - 1][0], cost[n - 1][1]), cost[n - 1][2]));
-		
+		dp[0] = cost[0];
+		ans = Math.min(getDp(n - 1, 0), getDp(n - 1, 1));
+		ans = Math.min(ans, getDp(n - 1, 2));
+		System.out.print(ans);
 	}
-
 }
