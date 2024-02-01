@@ -10,7 +10,7 @@ public class Main {
 		
 		int n, k, i, j;
 		int[] weight, value;
-		int[][] dp;
+		int[] dp;
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
@@ -22,15 +22,15 @@ public class Main {
 			weight[i] = Integer.parseInt(st.nextToken());
 			value[i] = Integer.parseInt(st.nextToken());
 		}
-		dp = new int[n + 1][k + 1];
+		dp = new int[k + 1];
 		for (i = 1; i <= n; i++) {
-			for (j = 1; j <= k; j++) {
-				dp[i][j] = dp[i - 1][j];
-				if (j >= weight[i]) {
-					dp[i][j] = Math.max(dp[i][j], dp[i - 1][j - weight[i]] + value[i]);
+			for (j = k; j >= 1; j--) {
+				if (j < weight[i]) {
+				} else {
+					dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i]);
 				}
 			}
 		}
-		System.out.print(dp[n][k]);
+		System.out.print(dp[k]);
 	}
 }
