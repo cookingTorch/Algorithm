@@ -1,69 +1,40 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-
 	public static void main(String[] args) throws IOException {
-
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		String str;
+		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 		
-		int n, k, i, j, num = 0;
-		Deque<Integer> circle = new LinkedList<>();
-		Deque<Integer> temp = new LinkedList<>();
+		int n, k, curr, i;
+		Queue<Integer> q, ans;
 		
-		str = br.readLine();
-		st = new StringTokenizer(str, " ");
+		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
 		k = Integer.parseInt(st.nextToken());
-		
-		for (i = 0; i < n; i++) {
-			circle.addLast(i + 1);
+		q = new ArrayDeque<>();
+		for (i = 1; i <= n; i++) {
+			q.add(i);
 		}
-		
-		bw.write("<");
-		
-		for (i = 0; i < n; i++) {
-			
-			for (j = 0; j < k - 1; j++) {
-				num++;
-				if (num == circle.size()) {
-					num = 0;
-				}
+		ans = new ArrayDeque<>();
+		while (!q.isEmpty()) {
+			for (i = 0; i < k - 1; i++) {
+				curr = q.poll();
+				q.add(curr);
 			}
-			
-			for (j = 0; j < num; j++) {
-				temp.addLast(circle.pollFirst());
-			}
-			
-			bw.write(Integer.toString(circle.pollFirst()));
-			
-			while (temp.size() > 0) {
-				circle.addFirst(temp.pollLast());
-			}
-			
-			if (circle.size() > 0) {
-				bw.write(", ");
-			}
-			
-			if (num == circle.size()) {
-				num = 0;
-			}
-			
+			curr = q.poll();
+			ans.add(curr);
 		}
-		
-		bw.write(">");
-		
-		bw.flush();
-		bw.close();
+		sb.append('<').append(ans.poll());
+		for (i = 1; i < n; i++) {
+			sb.append(", ").append(ans.poll());
+		}
+		sb.append('>');
+		System.out.print(sb);
 	}
-
 }
