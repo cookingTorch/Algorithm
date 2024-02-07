@@ -89,7 +89,7 @@ class Solution {
     }
 
     public int solution(int[][] rectangle, int characterX, int characterY, int itemX, int itemY) {
-        int i;
+        int min, i;
 
         adj = new int[MAX];
         start = MAX;
@@ -97,6 +97,7 @@ class Solution {
             addAdj(rectangle[i]);
         }
         getDist(characterX, characterY, itemX, itemY);
-        return Math.min(Math.abs(itemDist - characterDist), dist - Math.abs(itemDist - characterDist));
+        min = Math.abs(itemDist - characterDist);
+        return Math.min(min, dist - min);
     }
 }
