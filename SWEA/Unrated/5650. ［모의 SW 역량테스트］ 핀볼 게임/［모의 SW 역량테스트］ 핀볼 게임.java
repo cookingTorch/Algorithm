@@ -13,10 +13,9 @@ class Solution {
 	private static int[] map, diff;
 	private static int[][] wormhole;
 
-	private static int getScore(int start, int startDir) {
-		int dir, score, curr;
+	private static int getScore(int start, int dir) {
+		int score, curr;
 
-		dir = startDir;
 		score = 0;
 		for (curr = start + diff[dir];; curr += diff[dir]) {
 			if (curr == start) {
