@@ -11,7 +11,7 @@ class Solution {
 	
 	private static int size;
 	private static int[] map, diff;
-	private static int[][] wormhole, scoreBoard;
+	private static int[][] wormhole;
 
 	private static int getScore(int start, int startDir) {
 		int dir, score, curr;
@@ -118,16 +118,15 @@ class Solution {
 		for (i = (size - 1) * size; i < end; i++) {
 			map[i] = 5;
 		}
-		scoreBoard = new int[end][4];
 		max = 0;
 		for (i = 1; i <= n; i++) {
 			for (j = 1; j <= n; j++) {
 				loc = i * size + j;
 				if (map[loc] == 0) {
-					max = Math.max(max, Math.max(scoreBoard[loc][LEFT] = getScore(loc, LEFT),
-							Math.max(scoreBoard[loc][RIGHT] = getScore(loc, RIGHT),
-							Math.max(scoreBoard[loc][UP] = getScore(loc, UP),
-							scoreBoard[loc][DOWN] = getScore(loc, DOWN)))));
+					max = Math.max(max, Math.max(getScore(loc, LEFT),
+							Math.max(getScore(loc, RIGHT),
+							Math.max(getScore(loc, UP),
+							getScore(loc, DOWN)))));
 				}
 			}
 		}
