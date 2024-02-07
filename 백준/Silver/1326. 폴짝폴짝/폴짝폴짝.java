@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -10,12 +9,12 @@ import java.util.StringTokenizer;
 public class Main {
 	private static final int INF = Integer.MAX_VALUE;
 	
-	private static int[] distance;
+	private static int n;
+	private static int[] arr, distance;
 	private static boolean[] inQueue;
-	private static ArrayList<ArrayList<Integer>> adj;
 	
 	private static int spfa(int a, int b) {
-		int curr;
+		int curr, next;
 		Queue<Integer> q;
 		
 		Arrays.fill(distance, INF);
@@ -26,7 +25,16 @@ public class Main {
 		while (!q.isEmpty()) {
 			curr = q.poll();
 			inQueue[curr] = false;
-			for (int next : adj.get(curr)) {
+			for (next = curr - arr[curr]; next >= 0; next -= arr[curr]) {
+				if (distance[curr] + 1 < distance[next]) {
+					distance[next] = distance[curr] + 1;
+					if (!inQueue[next]) {
+						q.add(next);
+						inQueue[next] = true;
+					}
+				}
+			}
+			for (next = curr + arr[curr]; next < n; next += arr[curr]) {
 				if (distance[curr] + 1 < distance[next]) {
 					distance[next] = distance[curr] + 1;
 					if (!inQueue[next]) {
@@ -41,25 +49,15 @@ public class Main {
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 		
-		int n, num, a, b, i, j;
+		int a, b, i;
 		
 		n = Integer.parseInt(br.readLine());
-		adj = new ArrayList<>();
-		for (i = 0; i < n; i++) {
-			adj.add(new ArrayList<>());
-		}
+		arr = new int[n];
 		st = new StringTokenizer(br.readLine());
 		for (i = 0; i < n; i++) {
-			num = Integer.parseInt(st.nextToken());
-			for (j = i - num; j >= 0; j -= num) {
-				adj.get(i).add(j);
-			}
-			for (j = i + num; j < n; j += num) {
-				adj.get(i).add(j);
-			}
+			arr[i] = Integer.parseInt(st.nextToken());
 		}
 		st = new StringTokenizer(br.readLine());
 		a = Integer.parseInt(st.nextToken()) - 1;
