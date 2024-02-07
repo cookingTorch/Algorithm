@@ -12,7 +12,6 @@ class Solution {
 	private static int size;
 	private static int[] map, diff;
 	private static int[][] wormhole, scoreBoard;
-	private static boolean[][] wallEnd;
 
 	private static int getScore(int start, int startDir) {
 		int dir, score, curr;
@@ -31,7 +30,6 @@ class Solution {
 			case 1:
 				switch (dir) {
 				case RIGHT: case UP:
-					wallEnd[start][startDir] = true;
 					return 2 * score + 1;
 				case DOWN:
 					dir = RIGHT;
@@ -44,7 +42,6 @@ class Solution {
 			case 2:
 				switch (dir) {
 				case RIGHT: case DOWN:
-					wallEnd[start][startDir] = true;
 					return 2 * score + 1;
 				case LEFT:
 					dir = DOWN;
@@ -57,7 +54,6 @@ class Solution {
 			case 3:
 				switch (dir) {
 				case DOWN: case LEFT:
-					wallEnd[start][startDir] = true;
 					return 2 * score + 1;
 				case RIGHT:
 					dir = DOWN;
@@ -70,7 +66,6 @@ class Solution {
 			case 4:
 				switch (dir) {
 				case LEFT: case UP:
-					wallEnd[start][startDir] = true;
 					return 2 * score + 1;
 				case RIGHT:
 					dir = UP;
@@ -81,7 +76,6 @@ class Solution {
 				score++;
 				break;
 			case 5:
-				wallEnd[start][startDir] = true;
 				return 2 * score + 1;
 			case 6: case 7: case 8: case 9: case 10:
 				if (wormhole[map[curr]][0] == curr) {
@@ -125,7 +119,6 @@ class Solution {
 			map[i] = 5;
 		}
 		scoreBoard = new int[end][4];
-		wallEnd = new boolean[end][4];
 		max = 0;
 		for (i = 1; i <= n; i++) {
 			for (j = 1; j <= n; j++) {
