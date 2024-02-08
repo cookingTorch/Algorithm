@@ -25,7 +25,7 @@ public class Main {
 				continue;
 			}
 			dp[i] = 1;
-			for (j = 1; j <= SIZE; j++) {
+			for (j = 1; j < i; j++) {
 				if (arr[j] < arr[i]) {
 					dp[i] = Math.max(dp[i], dp[j] + 1);
 				}
