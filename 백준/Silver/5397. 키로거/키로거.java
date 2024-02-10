@@ -11,8 +11,6 @@ public class Main {
 
 		str = br.readLine().toCharArray();
 		len = str.length;
-		left = new int[len + 1];
-		right = new int[len + 1];
 		left[len] = len;
 		right[len] = len;
 		curr = len;
