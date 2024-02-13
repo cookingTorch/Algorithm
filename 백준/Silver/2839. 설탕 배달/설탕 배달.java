@@ -1,38 +1,33 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 
 public class Main {
-
 	public static void main(String[] args) throws IOException {
-		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		String str;
 		
-		int n, ans = 0;
+		int n, i;
+		int[] dp;
 		
-		str = br.readLine();
-		n = Integer.parseInt(str);
-		
-		while (n % 5 != 0) {
-			n -= 3;
-			ans++;
-			if (n < 0) {
-				bw.write("-1");
-				break;
+		n = Integer.parseInt(br.readLine());
+		dp = new int[n + 1];
+		dp[3] = 1;
+		if (n >= 5) {
+			dp[5] = 1;
+		}
+		for (i = 6; i <= n; i++) {
+			if (dp[i - 3] > 0 && dp[i - 5] > 0) {
+				dp[i] = Math.min(dp[i - 3] + 1, dp[i - 5] + 1);
+			} else if (dp[i - 3] > 0) {
+				dp[i] = dp[i - 3] + 1;
+			} else if (dp[i - 5] > 0) {
+				dp[i] = dp[i - 5] + 1;
 			}
 		}
-		if (n >= 0) {
-			ans += n / 5;
-			bw.write(Integer.toString(ans));
+		if (dp[n] == 0) {
+			System.out.print("-1");
+		} else {
+			System.out.print(dp[n]);
 		}
-		
-		bw.flush();
-		bw.close();
-
 	}
-
 }
