@@ -9,29 +9,36 @@ public class Main {
 	
 	private static int[][] game, result;
 	
-	private static int dfs(int depth) {
-		int val;
+	private static boolean dfs(int depth) {
+		int[] teamA, teamB;
 		
 		if (depth == COMBI) {
-			return 1;
+			return true;
 		}
-		val = 0;
-		if (--result[game[depth][0]][0] >= 0 & --result[game[depth][1]][2] >= 0) {
-			val |= dfs(depth + 1);
+		teamA = result[game[depth][0]];
+		teamB = result[game[depth][1]];
+		if (--teamA[0] >= 0 & --teamB[2] >= 0) {
+			if (dfs(depth + 1)) {
+				return true;
+			}
 		}
-		result[game[depth][0]][0]++;
-		result[game[depth][1]][2]++;
-		if (--result[game[depth][0]][1] >= 0 & --result[game[depth][1]][1] >= 0) {
-			val |= dfs(depth + 1);
+		teamA[0]++;
+		teamB[2]++;
+		if (--teamA[1] >= 0 & --teamB[1] >= 0) {
+			if (dfs(depth + 1)) {
+				return true;
+			}
 		}
-		result[game[depth][0]][1]++;
-		result[game[depth][1]][1]++;
-		if (--result[game[depth][0]][2] >= 0 & --result[game[depth][1]][0] >= 0) {
-			val |= dfs(depth + 1);
+		teamA[1]++;
+		teamB[1]++;
+		if (--teamA[2] >= 0 & --teamB[0] >= 0) {
+			if (dfs(depth + 1)) {
+				return true;
+			}
 		}
-		result[game[depth][0]][2]++;
-		result[game[depth][1]][0]++;
-		return val;
+		teamA[2]++;
+		teamB[0]++;
+		return false;
 	}
 	
 	private static int solution(BufferedReader br, StringTokenizer st) throws IOException {
@@ -48,7 +55,7 @@ public class Main {
 		if (sum != COMBI * 2) {
 			return 0;
 		}
-		return dfs(0);
+		return dfs(0) ? 1 : 0;
 	}
 	
 	public static void main(String[] args) throws IOException {
