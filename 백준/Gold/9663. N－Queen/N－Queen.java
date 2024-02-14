@@ -1,36 +1,30 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-    private static int getCnt(int[] queens, int col, int n) {
-        int cnt, i;
-
-        if (col == n)
-            return 1;
-        cnt = 0;
-        for (queens[col] = 0; queens[col] < n; queens[col]++) {
-            for (i = 0; i < col; i++)
-                if (queens[col] == queens[i] || Math.abs(queens[col] - queens[i]) == Math.abs(col - i))
-                    break;
-            if (i == col)
-                cnt += getCnt(queens, col + 1, n);
-        }
-        return cnt;
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder sb = new StringBuilder();
-
-        int n;
-        int[] queens;
-
-        n = Integer.parseInt(br.readLine());
-        queens = new int[n];
-        sb.append(getCnt(queens, 0, n));
-
-        bw.write(sb.toString());
-        bw.flush();
-        bw.close();
-    }
+	private static int n, board, ans;
+	
+	private static void dfs(int depth, int full, int left, int right) {
+		int available, position;
+		
+		if (depth == n) {
+			ans++;
+			return;
+		}
+		available = ~(full | left | right) & board;
+		for (; available > 0; available -= position) {
+			position = available & -available;
+			dfs(depth + 1, full | position, (left | position) << 1, (right | position) >> 1);
+		}
+	}
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		n = Integer.parseInt(br.readLine());
+		board = (1 << n) - 1;
+		dfs(0, 0, 0, 0);
+		System.out.print(ans);
+	}
 }
