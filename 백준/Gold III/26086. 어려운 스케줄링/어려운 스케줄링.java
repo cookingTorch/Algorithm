@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
@@ -11,7 +10,7 @@ public class Main {
 		StringTokenizer st;
 		
 		int n, q, k, lastSort, sort, reverse, command, i;
-		int[] query;
+		int[] query, cnt;
 		boolean flag;
 		LinkedList<Integer> list;
 		
@@ -19,7 +18,7 @@ public class Main {
 		n = Integer.parseInt(st.nextToken());
 		q = Integer.parseInt(st.nextToken());
 		k = Integer.parseInt(st.nextToken());
-		lastSort = q;
+		lastSort = -1;
 		sort = n + 1;
 		reverse = n + 2;
 		query = new int[q];
@@ -38,27 +37,32 @@ public class Main {
 				query[i] = reverse;
 			}
 		}
-		list = new LinkedList<>();
 		flag = true;
+		cnt = new int[n + 1];
 		for (i = 0; i < lastSort; i++) {
 			if (query[i] == reverse) {
 				flag ^= true;
 			} else if (query[i] != sort) {
-				if (flag) {
-					list.addFirst(query[i]);
-				} else {
-					list.addLast(query[i]);
+				cnt[query[i]]++;
+			}
+		}
+		list = new LinkedList<>();
+		if (lastSort != -1) {
+			if (flag) {
+				for (i = 1; i <= n; i++) {
+					if (cnt[i] == 1) {
+						list.add(i);
+					}
+				}
+			} else {
+				for (i = n; i > 0; i--) {
+					if (cnt[i] == 1) {
+						list.add(i);
+					}
 				}
 			}
 		}
-		if (lastSort != q) {
-			if (flag) {
-				Collections.sort(list);
-			} else {
-				Collections.sort(list, Collections.reverseOrder());
-			}
-		}
-		for (; i < q; i++) {
+		for (i = lastSort + 1; i < q; i++) {
 			if (query[i] == reverse) {
 				flag ^= true;
 			} else if (query[i] != sort) {
