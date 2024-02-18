@@ -7,7 +7,6 @@ import java.util.StringTokenizer;
 class Solution {
 	private static final int SIZE = 14;
 	private static final int MAX = SIZE * SIZE;
-	private static final int INF = Integer.MAX_VALUE;
 	
 	private static int coreNum, minLen, maxConnected;
 	private static int[] map, len;
@@ -145,7 +144,7 @@ class Solution {
 				}
 			}
 		}
-		if (map[pos = 1 * SIZE + n - 1] == 1 && map[pos - SIZE] == 1) {
+		if (map[pos = 2 * SIZE + n - 1] == 1 && map[pos - SIZE] == 1) {
 			if (map[pos + 1] == 0) {
 				ans++;
 			} else {
