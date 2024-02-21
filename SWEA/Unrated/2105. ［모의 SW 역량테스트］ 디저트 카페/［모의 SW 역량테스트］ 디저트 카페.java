@@ -42,10 +42,10 @@ class Solution {
 			return;
 		}
 		visited[map[x][y]] = true;
-		if (depth < ruMax) {
-			ru(x - 1, y + 1, depth + 1, cnt + 1);
-		} else {
+		if (depth == ruMax) {
 			lu(x - 1, y - 1, 1, cnt + 1);
+		} else {
+			ru(x - 1, y + 1, depth + 1, cnt + 1);
 		}
 		visited[map[x][y]] = false;
 	}
@@ -59,9 +59,7 @@ class Solution {
 			return;
 		}
 		visited[map[x][y]] = true;
-		if (depth < luMax) {
-			lu(x - 1, y - 1, depth + 1, cnt + 1);
-		}
+		lu(x - 1, y - 1, depth + 1, cnt + 1);
 		visited[map[x][y]] = false;
 	}
 	
