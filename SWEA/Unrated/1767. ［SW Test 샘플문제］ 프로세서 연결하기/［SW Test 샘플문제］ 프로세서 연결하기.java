@@ -2,181 +2,156 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 class Solution {
+	private static final int INF = Integer.MAX_VALUE;
 	private static final int SIZE = 14;
-	private static final int MAX = SIZE * SIZE;
+	private static final char POWER = '\0';
+	private static final char CORE = '1';
+	private static final char EMPTY = '0';
 	
-	private static int coreNum, minLen, maxConnected;
-	private static int[] map, len;
+	private static int max, ans;
+	private static int[] len;
+	private static char[] map;
 	private static boolean[] visited;
-	private static ArrayList<Integer> core;
-	private static ArrayList<ArrayList<Integer>> wires, cross;
+	private static LinkedList<Integer> cores, temp;
+	private static ArrayList<LinkedList<Character>> lines, cross;
 	
-	private static void connect() {
-		int idx, i, j;
-		
-		len = new int[coreNum * 4 + 1];
-		idx = 1;
-		for (i = 0; i < coreNum; i++) {
-			for (j = core.get(i) - 1; map[j] != 1; j--) {
-				if (map[j] == 2) {
-					wires.get(i).add(idx);
-					len[idx] = core.get(i) - j - 1;
-					for (j = core.get(i) - 1; map[j] != 2; j--) {
-						map[j] = -idx;
-					}
-					idx++;
-					break;
-				}
-			}
-			for (j = core.get(i) + 1; map[j] != 1; j++) {
-				if (map[j] == 2) {
-					wires.get(i).add(idx);
-					len[idx] = j - core.get(i) - 1;
-					for (j = core.get(i) + 1; map[j] != 2; j++) {
-						map[j] = -idx;
-					}
-					idx++;
-					break;
-				}
-			}
-		}
-		cross.clear();
-		for (i = 0; i < coreNum * 4 + 1; i++) {
-			cross.add(new ArrayList<>());
-		}
-		for (i = 0; i < coreNum; i++) {
-			for (j = core.get(i) - SIZE; map[j] != 1; j -= SIZE) {
-				if (map[j] == 2) {
-					wires.get(i).add(idx);
-					len[idx] = (core.get(i) - j) / SIZE - 1;
-					for (j = core.get(i) - SIZE; map[j] != 2; j -= SIZE) {
-						if (map[j] < 0) {
-							cross.get(idx).add(-map[j]);
-							cross.get(-map[j]).add(idx);
-						}
-					}
-					idx++;
-					break;
-				}
-			}
-			for (j = core.get(i) + SIZE; map[j] != 1; j += SIZE) {
-				if (map[j] == 2) {
-					wires.get(i).add(idx);
-					len[idx] = (j - core.get(i)) / SIZE - 1;
-					for (j = core.get(i) + SIZE; map[j] != 2; j += SIZE) {
-						if (map[j] < 0) {
-							cross.get(idx).add(-map[j]);
-							cross.get(-map[j]).add(idx);
-						}
-					}
-					idx++;
-					break;
-				}
-			}
-		}
-		visited = new boolean[idx];
-	}
-	
-	private static void dfs(int sum, int depth, int connected) {
-		if (depth == coreNum) {
-			if (connected > maxConnected) {
-				maxConnected = connected;
-				minLen = sum;
-			} else if (connected == maxConnected) {
-				minLen = Math.min(minLen, sum);
+	private static void select(int core, int cnt, int sum) {
+		if (core == cores.size()) {
+			if (cnt > max) {
+				max = cnt;
+				ans = sum;
+			} else if (cnt == max) {
+				ans = Math.min(ans, sum);
 			}
 			return;
 		}
 		loop:
-		for (int wire : wires.get(depth)) {
-			for (int prev : cross.get(wire)) {
+		for (char line : lines.get(core)) {
+			for (char prev : cross.get(line)) {
 				if (visited[prev]) {
 					continue loop;
 				}
 			}
-			visited[wire] = true;
-			dfs(sum + len[wire], depth + 1, connected + 1);
-			visited[wire] = false;
+			visited[line] = true;
+			select(core + 1, cnt + 1, sum + len[line]);
+			visited[line] = false;
 		}
-		dfs(sum, depth + 1, connected);
+		select(core + 1, cnt, sum);
+	}
+	
+	private static void connect() {
+		int curr, size, num, i;
+		char idx;
+		LinkedList<Character> list;
+		
+		size = cores.size() * 4 + 1;
+		lines = new ArrayList<>();
+		len = new int[size];
+		idx = 0;
+		for (int core : cores) {
+			list = new LinkedList<>();
+			idx++;
+			curr = core - 1;
+			for (i = 0; map[curr] != CORE && map[curr] != POWER; i++) {
+				map[curr] = idx;
+				curr--;
+			}
+			if (map[curr] == POWER) {
+				len[idx] = i;
+				list.add(idx);
+			}
+			idx++;
+			curr = core + 1;
+			for (i = 0; map[curr] != CORE && map[curr] != POWER; i++) {
+				map[curr] = idx;
+				curr++;
+			}
+			if (map[curr] == POWER) {
+				len[idx] = i;
+				list.add(idx);
+			}
+			lines.add(list);
+		}
+		cross = new ArrayList<>();
+		for (i = 0; i < size; i++) {
+			cross.add(new LinkedList<>());
+		}
+		num = 0;
+		for (int core : cores) {
+			list = lines.get(num++);
+			idx++;
+			curr = core - SIZE;
+			for (i = 0; map[curr] != CORE && map[curr] != POWER; i++) {
+				if (map[curr] != EMPTY) {
+					cross.get(map[curr]).add(idx);
+					cross.get(idx).add(map[curr]);
+				}
+				curr -= SIZE;
+			}
+			if (map[curr] == POWER) {
+				len[idx] = i;
+				list.add(idx);
+			}
+			idx++;
+			curr = core + SIZE;
+			for (i = 0; map[curr] != CORE && map[curr] != POWER; i++) {
+				if (map[curr] != EMPTY) {
+					cross.get(map[curr]).add(idx);
+					cross.get(idx).add(map[curr]);
+				}
+				curr += SIZE;
+			}
+			if (map[curr] == POWER) {
+				len[idx] = i;
+				list.add(idx);
+			}
+		}
+		visited = new boolean[size];
 	}
 	
 	private static int solution(BufferedReader br, StringTokenizer st) throws IOException {
-		int n, ans, pos, i, j;
+		int n, pos, add, x, y, i, j;
 		
 		n = Integer.parseInt(br.readLine());
-		for (i = 1; i < n + 2; i++) {
-			map[i * SIZE + n + 1] = 2;
-			map[(n + 1) * SIZE + i] = 2;
+		for (i = 1; i <= n; i++) {
+			map[(n + 1) * SIZE + i] = POWER;
+			map[i * SIZE + n + 1] = POWER;
 		}
-		ans = 0;
-		core.clear();
-		wires.clear();
+		cores = new LinkedList<>();
+		temp = new LinkedList<>();
 		for (i = 1; i <= n; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (j = 1; j <= n; j++) {
 				pos = i * SIZE + j;
-				map[pos] = Integer.parseInt(st.nextToken());
-				if (map[pos] == 1 && i != 1 && j != 1 && i != n && j != n) {
-					if ((i == 2 && map[pos - SIZE] == 0) || (j == 2 && map[pos - 1] == 0)) {
-						ans++;
-					} else if (i != n - 1 && j != n - 1) {
-						core.add(pos);
-						wires.add(new ArrayList<>());
-					}
-				} else if (i == n && map[pos - SIZE] == 1 && j > 2 && j < n - 1) {
-					if (map[pos] == 0) {
-						ans++;
+				map[pos] = st.nextToken().charAt(0);
+				if (map[pos] == CORE && i != 1 && i != n && j != 1 && j != n) {
+					if (i == 2 || i == n - 1 || j == 2 || j == n - 1) {
+						temp.add(pos);
 					} else {
-						core.add(pos - SIZE);
-						wires.add(new ArrayList<>());
-					}
-				} else if (j == n && map[pos - 1] == 1 && i > 2 && i < n - 1) {
-					if (map[pos] == 0) {
-						ans++;
-					} else {
-						core.add(pos - 1);
-						wires.add(new ArrayList<>());
+						cores.add(pos);
 					}
 				}
 			}
 		}
-		if (map[pos = 2 * SIZE + n - 1] == 1 && map[pos - SIZE] == 1) {
-			if (map[pos + 1] == 0) {
-				ans++;
+		add = 0;
+		for (int core : temp) {
+			x = core / SIZE;
+			y = core % SIZE;
+			if ((x == 2 && map[core - SIZE] == EMPTY) || (x == n - 1 && map[core + SIZE] == EMPTY) || (y == 2 && map[core - 1] == EMPTY) || (y == n - 1 && map[core + 1] == EMPTY)) {
+				add++;
 			} else {
-				core.add(pos);
-				wires.add(new ArrayList<>());
+				cores.add(core);
 			}
-		}
-		if (map[pos = (n - 1) * SIZE + 2] == 1 && map[pos - 1] == 1) {
-			if (map[pos + SIZE] == 0) {
-				ans++;
-			} else {
-				core.add(pos);
-				wires.add(new ArrayList<>());
-			}
-		}
-		if (map[pos = (n - 1) * SIZE + n - 1] == 1) {
-			if (map[pos + 1] == 0 || map[pos + SIZE] == 0) {
-				ans++;
-			} else {
-				core.add(pos);
-				wires.add(new ArrayList<>());
-			}
-		}
-		coreNum = core.size();
-		if (coreNum == 0) {
-			return ans;
 		}
 		connect();
-		maxConnected = 0;
-		minLen = 0;
-		dfs(0, 0, 0);
-		return ans + minLen;
+		max = 0;
+		ans = INF;
+		select(0, 0, 0);
+		return ans + add;
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -184,16 +159,9 @@ class Solution {
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = null;
 		
-		int t, testCase, i;
+		int t, testCase;
 		
-		map = new int[MAX];
-		for (i = 0; i < SIZE; i++) {
-			map[i] = 2;
-			map[i * SIZE] = 2;
-		}
-		core = new ArrayList<>();
-		wires = new ArrayList<>();
-		cross = new ArrayList<>();
+		map = new char[SIZE * SIZE];
 		t = Integer.parseInt(br.readLine());
 		for (testCase = 1; testCase <= t; testCase++) {
 			sb.append('#').append(testCase).append(' ').append(solution(br, st)).append('\n');
