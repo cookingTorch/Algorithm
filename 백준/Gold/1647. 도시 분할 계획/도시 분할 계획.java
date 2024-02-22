@@ -6,23 +6,30 @@ import java.util.Comparator;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static int[] parent;
+	private static int[] root;
 	
-	private static boolean union(int node1, int node2) {
-		int parent1, parent2;
+	private static boolean union(int u, int v) {
+		int ru, rv;
 		
-		if ((parent1 = find(node1)) == (parent2 = find(node2))) {
+		if ((ru = find(u)) == (rv = find(v))) {
 			return false;
 		}
-		parent[parent2] = parent1;
+		if (root[ru] > root[rv]) {
+			root[ru] = rv;
+		} else {
+			if (root[ru] == root[rv]) {
+				root[ru]--;
+			}
+			root[rv] = ru;
+		}
 		return true;
 	}
 	
-	private static int find(int node) {
-		if (parent[node] == node) {
-			return node;
+	private static int find(int u) {
+		if (root[u] <= 0) {
+			return u;
 		}
-		return parent[node] = find(parent[node]);
+		return root[u] = find(root[u]);
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -38,8 +45,8 @@ public class Main {
 		edge = new int[m][3];
 		for (i = 0; i < m; i++) {
 			st = new StringTokenizer(br.readLine());
-			edge[i][0] = Integer.parseInt(st.nextToken()) - 1;
-			edge[i][1] = Integer.parseInt(st.nextToken()) - 1;
+			edge[i][0] = Integer.parseInt(st.nextToken());
+			edge[i][1] = Integer.parseInt(st.nextToken());
 			edge[i][2] = Integer.parseInt(st.nextToken());
 		}
 		Arrays.sort(edge, new Comparator<int[]>() {
@@ -48,10 +55,7 @@ public class Main {
 				return Integer.compare(o1[2], o2[2]);
 			}
 		});
-		parent = new int[n];
-		for (i = 0; i < n; i++) {
-			parent[i] = i;
-		}
+		root = new int[n + 1];
 		ans = 0;
 		prev = 0;
 		for (i = 0; i < m; i++) {
