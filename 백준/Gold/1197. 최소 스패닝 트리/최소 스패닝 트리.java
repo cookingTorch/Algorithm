@@ -1,28 +1,49 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static int[] parent;
-	
-	private static boolean union(int node1, int node2) {
-		int parent1, parent2;
+	private static class Edge implements Comparable<Edge> {
+		int u, v, weight;
 		
-		if ((parent1 = find(node1)) == (parent2 = find(node2))) {
+		Edge(int u, int v, int weight) {
+			this.u = u;
+			this.v = v;
+			this.weight = weight;
+		}
+		
+		@Override
+		public int compareTo(Edge o) {
+			return Integer.compare(this.weight, o.weight);
+		}
+	}
+	
+	private static int[] root;
+	
+	private static boolean union(int u, int v) {
+		int ru, rv;
+		
+		if ((ru = find(u)) == (rv = find(v))) {
 			return false;
 		}
-		parent[parent2] = parent[parent1];
+		if (root[ru] > root[rv]) {
+			root[ru] = rv;
+		} else {
+			if (root[ru] == root[rv]) {
+				root[ru]--;
+			}
+			root[rv] = ru;
+		}
 		return true;
 	}
 	
-	private static int find(int node) {
-		if (parent[node] == node) {
-			return node;
+	private static int find(int u) {
+		if (root[u] <= 0) {
+			return u;
 		}
-		return parent[node] = find(parent[node]);
+		return root[u] = find(root[u]);
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -30,32 +51,24 @@ public class Main {
 		StringTokenizer st;
 		
 		int v, e, ans, i;
-		int[][] edge;
+		Edge edge;
+		PriorityQueue<Edge> pq;
 		
 		st = new StringTokenizer(br.readLine());
 		v = Integer.parseInt(st.nextToken());
 		e = Integer.parseInt(st.nextToken());
-		edge = new int[e][3];
+		pq = new PriorityQueue<>();
 		for (i = 0; i < e; i++) {
 			st = new StringTokenizer(br.readLine());
-			edge[i][0] = Integer.parseInt(st.nextToken()) - 1;
-			edge[i][1] = Integer.parseInt(st.nextToken()) - 1;
-			edge[i][2] = Integer.parseInt(st.nextToken());
+			pq.add(new Edge(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
 		}
-		Arrays.sort(edge, new Comparator<int[]>() {
-			@Override
-			public int compare(int[] o1, int[] o2) {
-				return Integer.compare(o1[2], o2[2]);
-			}
-		});
-		parent = new int[v];
-		for (i = 0; i < v; i++) {
-			parent[i] = i;
-		}
+		root = new int[v + 1];
 		ans = 0;
-		for (i = 0; i < e; i++) {
-			if (union(edge[i][0], edge[i][1])) {
-				ans += edge[i][2];
+		for (i = 0; i < v - 1;) {
+			edge = pq.poll();
+			if (union(edge.u, edge.v)) {
+				ans += edge.weight;
+				i++;
 			}
 		}
 		System.out.print(ans);
