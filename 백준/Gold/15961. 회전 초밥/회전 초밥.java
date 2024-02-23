@@ -2,7 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -12,7 +12,7 @@ public class Main {
 		
 		int n, d, k, c, susi, num, max, i;
 		int[] cnt, first;
-		Deque<Integer> dq;
+		Queue<Integer> dq;
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
@@ -23,14 +23,13 @@ public class Main {
 		cnt[c]++;
 		num = 1;
 		max = 1;
-		first = new int[k];
+		first = new int[k - 1];
 		dq = new ArrayDeque<>();
-		for (i = 0; i < k; i++) {
-			first[i] = Integer.parseInt(br.readLine());
-			dq.add(first[i]);
-			if (cnt[first[i]]++ == 0) {
+		for (i = 0; i < k - 1; i++) {
+			first[i] = susi = Integer.parseInt(br.readLine());
+			dq.add(susi);
+			if (cnt[susi]++ == 0) {
 				num++;
-				max++;
 			}
 		}
 		for (; i < n; i++) {
@@ -39,19 +38,19 @@ public class Main {
 			if (cnt[susi]++ == 0) {
 				num++;
 			}
+			max = Math.max(max, num);
 			if (--cnt[dq.poll()] == 0) {
 				num--;
 			}
-			max = Math.max(max, num);
 		}
 		for (i = 0; i < k - 1; i++) {
 			if (cnt[first[i]]++ == 0) {
 				num++;
 			}
+			max = Math.max(max, num);
 			if (--cnt[dq.poll()] == 0) {
 				num--;
 			}
-			max = Math.max(max, num);
 		}
 		System.out.print(max);
 	}
