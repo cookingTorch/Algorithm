@@ -11,7 +11,7 @@ class Solution {
 	private static final int[] CHEM_A = new int[MAX_W];
 	private static final int[] CHEM_B = new int[MAX_W];
 	
-	private static int d, w, k, min;
+	private static int d, w, k;
 	private static int[][] films;
 	
 	private static boolean test() {
