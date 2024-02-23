@@ -27,16 +27,19 @@ public class Main {
 		return score;
 	}
 	
-	private static int hit() {
+	private static int hit(int res) {
 		int score;
 		
 		score = move();
 		base[0] = true;
+		for (res--; res > 0; res--) {
+			score += move();
+		}
 		return score;
 	}
 	
 	private static int inning(int[] res) {
-		int score, out, i;
+		int score, out;
 		
 		score = 0;
 		for (out = 0; out < 3; player = ++player % PLAYERS) {
@@ -44,10 +47,7 @@ public class Main {
 				out++;
 				continue;
 			}
-			score += hit();
-			for (i = 0; i < res[order[player]] - 1; i++) {
-				score += move();
-			}
+			score += hit(res[order[player]]);
 		}
 		return score;
 	}
