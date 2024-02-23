@@ -37,23 +37,21 @@ class Solution {
 		return true;
 	}
 	
-	private static void dfs(int start, int cnt) {
+	private static boolean dfs(int num, int start, int cnt) {
 		int i;
 		int[] temp;
 		
-		if (cnt >= min) {
-			return;
-		} else if (test()) {
-			min = Math.min(min, cnt);
-			return;
-		} else if (cnt >= min - 1) {
-			return;
+		if (cnt == num) {
+			return test();
 		}
 		for (i = start; i < d; i++) {
 			if (films[i] != CHEM_A && films[i] != CHEM_B) {
 				temp = films[i];
 				films[i] = CHEM_A;
-				dfs(i + 1, cnt + 1);
+				if (dfs(num, i + 1, cnt + 1)) {
+					films[i] = temp;
+					return true;
+				}
 				films[i] = temp;
 			}
 		}
@@ -61,14 +59,18 @@ class Solution {
 			if (films[i] != CHEM_A && films[i] != CHEM_B) {
 				temp = films[i];
 				films[i] = CHEM_B;
-				dfs(i + 1, cnt + 1);
+				if (dfs(num, i + 1, cnt + 1)) {
+					films[i] = temp;
+					return true;
+				}
 				films[i] = temp;
 			}
 		}
+		return false;
 	}
 	
 	private static int solution(BufferedReader br, StringTokenizer st) throws IOException {
-		int i, j;
+		int left, right, mid, i, j;
 		
 		st = new StringTokenizer(br.readLine());
 		d = Integer.parseInt(st.nextToken());
@@ -83,9 +85,17 @@ class Solution {
 		if (k == 1) {
 			return 0;
 		}
-		min = k;
-		dfs(0, 0);
-		return min;
+		left = 0;
+		right = k;
+		while (left < right) {
+			mid = (left + right) / 2;
+			if (!dfs(mid, 0, 0)) {
+				left = mid + 1;
+			} else {
+				right = mid;
+			}
+		}
+		return right;
 	}
 
 	public static void main(String[] args) throws IOException {
