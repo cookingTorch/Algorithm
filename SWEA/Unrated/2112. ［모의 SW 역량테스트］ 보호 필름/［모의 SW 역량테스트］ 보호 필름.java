@@ -5,14 +5,15 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 class Solution {
-	private static final int B = 1;
+	private static final char A = '0';
+	private static final char B = '1';
 	private static final int MAX_D = 13;
 	private static final int MAX_W = 20;
-	private static final int[] CHEM_A = new int[MAX_W];
-	private static final int[] CHEM_B = new int[MAX_W];
+	private static final char[] CHEM_A = new char[MAX_W];
+	private static final char[] CHEM_B = new char[MAX_W];
 	
 	private static int d, w, k;
-	private static int[][] films;
+	private static char[][] films;
 	
 	private static boolean test() {
 		int temp, i, j;
@@ -39,7 +40,7 @@ class Solution {
 	
 	private static boolean dfs(int num, int start, int cnt) {
 		int i;
-		int[] temp;
+		char[] temp;
 		
 		if (cnt == num) {
 			return test();
@@ -79,7 +80,7 @@ class Solution {
 		for (i = 0; i < d; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (j = 0; j < w; j++) {
-				films[i][j] = Integer.parseInt(st.nextToken());
+				films[i][j] = st.nextToken().charAt(0);
 			}
 		}
 		if (k == 1) {
@@ -105,7 +106,8 @@ class Solution {
 		
 		int t, testCase;
 		
-		films = new int[MAX_D][MAX_W];
+		films = new char[MAX_D][MAX_W];
+		Arrays.fill(CHEM_A, A);
 		Arrays.fill(CHEM_B, B);
 		t = Integer.parseInt(br.readLine());
 		for (testCase = 1; testCase <= t; testCase++) {
