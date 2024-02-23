@@ -45,24 +45,20 @@ class Solution {
 			return test();
 		}
 		for (i = start; i < d; i++) {
-			if (films[i] != CHEM_A && films[i] != CHEM_B) {
-				films[i] = CHEM_A;
-				if (dfs(num, i + 1, cnt + 1)) {
-					films[i] = copy[i];
-					return true;
-				}
+			films[i] = CHEM_A;
+			if (dfs(num, i + 1, cnt + 1)) {
 				films[i] = copy[i];
+				return true;
 			}
+			films[i] = copy[i];
 		}
 		for (i = start; i < d; i++) {
-			if (films[i] != CHEM_A && films[i] != CHEM_B) {
-				films[i] = CHEM_B;
-				if (dfs(num, i + 1, cnt + 1)) {
-					films[i] = copy[i];
-					return true;
-				}
+			films[i] = CHEM_B;
+			if (dfs(num, i + 1, cnt + 1)) {
 				films[i] = copy[i];
+				return true;
 			}
+			films[i] = copy[i];
 		}
 		return false;
 	}
