@@ -7,8 +7,8 @@ class Solution {
 	private static final int MAX_N = 10;
 	
 	private static int n, m, c, max;
-	private static int[] rowMax;
-	private static int[][] beehives, results;
+	private static int[] results;
+	private static int[][] beehives;
 	
 	private static int knapsack(int start, int[] beehive) {
 		int weight, value, i, j;
@@ -31,17 +31,15 @@ class Solution {
 		int i, j;
 		
 		for (i = 0; i < n; i++) {
-			rowMax[i] = 0;
+			results[i] = 0;
 			for (j = 0; j < n - m + 1; j++) {
-				results[i][j] = knapsack(j, beehives[i]);
-				rowMax[i] = Math.max(rowMax[i], results[i][j]);
+				results[i] = Math.max(results[i], knapsack(j, beehives[i]));
 			}
 		}
 	}
 	
 	private static int solution(BufferedReader br, StringTokenizer st) throws IOException {
-		int i, j, k;
-		int[] result;
+		int i, j;
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
@@ -55,17 +53,9 @@ class Solution {
 		}
 		getResults();
 		max = 0;
-//		for (i = 0; i < n; i++) {
-//			result = results[i];
-//			for (j = 0; j < n; j++) {
-//				for (k = j + m; k < n; k++) {
-//					max = Math.max(max, result[j] + result[k]);
-//				}
-//			}
-//		}
 		for (i = 0; i < n; i++) {
 			for (j = i + 1; j < n; j++) {
-				max = Math.max(max, rowMax[i] + rowMax[j]);
+				max = Math.max(max, results[i] + results[j]);
 			}
 		}
 		return max;
@@ -79,8 +69,7 @@ class Solution {
 		int t, testCase;
 		
 		beehives = new int[MAX_N][MAX_N];
-		results = new int[MAX_N][MAX_N];
-		rowMax = new int[MAX_N];
+		results = new int[MAX_N];
 		t = Integer.parseInt(br.readLine());
 		for (testCase = 1; testCase <= t; testCase++) {
 			sb.append('#').append(testCase).append(' ').append(solution(br, st)).append('\n');
