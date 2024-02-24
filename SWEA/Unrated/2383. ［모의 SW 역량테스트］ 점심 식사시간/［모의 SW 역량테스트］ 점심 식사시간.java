@@ -10,6 +10,7 @@ class Solution {
 	private static final int INF = Integer.MAX_VALUE;
 	private static final int MAX_PEOPLE = 10;
 	private static final int MAX_STAIRS = 2;
+	private static final int FULL = 3;
 	
 	private static int peopleSize, stairsSize;
 	private static int[] stairLen;
@@ -36,11 +37,11 @@ class Solution {
 				q1.poll();
 				cnt++;
 			}
-			while (!pq0.isEmpty() && pq0.peek() <= time && q0.size() < 3) {
+			while (!pq0.isEmpty() && pq0.peek() <= time && q0.size() < FULL) {
 				pq0.poll();
 				q0.add(time + stairLen[0]);
 			}
-			while (!pq1.isEmpty() && pq1.peek() <= time && q1.size() < 3) {
+			while (!pq1.isEmpty() && pq1.peek() <= time && q1.size() < FULL) {
 				pq1.poll();
 				q1.add(time + stairLen[1]);
 			}
