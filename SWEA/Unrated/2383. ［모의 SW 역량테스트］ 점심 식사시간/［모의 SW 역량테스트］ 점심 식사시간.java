@@ -2,8 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 class Solution {
@@ -14,7 +14,7 @@ class Solution {
 	private static int peopleSize, stairsSize;
 	private static int[] stairLen;
 	private static int[][] people, stairs, dist;
-	private static Deque<Integer> dq0, dq1;
+	private static Queue<Integer> dq0, dq1;
 	private static PriorityQueue<Integer> pq0, pq1;
 	
 	private static int calc(int bit) {
