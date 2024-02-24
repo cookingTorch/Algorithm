@@ -14,7 +14,7 @@ class Solution {
 	private static int peopleSize, stairsSize;
 	private static int[] stairLen;
 	private static int[][] people, stairs, dist;
-	private static Queue<Integer> dq0, dq1;
+	private static Queue<Integer> q0, q1;
 	private static PriorityQueue<Integer> pq0, pq1;
 	
 	private static int calc(int bit) {
@@ -28,21 +28,21 @@ class Solution {
 			}
 		}
 		for (time = 0, cnt = 0; cnt < peopleSize; time++) {
-			while (!dq0.isEmpty() && dq0.peek() == time) {
-				dq0.poll();
+			while (!q0.isEmpty() && q0.peek() == time) {
+				q0.poll();
 				cnt++;
 			}
-			while (!dq1.isEmpty() && dq1.peek() == time) {
-				dq1.poll();
+			while (!q1.isEmpty() && q1.peek() == time) {
+				q1.poll();
 				cnt++;
 			}
-			while (!pq0.isEmpty() && pq0.peek() <= time && dq0.size() < 3) {
+			while (!pq0.isEmpty() && pq0.peek() <= time && q0.size() < 3) {
 				pq0.poll();
-				dq0.add(time + stairLen[0]);
+				q0.add(time + stairLen[0]);
 			}
-			while (!pq1.isEmpty() && pq1.peek() <= time && dq1.size() < 3) {
+			while (!pq1.isEmpty() && pq1.peek() <= time && q1.size() < 3) {
 				pq1.poll();
-				dq1.add(time + stairLen[1]);
+				q1.add(time + stairLen[1]);
 			}
 		}
 		return time - 1;
@@ -94,8 +94,8 @@ class Solution {
 		stairs = new int[MAX_STAIRS][2];
 		stairLen = new int[MAX_STAIRS];
 		dist = new int[MAX_PEOPLE][MAX_STAIRS];
-		dq0 = new ArrayDeque<>();
-		dq1 = new ArrayDeque<>();
+		q0 = new ArrayDeque<>();
+		q1 = new ArrayDeque<>();
 		pq0 = new PriorityQueue<>();
 		pq1 = new PriorityQueue<>();
 		t = Integer.parseInt(br.readLine());
