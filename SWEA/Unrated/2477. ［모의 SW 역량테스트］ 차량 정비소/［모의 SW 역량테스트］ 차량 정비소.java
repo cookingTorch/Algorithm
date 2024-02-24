@@ -47,12 +47,12 @@ class Solution {
 	private static PriorityQueue<Customer> pq;
 	
 	private static int repairShop() {
-		int time, finish, num, idx, ans, i;
+		int time, cnt, num, idx, ans, i;
 		Customer customer;
 		
 		idx = 1;
 		ans = 0;
-		for (finish = 0, time = 0;; time++) {
+		for (cnt = 0, time = 0; cnt < k; time++) {
 			if (time < MAX_TK) {
 				num = tk[time];
 				for (i = 0; i < num; i++) {
@@ -73,9 +73,7 @@ class Solution {
 						ans += customer.idx;
 					}
 					repair[i] = EMPTY;
-					if (++finish == k) {
-						return ans == 0 ? -1 : ans;
-					}
+					cnt++;
 				}
 			}
 			for (i = 0; !pq.isEmpty() && i < n; i++) {
@@ -89,6 +87,7 @@ class Solution {
 				}
 			}
 		}
+		return ans == 0 ? -1 : ans;
 	}
 	
 	private static int solution(BufferedReader br, StringTokenizer st) throws IOException {
