@@ -5,26 +5,30 @@ import java.util.StringTokenizer;
 
 class Solution {
 	private static final int MAG_NUM = 4;
-	private static final int SIZE =  8;
-	private static final int START = 0;
-	private static final int LEFT = 6;
-	private static final int RIGHT = 2;
+	private static final int SIZE = 8;
+	private static final int FIRST = 1 << (SIZE - 1);
+	private static final int LAST = 1;
+	private static final int LEFT = 1 << 1;
+	private static final int RIGHT = 1 << 5;
+	private static final int N = 0;
+	private static final int S = 1;
 	
 	private static class Magnet {
-		int idx, start, left, right;
-		int[] poles;
+		int poles, first, last;
+		boolean left, right;
 		Magnet leftMag, rightMag;
 		
 		Magnet(StringTokenizer st) {
 			int i;
 			
-			poles = new int[SIZE];
 			for (i = 0; i < SIZE; i++) {
-				poles[i] = Integer.parseInt(st.nextToken());
+				poles <<= 1;
+				poles += Integer.parseInt(st.nextToken());
 			}
-			start = poles[START];
-			left = poles[LEFT];
-			right = poles[RIGHT];
+			first = (poles & FIRST) == 0 ? N : S;
+			last = (poles & LAST) == 0 ? N : S;
+			left = (poles & LEFT) == 0;
+			right = (poles & RIGHT) == 0;
 		}
 		
 		void rotate(int dir, boolean toLeft, boolean toRight) {
@@ -34,10 +38,17 @@ class Solution {
 			if (toRight && rightMag != null && right != rightMag.left) {
 				rightMag.rotate(-dir, false, true);
 			}
-			idx = ((idx + SIZE) - dir) % SIZE;
-			start = poles[idx];
-			left = poles[(idx + LEFT) % SIZE];
-			right = poles[(idx + RIGHT) % SIZE];
+			if (dir == 1) {
+				poles >>= 1;
+				poles |= last << (SIZE - 1);
+			} else {
+				poles <<= 1;
+				poles |= first;
+			}
+			first = (poles & FIRST) == 0 ? N : S;
+			last = (poles & LAST) == 0 ? N : S;
+			left = (poles & LEFT) == 0;
+			right = (poles & RIGHT) == 0;
 		}
 	}
 	
@@ -62,7 +73,7 @@ class Solution {
 		score = 0;
 		for (i = MAG_NUM - 1; i >= 0; i--) {
 			score <<= 1;
-			score += magnets[i].start;
+			score += magnets[i].first;
 		}
 		return score;
 	}
