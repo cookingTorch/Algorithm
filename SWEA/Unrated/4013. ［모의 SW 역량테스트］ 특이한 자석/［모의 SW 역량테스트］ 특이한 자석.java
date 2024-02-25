@@ -48,7 +48,6 @@ class Solution {
 		Magnet prev;
 		
 		k = Integer.parseInt(br.readLine());
-		
 		prev = magnets[0] = new Magnet(new StringTokenizer(br.readLine()));
 		for (i = 1; i < MAG_NUM; i++) {
 			magnets[i] = new Magnet(new StringTokenizer(br.readLine()));
