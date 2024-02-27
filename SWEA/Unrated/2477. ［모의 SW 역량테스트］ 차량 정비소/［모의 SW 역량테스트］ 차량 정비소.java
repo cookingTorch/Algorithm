@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -40,8 +39,7 @@ class Solution {
 	private static int n, m, k, a, b;
 	private static int[] ai, bi, tk;
 	private static Customer[] reception, repair;
-	private static Queue<Customer> q;
-	private static PriorityQueue<Customer> pq;
+	private static Queue<Customer> qA, qB;
 	
 	private static int repairShop() {
 		int time, cnt, num, idx, ans, i;
@@ -53,13 +51,13 @@ class Solution {
 			if (time < MAX_TK) {
 				num = tk[time];
 				for (i = 0; i < num; i++) {
-					pq.add(new Customer(idx++));
+					qA.add(new Customer(idx++));
 				}
 			}
 			for (i = 0; i < n; i++) {
 				customer = reception[i];
 				if (customer != EMPTY && customer.time == time) {
-					q.add(customer);
+					qB.add(customer);
 					reception[i] = EMPTY;
 				}
 			}
@@ -73,14 +71,14 @@ class Solution {
 					cnt++;
 				}
 			}
-			for (i = 0; !pq.isEmpty() && i < n; i++) {
+			for (i = 0; !qA.isEmpty() && i < n; i++) {
 				if (reception[i] == EMPTY) {
-					reception[i] = pq.poll().setTimeA(time + ai[i], i);
+					reception[i] = qA.poll().setTimeA(time + ai[i], i);
 				}
 			}
-			for (i = 0; !q.isEmpty() && i < m; i++) {
+			for (i = 0; !qB.isEmpty() && i < m; i++) {
 				if (repair[i] == EMPTY) {
-					repair[i] = q.poll().setTimeB(time + bi[i], i);
+					repair[i] = qB.poll().setTimeB(time + bi[i], i);
 				}
 			}
 		}
@@ -123,8 +121,8 @@ class Solution {
 		repair = new Customer[MAX_M];
 		ai = new int[MAX_N];
 		bi = new int[MAX_M];
-		q = new ArrayDeque<>();
-		pq = new PriorityQueue<>();
+		qA = new ArrayDeque<>();
+		qB = new ArrayDeque<>();
 		t = Integer.parseInt(br.readLine());
 		for (testCase = 1; testCase <= t; testCase++) {
 			sb.append('#').append(testCase).append(' ').append(solution(br, st)).append('\n');
