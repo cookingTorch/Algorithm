@@ -2,27 +2,72 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
 	private static final long INF = Long.MAX_VALUE;
 	
-	private static class Point {
+	private static class Point implements Comparable<Point> {
 	    long x, y;
 
 	    Point(long x, long y) {
 	        this.x = x;
 	        this.y = y;
 	    }
+
+		@Override
+		public int compareTo(Point o) {
+			long val;
+			
+			val = ccw(base, this, o);
+			if (val == 0) {
+				return Long.compare(dist(base, this), dist(base, o));
+			}
+			return val > 0 ? -1 : 1;
+		}
 	}
 	
 	private static Point base;
 	private static Point[] result;
 	private static ArrayList<Point> points;
+	
+	private static long ccw(Point p1, Point p2, Point p3) {
+        return (p1.x * p2.y + p2.x * p3.y + p3.x * p1.y) - (p1.y * p2.x + p2.y * p3.x + p3.y * p1.x);
+    }
 
-    private static Point[] rotatingCalipers(ArrayList<Point> hull) {
+    private static long dist(Point p1, Point p2) {
+        return (p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y);
+    }
+	
+	private static ArrayList<Point> convexHull(ArrayList<Point> input) {
+    	int i;
+        Stack<Point> stack;
+
+        base = new Point(INF, INF);
+        for (i = 0; i < input.size(); i++) {
+            if (input.get(i).x < base.x) {
+                base = input.get(i);
+            } else if (input.get(i).x == base.x) {
+                if (input.get(i).y < base.y) {
+                    base = input.get(i);
+                }
+            }
+        }
+        Collections.sort(input);
+        stack = new Stack<>();
+        stack.add(base);
+        for (i = 1; i < input.size(); i++) {
+            while (stack.size() > 1 && (ccw(stack.get(stack.size() - 2), stack.get(stack.size() - 1), input.get(i)) <= 0)) {
+                stack.pop();
+            }
+            stack.add(input.get(i));
+        }
+        return new ArrayList<>(stack);
+    }
+
+    private static void rotatingCalipers(ArrayList<Point> hull) {
     	int i, j, ni, nj;
     	long max, distance, ix, iy, jx, jy;
 
@@ -49,59 +94,10 @@ public class Main {
                 result[1] = hull.get(j);
             }
         }
-        return result;
-    }
-
-    private static ArrayList<Point> convexHull(ArrayList<Point> input) {
-    	int i;
-        Stack<Point> stack;
-
-        base = new Point(INF, INF);
-        for (i = 0; i < input.size(); i++) {
-            if (input.get(i).x < base.x) {
-                base = input.get(i);
-            } else if (input.get(i).x == base.x) {
-                if (input.get(i).y < base.y) {
-                    base = input.get(i);
-                }
-            }
-        }
-        input.sort(new Comparator<Point>() {
-            @Override
-            public int compare(Point o1, Point o2) {
-                long ccw = ccw(base, o1, o2);
-                
-                if (ccw > 0) {
-                    return -1;
-                } else if (ccw < 0) {
-                    return 1;
-                } else {
-                    return Long.compare(dist(base, o1), dist(base, o2));
-                }
-            }
-        });
-        stack = new Stack<>();
-        stack.add(base);
-        for (i = 1; i < input.size(); i++) {
-            while (stack.size() > 1 && (ccw(stack.get(stack.size() - 2), stack.get(stack.size() - 1), input.get(i)) <= 0)) {
-                stack.pop();
-            }
-            stack.add(input.get(i));
-        }
-        return new ArrayList<>(stack);
-    }
-
-    private static long ccw(Point p1, Point p2, Point p3) {
-        return (p1.x * p2.y + p2.x * p3.y + p3.x * p1.y) - (p1.y * p2.x + p2.y * p3.x + p3.y * p1.x);
-    }
-
-    private static long dist(Point p1, Point p2) {
-        return (p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y);
     }
     
     private static void solution(BufferedReader br, StringBuilder sb, StringTokenizer st) throws IOException {
     	int n, i;
-    	Point[] result;
     	
     	st = new StringTokenizer(br.readLine());
         n = Integer.parseInt(st.nextToken());
@@ -110,7 +106,7 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             points.add(new Point(Long.parseLong(st.nextToken()), Long.parseLong(st.nextToken())));
         }
-        result = rotatingCalipers(convexHull(points));
+        rotatingCalipers(convexHull(points));
         sb.append(result[0].x).append(' ').append(result[0].y).append(' ').append(result[1].x).append(' ').append(result[1].y).append('\n');
     }
 	
