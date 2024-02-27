@@ -19,6 +19,18 @@ class Solution {
 			this.idx = idx;
 		}
 		
+		Customer setTimeA(int time, int a) {
+			this.time = time;
+			this.a = a;
+			return this;
+		}
+		
+		Customer setTimeB(int time, int b) {
+			this.time = time;
+			this.b = b;
+			return this;
+		}
+		
 		@Override
 		public int compareTo(Customer o) {
 			return Integer.compare(this.idx, o.idx);
@@ -63,18 +75,12 @@ class Solution {
 			}
 			for (i = 0; !pq.isEmpty() && i < n; i++) {
 				if (reception[i] == EMPTY) {
-					customer = pq.poll();
-					customer.a = i;
-					customer.time = time + ai[i];
-					reception[i] = customer;
+					reception[i] = pq.poll().setTimeA(time + ai[i], i);
 				}
 			}
 			for (i = 0; !q.isEmpty() && i < m; i++) {
 				if (repair[i] == EMPTY) {
-					customer = q.poll();
-					customer.b = i;
-					customer.time = time + bi[i];
-					repair[i] = customer;
+					repair[i] = q.poll().setTimeB(time + bi[i], i);
 				}
 			}
 		}
