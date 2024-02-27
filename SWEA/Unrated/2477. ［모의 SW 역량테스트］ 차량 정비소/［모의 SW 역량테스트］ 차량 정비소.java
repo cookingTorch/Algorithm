@@ -11,28 +11,21 @@ class Solution {
 	private static final int MAX_TK = 1001;
 	private static final Customer EMPTY = null;
 	
-	private static class Customer implements Comparable<Customer> {
-		int idx, time, a, b;
+	private static class Customer {
+		int idx, time, a;
 		
 		Customer(int idx) {
 			this.idx = idx;
 		}
 		
-		Customer setTimeA(int time, int a) {
-			this.time = time;
+		Customer setA(int a) {
 			this.a = a;
 			return this;
 		}
 		
-		Customer setTimeB(int time, int b) {
+		Customer setTime(int time) {
 			this.time = time;
-			this.b = b;
 			return this;
-		}
-		
-		@Override
-		public int compareTo(Customer o) {
-			return Integer.compare(this.idx, o.idx);
 		}
 	}
 	
@@ -45,8 +38,8 @@ class Solution {
 		int time, cnt, num, idx, ans, i;
 		Customer customer;
 		
-		idx = 1;
 		ans = 0;
+		idx = 1;
 		for (cnt = 0, time = 0; cnt < k; time++) {
 			if (time < MAX_TK) {
 				num = tk[time];
@@ -64,7 +57,7 @@ class Solution {
 			for (i = 0; i < m; i++) {
 				customer = repair[i];
 				if (customer != EMPTY && customer.time == time) {
-					if (customer.a == a && customer.b == b) {
+					if (customer.a == a && i == b) {
 						ans += customer.idx;
 					}
 					repair[i] = EMPTY;
@@ -73,12 +66,12 @@ class Solution {
 			}
 			for (i = 0; !qA.isEmpty() && i < n; i++) {
 				if (reception[i] == EMPTY) {
-					reception[i] = qA.poll().setTimeA(time + ai[i], i);
+					reception[i] = qA.poll().setA(i).setTime(time + ai[i]);
 				}
 			}
 			for (i = 0; !qB.isEmpty() && i < m; i++) {
 				if (repair[i] == EMPTY) {
-					repair[i] = qB.poll().setTimeB(time + bi[i], i);
+					repair[i] = qB.poll().setTime(time + bi[i]);
 				}
 			}
 		}
