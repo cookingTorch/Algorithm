@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 	private static final long INF = Long.MAX_VALUE;
+	private static final Point origin = new Point(0, 0);
 	
 	private static class Point implements Comparable<Point> {
 	    long x, y;
@@ -35,37 +36,27 @@ public class Main {
 	private static ArrayList<Point> points;
 	
 	private static long ccw(Point p1, Point p2, Point p3) {
-        return (p1.x * p2.y + p2.x * p3.y + p3.x * p1.y) - (p1.y * p2.x + p2.y * p3.x + p3.y * p1.x);
-    }
+		return (p2.x - p1.x) * (p3.y - p2.y) - (p3.x - p2.x) * (p2.y - p1.y);
+	}
 
     private static long dist(Point p1, Point p2) {
         return (p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y);
     }
 	
-	private static ArrayList<Point> convexHull(ArrayList<Point> input) {
+	private static ArrayList<Point> convexHull(ArrayList<Point> points) {
     	int size, i;
         Stack<Point> stack;
 
-        base = new Point(INF, INF);
-        for (i = 0; i < input.size(); i++) {
-            if (input.get(i).x < base.x) {
-                base = input.get(i);
-            } else if (input.get(i).x == base.x) {
-                if (input.get(i).y < base.y) {
-                    base = input.get(i);
-                }
-            }
-        }
-        Collections.sort(input);
+        Collections.sort(points);
         stack = new Stack<>();
         stack.add(base);
         size = 1;
         for (i = 1; i < n; i++) {
-            while (size > 1 && (ccw(stack.get(size - 2), stack.get(size - 1), input.get(i)) <= 0)) {
+            while (size > 1 && (ccw(stack.get(size - 2), stack.get(size - 1), points.get(i)) <= 0)) {
                 stack.pop();
                 size--;
             }
-            stack.add(input.get(i));
+            stack.add(points.get(i));
             size++;
         }
         return new ArrayList<>(stack);
@@ -73,7 +64,7 @@ public class Main {
 
     private static void rotatingCalipers(ArrayList<Point> hull) {
     	int i, j, ni, nj;
-    	long max, distance, ix, iy, jx, jy;
+    	long max, distance, val, ix, iy, jx, jy;
 
         max = 0;
         for (i = 0, j = 1; i < hull.size(); i++) {
@@ -84,8 +75,8 @@ public class Main {
                 iy = hull.get(ni).y - hull.get(i).y;
                 jx = hull.get(nj).x - hull.get(j).x;
                 jy = hull.get(nj).y - hull.get(j).y;
-                long ccw = ccw(new Point(0, 0), new Point(ix, iy), new Point(jx, jy));
-                if (ccw > 0) {
+                val = ccw(origin, new Point(ix, iy), new Point(jx, jy));
+                if (val > 0) {
                     j = nj;
                 } else {
                     break;
@@ -102,13 +93,24 @@ public class Main {
     
     private static void solution(BufferedReader br, StringBuilder sb, StringTokenizer st) throws IOException {
     	int i;
+    	long x, y;
+    	Point point;
     	
     	st = new StringTokenizer(br.readLine());
         n = Integer.parseInt(st.nextToken());
         points = new ArrayList<>();
+        base = new Point(INF, INF);
         for (i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
-            points.add(new Point(Long.parseLong(st.nextToken()), Long.parseLong(st.nextToken())));
+            x = Long.parseLong(st.nextToken());
+            y = Long.parseLong(st.nextToken());
+            point = new Point(x, y);
+            points.add(point);
+            if (x < base.x) {
+            	base = point;
+            } else if (x == base.x && y < base.y) {
+            	base = point;
+            }
         }
         rotatingCalipers(convexHull(points));
         sb.append(result[0].x).append(' ').append(result[0].y).append(' ').append(result[1].x).append(' ').append(result[1].y).append('\n');
