@@ -8,7 +8,6 @@ import java.util.StringTokenizer;
 
 public class Main {
 	private static final long INF = Long.MAX_VALUE;
-	private static final Point origin = new Point(0, 0);
 	
 	private static class Point implements Comparable<Point> {
 	    long x, y;
@@ -26,7 +25,7 @@ public class Main {
 			if (val == 0) {
 				return Long.compare(dist(base, this), dist(base, o));
 			}
-			return val > 0 ? -1 : 1;
+			return val > 0 ? 1 : -1;
 		}
 	}
 	
@@ -37,6 +36,10 @@ public class Main {
 	
 	private static long ccw(Point p1, Point p2, Point p3) {
 		return (p2.x - p1.x) * (p3.y - p2.y) - (p3.x - p2.x) * (p2.y - p1.y);
+	}
+	
+	private static long ccw(Point p1, Point p2, Point p3, Point p4) {
+		return (p2.x - p1.x) * (p4.y - p3.y) - (p4.x - p3.x) * (p2.y - p1.y);
 	}
 
     private static long dist(Point p1, Point p2) {
@@ -52,7 +55,7 @@ public class Main {
         stack.add(base);
         size = 1;
         for (i = 1; i < n; i++) {
-            while (size > 1 && (ccw(stack.get(size - 2), stack.get(size - 1), points.get(i)) <= 0)) {
+            while (size > 1 && (ccw(stack.get(size - 2), stack.get(size - 1), points.get(i)) >= 0)) {
                 stack.pop();
                 size--;
             }
@@ -64,19 +67,15 @@ public class Main {
 
     private static void rotatingCalipers(ArrayList<Point> hull) {
     	int i, j, ni, nj;
-    	long max, distance, val, ix, iy, jx, jy;
+    	long max, distance, val;
 
         max = 0;
         for (i = 0, j = 1; i < hull.size(); i++) {
             ni = (i + 1) % hull.size();
             for (;;) {
                 nj = (j + 1) % hull.size();
-                ix = hull.get(ni).x - hull.get(i).x;
-                iy = hull.get(ni).y - hull.get(i).y;
-                jx = hull.get(nj).x - hull.get(j).x;
-                jy = hull.get(nj).y - hull.get(j).y;
-                val = ccw(origin, new Point(ix, iy), new Point(jx, jy));
-                if (val > 0) {
+                val = ccw(hull.get(i), hull.get(ni), hull.get(j), hull.get(nj));
+                if (val < 0) {
                     j = nj;
                 } else {
                     break;
@@ -106,9 +105,9 @@ public class Main {
             y = Long.parseLong(st.nextToken());
             point = new Point(x, y);
             points.add(point);
-            if (x < base.x) {
+            if (y < base.y) {
             	base = point;
-            } else if (x == base.x && y < base.y) {
+            } else if (y == base.y && x < base.x) {
             	base = point;
             }
         }
@@ -127,7 +126,6 @@ public class Main {
         t = Integer.parseInt(br.readLine());
         for (testCase = 0; testCase < t; testCase++) {
         	solution(br, sb, st);
-        	sb.append('\n');
         }
         System.out.print(sb);
     }
