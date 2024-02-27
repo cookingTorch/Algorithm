@@ -29,6 +29,7 @@ public class Main {
 		}
 	}
 	
+	private static int n;
 	private static Point base;
 	private static Point[] result;
 	private static ArrayList<Point> points;
@@ -42,7 +43,7 @@ public class Main {
     }
 	
 	private static ArrayList<Point> convexHull(ArrayList<Point> input) {
-    	int i;
+    	int size, i;
         Stack<Point> stack;
 
         base = new Point(INF, INF);
@@ -58,11 +59,14 @@ public class Main {
         Collections.sort(input);
         stack = new Stack<>();
         stack.add(base);
-        for (i = 1; i < input.size(); i++) {
-            while (stack.size() > 1 && (ccw(stack.get(stack.size() - 2), stack.get(stack.size() - 1), input.get(i)) <= 0)) {
+        size = 1;
+        for (i = 1; i < n; i++) {
+            while (size > 1 && (ccw(stack.get(size - 2), stack.get(size - 1), input.get(i)) <= 0)) {
                 stack.pop();
+                size--;
             }
             stack.add(input.get(i));
+            size++;
         }
         return new ArrayList<>(stack);
     }
@@ -97,7 +101,7 @@ public class Main {
     }
     
     private static void solution(BufferedReader br, StringBuilder sb, StringTokenizer st) throws IOException {
-    	int n, i;
+    	int i;
     	
     	st = new StringTokenizer(br.readLine());
         n = Integer.parseInt(st.nextToken());
