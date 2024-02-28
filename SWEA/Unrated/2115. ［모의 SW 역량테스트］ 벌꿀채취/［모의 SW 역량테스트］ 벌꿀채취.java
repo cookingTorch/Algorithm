@@ -57,7 +57,7 @@ class Solution {
 		max = 0;
 		for (i = 0; i < n; i++) {
 			result = results[i];
-			for (j = 0; j < n; j++) {
+			for (j = 0; j < n - m + 1; j++) {
 				for (k = j + m; k < n - m + 1; k++) {
 					max = Math.max(max, result[j] + result[k]);
 				}
