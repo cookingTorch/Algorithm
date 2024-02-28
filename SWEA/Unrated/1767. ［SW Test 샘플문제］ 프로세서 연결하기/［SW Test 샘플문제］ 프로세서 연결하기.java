@@ -158,9 +158,9 @@ class Solution {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = null;
-		
+		 
 		int t, testCase;
-		
+		 
 		map = new char[SIZE * SIZE];
 		t = Integer.parseInt(br.readLine());
 		for (testCase = 1; testCase <= t; testCase++) {
