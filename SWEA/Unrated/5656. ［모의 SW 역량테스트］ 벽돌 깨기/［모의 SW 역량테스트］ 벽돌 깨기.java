@@ -32,20 +32,33 @@ class Solution {
 		
 		range = map[x][y];
 		map[x][y] = EMPTY;
-		if (range <= 1) {
-			return;
-		}
 		for (i = 1; i < range && x - i >= 0; i++) {
-			explode(map, x - i, y);
+			if (map[x - i][y] > 1) {
+				explode(map, x - i, y);
+			} else {
+				map[x - i][y] = EMPTY;
+			}
 		}
 		for (i = 1; i < range && y - i >= 0; i++) {
-			explode(map, x, y - i);
+			if (map[x][y - i] > 1) {
+				explode(map, x, y - i);
+			} else {
+				map[x][y - i] = EMPTY;
+			}
 		}
 		for (i = 1; i < range && x + i < h; i++) {
-			explode(map, x + i, y);
+			if (map[x + i][y] > 1) {
+				explode(map, x + i, y);
+			} else {
+				map[x + i][y] = EMPTY;
+			}
 		}
 		for (i = 1; i < range && y + i < w; i++) {
-			explode(map, x, y + i);
+			if (map[x][y + i] > 1) {
+				explode(map, x, y + i);
+			} else {
+				map[x][y + i] = EMPTY;
+			}
 		}
 	}
 	
@@ -75,7 +88,11 @@ class Solution {
 		
 		for (i = h - 1;; i--) {
 			if (i == -1 || map[i][y] == EMPTY) {
-				explode(map, ++i, y);
+				if (map[++i][y] > 1) {
+					explode(map, i, y);
+				} else {
+					map[i][y] = EMPTY;
+				}
 				cnt = count(map);
 				break;
 			}
