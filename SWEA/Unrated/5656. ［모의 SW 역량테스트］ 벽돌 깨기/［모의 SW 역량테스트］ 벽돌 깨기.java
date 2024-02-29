@@ -11,7 +11,8 @@ class Solution {
 	private static final int EMPTY = 0;
 	
 	private static int n, w, h, min;
-	private static int[][] matrix;
+	private static int[] marble;
+	private static int[][] matrix, map;
 	private static Deque<Integer> stack;
 	
 	private static int[][] getClone(int[][] map) {
@@ -27,71 +28,68 @@ class Solution {
 		return clone;
 	}
 	
-	private static void explode(int[][] map, int x, int y) {
+	private static void explode(int x, int y) {
 		int range, i;
 		
 		range = map[x][y];
 		map[x][y] = EMPTY;
-		if (range == 1) {
+		if (range <= 1) {
 			return;
 		}
 		for (i = 1; i < range && x - i >= 0; i++) {
-			if (map[x - i][y] != EMPTY) {
-				explode(map, x - i, y);
-			}
+			explode(x - i, y);
 		}
 		for (i = 1; i < range && y - i >= 0; i++) {
-			if (map[x][y - i] != EMPTY) {
-				explode(map, x, y - i);
-			}
+			explode(x, y - i);
 		}
 		for (i = 1; i < range && x + i < h; i++) {
-			if (map[x + i][y] != EMPTY) {
-				explode(map, x + i, y);
-			}
+			explode(x + i, y);
 		}
 		for (i = 1; i < range && y + i < w; i++) {
-			if (map[x][y + i] != EMPTY) {
-				explode(map, x, y + i);
-			}
+			explode(x, y + i);
 		}
 	}
 	
-	private static int count(int[][] map) {
-		int cnt, i, j;
+	private static int count() {
+		int cnt, size, i, j;
 		
 		cnt = 0;
 		for (i = 0; i < w; i++) {
+			size = 0;
 			for (j = 0; j < h; j++) {
 				if (map[j][i] != EMPTY) {
 					stack.push(map[j][i]);
 					map[j][i] = EMPTY;
+					size++;
 				}
 			}
-			for (j = h - 1; !stack.isEmpty(); j--) {
-				map[j][i] = stack.pop();
+			for (j = 1; j <= size; j++) {
+				map[h - j][i] = stack.pop();
 				cnt++;
 			}
 		}
 		return cnt;
 	}
 	
-	private static void drop(int[][] map, int y, int cnt, int depth) {
-		int i;
+	private static void drop(int depth) {
+		int i, j;
 		
-		for (i = 0; i < h; i++) {
-			if (map[i][y] != EMPTY) {
-				explode(map, i, y);
-				cnt = count(map);
-				break;
-			}
-		}
 		if (depth == n) {
-			min = Math.min(min, cnt);
+			map = getClone(matrix);
+			for (i = 0; i < n; i++) {
+				for (j = 0; j < h; j++) {
+					if (map[j][marble[i]] != EMPTY) {
+						explode(j, marble[i]);
+						min = Math.min(min, count());
+						break;
+					}
+				}
+			}
 			return;
 		}
 		for (i = 0; i < w; i++) {
-			drop(getClone(map), i, cnt, depth + 1);
+			marble[depth] = i;
+			drop(depth + 1);
 		}
 	}
 	
@@ -112,9 +110,8 @@ class Solution {
 				}
 			}
 		}
-		for (i = 0; i < w; i++) {
-			drop(getClone(matrix), i, min, 1);
-		}
+		marble = new int[n];
+		drop(0);
 		return min;
 	}
 	
