@@ -73,9 +73,9 @@ class Solution {
 	private static boolean drop(int[][] map, int y, int cnt, int depth) {
 		int i;
 		
-		for (i = 0; i < h; i++) {
-			if (map[i][y] != EMPTY) {
-				explode(map, i, y);
+		for (i = h - 1;; i--) {
+			if (i == -1 || map[i][y] == EMPTY) {
+				explode(map, ++i, y);
 				cnt = count(map);
 				break;
 			}
