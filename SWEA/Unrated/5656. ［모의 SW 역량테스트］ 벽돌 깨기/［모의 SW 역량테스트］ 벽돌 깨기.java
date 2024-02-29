@@ -90,10 +90,11 @@ class Solution {
 			if (i == -1 || map[i][y] == EMPTY) {
 				if (map[++i][y] > 1) {
 					explode(map, i, y);
+					cnt = count(map);
 				} else {
 					map[i][y] = EMPTY;
+					cnt--;
 				}
-				cnt = count(map);
 				break;
 			}
 		}
@@ -116,30 +117,31 @@ class Solution {
 	}
 	
 	private static int solution(BufferedReader br, StringTokenizer st) throws IOException {
-		int i, j;
+		int sum, i, j;
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
 		w = Integer.parseInt(st.nextToken());
 		h = Integer.parseInt(st.nextToken());
-		min = 0;
+		sum = 0;
 		for (i = 0; i < h; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (j = 0; j < w; j++) {
 				matrix[i][j] = Integer.parseInt(st.nextToken());
 				if (matrix[i][j] != EMPTY) {
-					min++;
+					sum++;
 				}
 			}
 		}
-		if (min == 0) {
+		if (sum == 0) {
 			return 0;
 		}
+		min = sum;
 		for (i = 0; i < w; i++) {
 			if (matrix[h - 1][i] == EMPTY) {
 				continue;
 			}
-			if (drop(getClone(matrix), i, min, 1)) {
+			if (drop(getClone(matrix), i, sum, 1)) {
 				break;
 			}
 		}
