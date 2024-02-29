@@ -11,8 +11,7 @@ class Solution {
 	private static final int EMPTY = 0;
 	
 	private static int n, w, h, min;
-	private static int[] marble;
-	private static int[][] matrix, map;
+	private static int[][] matrix;
 	private static Deque<Integer> stack;
 	
 	private static int[][] getClone(int[][] map) {
@@ -28,7 +27,7 @@ class Solution {
 		return clone;
 	}
 	
-	private static void explode(int x, int y) {
+	private static void explode(int[][] map, int x, int y) {
 		int range, i;
 		
 		range = map[x][y];
@@ -37,20 +36,20 @@ class Solution {
 			return;
 		}
 		for (i = 1; i < range && x - i >= 0; i++) {
-			explode(x - i, y);
+			explode(map, x - i, y);
 		}
 		for (i = 1; i < range && y - i >= 0; i++) {
-			explode(x, y - i);
+			explode(map, x, y - i);
 		}
 		for (i = 1; i < range && x + i < h; i++) {
-			explode(x + i, y);
+			explode(map, x + i, y);
 		}
 		for (i = 1; i < range && y + i < w; i++) {
-			explode(x, y + i);
+			explode(map, x, y + i);
 		}
 	}
 	
-	private static int count() {
+	private static int count(int[][] map) {
 		int cnt, size, i, j;
 		
 		cnt = 0;
@@ -71,26 +70,26 @@ class Solution {
 		return cnt;
 	}
 	
-	private static void drop(int depth) {
-		int i, j;
+	private static boolean drop(int[][] map, int y, int cnt, int depth) {
+		int i;
 		
-		if (depth == n) {
-			map = getClone(matrix);
-			for (i = 0; i < n; i++) {
-				for (j = 0; j < h; j++) {
-					if (map[j][marble[i]] != EMPTY) {
-						explode(j, marble[i]);
-						min = Math.min(min, count());
-						break;
-					}
-				}
+		for (i = 0; i < h; i++) {
+			if (map[i][y] != EMPTY) {
+				explode(map, i, y);
+				cnt = count(map);
+				break;
 			}
-			return;
+		}
+		if (depth == n) {
+			min = Math.min(min, cnt);
+			return min == 0;
 		}
 		for (i = 0; i < w; i++) {
-			marble[depth] = i;
-			drop(depth + 1);
+			if (drop(getClone(map), i, cnt, depth + 1)) {
+				return true;
+			}
 		}
+		return false;
 	}
 	
 	private static int solution(BufferedReader br, StringTokenizer st) throws IOException {
@@ -110,8 +109,11 @@ class Solution {
 				}
 			}
 		}
-		marble = new int[n];
-		drop(0);
+		for (i = 0; i < w; i++) {
+			if (drop(getClone(matrix), i, min, 1)) {
+				break;
+			}
+		}
 		return min;
 	}
 	
