@@ -1,103 +1,91 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.StringTokenizer;
 
 public class Main {
-    private static void combi(ArrayList<int[]> empty, ArrayList<int[][]> walls, int[][] wall, int start, int depth) {
-        int i, size;
-        int[][] temp;
-
-        if (depth == 3) {
-            temp = new int[3][2];
-            for (i = 0; i < 3; i++)
-                temp[i] = Arrays.copyOf(wall[i], 2);
-            walls.add(temp);
-            return ;
-        }
-        size = empty.size();
-        for (i = start; i < size; i++) {
-            wall[depth] = empty.get(i);
-            combi(empty, walls, wall, i + 1, depth + 1);
-        }
-    }
-
-    private static void qAdd(Queue<int[]> q, int[] next, int[][] map, int n, int m) {
-        if (next[0] < 0 || next[1] < 0 || next[0] >= n || next[1] >= m || map[next[0]][next[1]] != 0)
-            return ;
-        map[next[0]][next[1]] = 2;
-        q.add(new int[]{next[0], next[1]});
-    }
-
-    private static void infect(int[][] map, int[] virus, int n, int m) {
-        int[] node, next;
-        Queue<int[]> q = new LinkedList<>();
-
-        q.add(virus);
-        while (!q.isEmpty()) {
-            node = q.poll();
-            next = new int[]{node[0] - 1, node[1]};
-            qAdd(q, next, map, n, m);
-            next = new int[]{node[0], node[1] - 1};
-            qAdd(q, next, map, n, m);
-            next = new int[]{node[0] + 1, node[1]};
-            qAdd(q, next, map, n, m);
-            next = new int[]{node[0], node[1] + 1};
-            qAdd(q, next, map, n, m);
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder sb = new StringBuilder();
-        StringTokenizer st;
-
-        int n, m, i, j, k, size, max, safe;
-        int[][] wall = new int[3][2];
-        int[][] map, temp;
-        ArrayList<int[]> virus = new ArrayList<>();
-        ArrayList<int[]> empty = new ArrayList<>();
-        ArrayList<int[][]> walls = new ArrayList<>();
-
-        st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        map = new int[n][m];
-        temp = new int[n][m];
-        for (i = 0; i < n; i++) {
-            st = new StringTokenizer(br.readLine());
-            for (j = 0; j < m; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
-                if (map[i][j] == 2)
-                    virus.add(new int[]{i, j});
-                else if (map[i][j] == 0)
-                    empty.add(new int[]{i, j});
-            }
-        }
-        combi(empty, walls, wall, 0, 0);
-        max = 0;
-        size = walls.size();
-        for (k = 0; k < size; k++) {
-            for (i = 0; i < n; i++) {
-                for (j = 0; j < m; j++)
-                    temp[i][j] = map[i][j];
-            }
-            for (i = 0; i < 3; i++)
-                temp[walls.get(k)[i][0]][walls.get(k)[i][1]] = 1;
-            for (i = 0; i < virus.size(); i++)
-                infect(temp, virus.get(i), n, m);
-            safe = 0;
-            for (i = 0; i < n; i++) {
-                for (j = 0; j < m; j++) {
-                    if (temp[i][j] == 0)
-                        safe++;
-                }
-            }
-            max = Math.max(max, safe);
-        }
-        sb.append(max);
-
-        bw.write(sb.toString());
-        bw.flush();
-        bw.close();
-    }
+	private static final int EMPTY = 0;
+	private static final int WALL = 1;
+	private static final int VIRUS = 2;
+	
+	private static int n, m, cnt, max;
+	private static int[][] map;
+	private static boolean[][] visited;
+	private static LinkedList<int[]> viruses;
+	
+	private static void dfs(int x, int y) {
+		if (x < 0 || x >= n || y < 0 || y >= m || visited[x][y] || map[x][y] == WALL) {
+			return;
+		}
+		visited[x][y] = true;
+		cnt++;
+		dfs(x - 1, y);
+		dfs(x + 1, y);
+		dfs(x, y - 1);
+		dfs(x, y + 1);
+	}
+	
+	private static int infect() {
+		cnt = 0;
+		visited = new boolean[n][m];
+		for (int[] virus : viruses) {
+			if (!visited[virus[0]][virus[1]]) {
+				dfs(virus[0], virus[1]);
+			}
+		}
+		return cnt;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		
+		int sum, size, i, j, k;
+		
+		st = new StringTokenizer(br.readLine());
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		sum = 0;
+		map = new int[n][m];
+		viruses = new LinkedList<>();
+		for (i = 0; i < n; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (j = 0; j < m; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+				if (map[i][j] == EMPTY) {
+					sum++;
+				} else if (map[i][j] == VIRUS) {
+					sum++;
+					viruses.add(new int[] {i, j});
+				}
+			}
+		}
+		size = n * m;
+		max = 0;
+		sum -= 3;
+		for (i = 0; i < size; i++) {
+			if (map[i / m][i % m] != EMPTY) {
+				continue;
+			}
+			for (j = i + 1; j < size; j++) {
+				if (map[j / m][j % m] != EMPTY) {
+					continue;
+				}
+				for (k = j + 1; k < size; k++) {
+					if (map[k / m][k % m] != EMPTY) {
+						continue;
+					}
+					map[i / m][i % m] = WALL;
+					map[j / m][j % m] = WALL;
+					map[k / m][k % m] = WALL;
+					max = Math.max(max, sum - infect());
+					map[i / m][i % m] = EMPTY;
+					map[j / m][j % m] = EMPTY;
+					map[k / m][k % m] = EMPTY;
+				}
+			}
+		}
+		System.out.print(max);
+	}
 }
