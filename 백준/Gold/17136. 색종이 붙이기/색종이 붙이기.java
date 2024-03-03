@@ -58,7 +58,7 @@ public class Main {
 			if (papers[size] > 0 && check(x, y, size)) {
 				attach(x, y, size, 0);
 				papers[size]--;
-				dfs(x, y + 1, depth + 1);
+				dfs(x, y + size, depth + 1);
 				papers[size]++;
 				attach(x, y, size, 1);
 			}
