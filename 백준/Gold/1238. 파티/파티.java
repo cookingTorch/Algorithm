@@ -24,7 +24,7 @@ public class Main {
 	private static PriorityQueue<Integer> pq;
 	
 	private static void dijkstra(int[] distance, ArrayList<LinkedList<Edge>> adj) {
-		int curr;
+		int curr, next;
 		
 		Arrays.fill(distance, INF);
 		distance[x] = 0;
@@ -38,9 +38,10 @@ public class Main {
 		while (!pq.isEmpty()) {
 			curr = pq.poll();
 			for (Edge edge : adj.get(curr)) {
-				if (distance[curr] + edge.weight < distance[edge.to]) {
-					distance[edge.to] = distance[curr] + edge.weight;
-					pq.add(edge.to);
+				next = edge.to;
+				if (distance[curr] + edge.weight < distance[next]) {
+					distance[next] = distance[curr] + edge.weight;
+					pq.add(next);
 				}
 			}
 		}
