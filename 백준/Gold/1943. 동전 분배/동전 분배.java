@@ -30,17 +30,15 @@ public class Main {
 		sum /= 2;
 		size = coins.size() - 1;
 		dp = new int[sum + 1];
+		dp[0] = 1;
 		for (i = 1; i <= size; i++) {
 			for (j = sum; j >= 1; j--) {
 				if (j >= coins.get(i)) {
-					dp[j] = Math.max(dp[j], dp[j - coins.get(i)] + coins.get(i));
+					dp[j] |= dp[j - coins.get(i)];
 				}
 			}
 		}
-		if (dp[sum] == sum) {
-			return 1;
-		}
-		return 0;
+		return dp[sum];
 	}
 	
 	public static void main(String[] args) throws IOException {
