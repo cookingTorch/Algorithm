@@ -4,11 +4,11 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final int MAX_SIZE = 1000;
+	private static final int MAX_SIZE = 500;
 	
-	private static int solution(BufferedReader br, StringTokenizer st, int[] coins) throws IOException {
+	private static byte solution(BufferedReader br, StringTokenizer st, int[] coins) throws IOException {
 		int n, sum, coin, num, size, i, j;
-		int[] dp;
+		byte[] dp;
 		
 		n = Integer.parseInt(br.readLine());
 		sum = 0;
@@ -27,7 +27,7 @@ public class Main {
 			return 0;
 		}
 		sum >>= 1;
-		dp = new int[sum + 1];
+		dp = new byte[sum + 1];
 		dp[0] = 1;
 		for (i = 1; i <= size; i++) {
 			for (j = sum; j >= 1; j--) {
