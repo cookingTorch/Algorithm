@@ -1,7 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.PriorityQueue;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -26,19 +27,18 @@ public class Main {
 		StringTokenizer st;
 		
 		int n, end, i;
-		Task task;
-		PriorityQueue<Task> pq;
+		ArrayList<Task> tasks;
 		
 		n = Integer.parseInt(br.readLine());
-		pq = new PriorityQueue<>();
+		tasks = new ArrayList<>();
 		for (i = 0; i < n; i++) {
 			st = new StringTokenizer(br.readLine());
-			pq.add(new Task(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
+			tasks.add(new Task(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
 		}
+		Collections.sort(tasks);
 		end = INF;
 		for (i = 0; i < n; i++) {
-			task = pq.poll();
-			end = Math.min(end, task.t) - task.d;
+			end = Math.min(end, tasks.get(i).t) - tasks.get(i).d;
 		}
 		System.out.print(end);
 	}
