@@ -38,15 +38,13 @@ public class Main {
 			pq.add(new Town(x, a));
 			sum += a;
 		}
+		town = null;
 		sum = (sum + 1) / 2;
 		prefix = 0;
-		for (i = 0; i < n; i++) {
+		while (prefix < sum) {
 			town = pq.poll();
 			prefix += town.a;
-			if (prefix >= sum) {
-				System.out.print(town.x);
-				return;
-			}
 		}
+		System.out.print(town.x);
 	}
 }
