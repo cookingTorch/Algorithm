@@ -7,9 +7,9 @@ public class Main {
 	private static final int T = 3;
 	private static final int MAX_SIZE = 500;
 	
-	private static byte solution(BufferedReader br, StringTokenizer st, int[] coins) throws IOException {
+	private static int solution(BufferedReader br, StringTokenizer st, int[] coins) throws IOException {
 		int n, sum, coin, num, size, weight, i, j;
-		byte[] dp;
+		boolean[] dp;
 		
 		n = Integer.parseInt(br.readLine());
 		sum = 0;
@@ -28,15 +28,17 @@ public class Main {
 			return 0;
 		}
 		sum >>= 1;
-		dp = new byte[sum + 1];
-		dp[0] = 1;
+		dp = new boolean[sum + 1];
+		dp[0] = true;
 		for (i = 1; i <= size; i++) {
 			weight = coins[i];
 			for (j = sum; j >= weight; j--) {
-				dp[j] |= dp[j - weight];
+				if (!dp[j]) {
+					dp[j] = dp[j - weight];
+				}
 			}
 		}
-		return dp[sum];
+		return dp[sum] ? 1 : 0;
 	}
 	
 	public static void main(String[] args) throws IOException {
