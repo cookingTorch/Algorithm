@@ -20,7 +20,10 @@ public class Main {
 				ans++;
 			}
 			return;
+		} else if (x == 1 && y == c) {
+			return;
 		}
+		
 		for (i = 0; i < 4; i++) {
 			nx = x + dx[i];
 			ny = y + dy[i];
