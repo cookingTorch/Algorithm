@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 public class Main {
 	private static final int INF = Integer.MAX_VALUE;
 	
-	private static class Edge {
+	private static final class Edge {
 		int to, weight;
 		
 		Edge(int to, int weight) {
@@ -18,12 +18,8 @@ public class Main {
 		}
 	}
 	
-	private static int n, x;
-	private static boolean[] inQueue;
-	private static Queue<Integer> q;
-	
-	private static void spfa(int[] distance, ArrayList<ArrayList<Edge>> adj) {
-		int curr, next, i;
+	private static void spfa(int n, int x, int[] distance, boolean[] inQueue, Queue<Integer> q, ArrayList<ArrayList<Edge>> adj) {
+		int curr, next, dist, i;
 		
 		for (i = 1; i <= n; i++) {
 			distance[i] = INF;
@@ -35,8 +31,8 @@ public class Main {
 			inQueue[curr] = false;
 			for (Edge edge : adj.get(curr)) {
 				next = edge.to;
-				if (distance[curr] + edge.weight < distance[next]) {
-					distance[next] = distance[curr] + edge.weight;
+				if ((dist = distance[curr] + edge.weight) < distance[next]) {
+					distance[next] = dist;
 					if (!inQueue[next]) {
 						q.add(next);
 						inQueue[next] = true;
@@ -50,16 +46,18 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		
-		int m, a, b, weight, ans, i;
+		int n, m, x, a, b, weight, ans, i;
 		int[] distanceIn, distanceOut;
+		boolean[] inQueue;
+		Queue<Integer> q;
 		ArrayList<ArrayList<Edge>> adjIn, adjOut;
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
 		m = Integer.parseInt(st.nextToken());
 		x = Integer.parseInt(st.nextToken());
-		adjIn = new ArrayList<>();
-		adjOut = new ArrayList<>();
+		adjIn = new ArrayList<>(n + 1);
+		adjOut = new ArrayList<>(n + 1);
 		for (i = 0; i <= n; i++) {
 			adjIn.add(new ArrayList<>());
 			adjOut.add(new ArrayList<>());
@@ -76,8 +74,8 @@ public class Main {
 		distanceOut = new int[n + 1];
 		inQueue = new boolean[n + 1];
 		q = new ArrayDeque<>();
-		spfa(distanceIn, adjIn);
-		spfa(distanceOut, adjOut);
+		spfa(n, x, distanceIn, inQueue, q, adjIn);
+		spfa(n, x, distanceOut, inQueue, q, adjOut);
 		ans = 0;
 		for (i = 1; i <= n; i++) {
 			if (distanceIn[i] + distanceOut[i] > ans) {
