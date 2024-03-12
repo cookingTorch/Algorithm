@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -23,7 +22,7 @@ public class Main {
 	private static boolean[] inQueue;
 	private static Queue<Integer> q;
 	
-	private static void spfa(int[] distance, ArrayList<LinkedList<Edge>> adj) {
+	private static void spfa(int[] distance, ArrayList<ArrayList<Edge>> adj) {
 		int curr, next, i;
 		
 		for (i = 1; i <= n; i++) {
@@ -53,19 +52,17 @@ public class Main {
 		
 		int m, a, b, weight, ans, i;
 		int[] distanceIn, distanceOut;
-		ArrayList<LinkedList<Edge>> adjIn, adjOut;
+		ArrayList<ArrayList<Edge>> adjIn, adjOut;
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
 		m = Integer.parseInt(st.nextToken());
 		x = Integer.parseInt(st.nextToken());
 		adjIn = new ArrayList<>();
-		for (i = 0; i <= n; i++) {
-			adjIn.add(new LinkedList<>());
-		}
 		adjOut = new ArrayList<>();
 		for (i = 0; i <= n; i++) {
-			adjOut.add(new LinkedList<>());
+			adjIn.add(new ArrayList<>());
+			adjOut.add(new ArrayList<>());
 		}
 		for (i = 0; i < m; i++) {
 			st = new StringTokenizer(br.readLine());
