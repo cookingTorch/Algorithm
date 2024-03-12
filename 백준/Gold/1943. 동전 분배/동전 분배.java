@@ -32,13 +32,16 @@ public class Main {
 		dp[0] = true;
 		for (i = 1; i <= size; i++) {
 			weight = coins[i];
-			for (j = sum; j >= weight; j--) {
+			if (!dp[sum] && sum >= weight && (dp[sum] = dp[sum - weight])) {
+				return 1;
+			}
+			for (j = sum - 1; j >= weight; j--) {
 				if (!dp[j]) {
 					dp[j] = dp[j - weight];
 				}
 			}
 		}
-		return dp[sum] ? 1 : 0;
+		return 0;
 	}
 	
 	public static void main(String[] args) throws IOException {
