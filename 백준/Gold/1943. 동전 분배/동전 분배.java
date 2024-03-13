@@ -35,14 +35,14 @@ public class Main {
 		for (i = 1; i < size; i++) {
 			coin = coins[i];
 			num = nums[i];
-			for (j = coin; j < sum; j++) {
+			for (j = coin; j <= sum; j++) {
 				if (dp[j - coin] < num && dp[j] == INF) {
 					dp[j] = dp[j - coin] + 1;
 					dp[j - coin] = 0;
 					prev = j;
 				}
 			}
-			if (sum >= coin && dp[sum - coin] < num) {
+			if (dp[sum] != INF) {
 				return 1;
 			}
 			dp[prev] = 0;
