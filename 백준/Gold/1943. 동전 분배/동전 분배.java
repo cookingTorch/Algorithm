@@ -1,17 +1,16 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
 	private static final int INF = Integer.MAX_VALUE;
 	private static final int T = 3;
 	private static final int MAX_SIZE = 101;
+	private static final int MAX_SUM = 50001;
 	
-	private static int solution(BufferedReader br, StringTokenizer st, int[] coins, int[] nums) throws IOException {
+	private static int solution(BufferedReader br, StringTokenizer st, int[] coins, int[] nums, int[] dp) throws IOException {
 		int n, sum, coin, num, prev, i, j;
-		int[] dp;
 		
 		n = Integer.parseInt(br.readLine());
 		sum = 0;
@@ -27,9 +26,9 @@ public class Main {
 			return 0;
 		}
 		sum >>= 1;
-		dp = new int[sum + 1];
-		Arrays.fill(dp, INF);
-		dp[0] = 0;
+		for (i = 1; i <= sum; i++) {
+			dp[i] = INF;
+		}
 		prev = 0;
 		for (i = 1; i <= n; i++) {
 			coin = coins[i];
@@ -55,12 +54,13 @@ public class Main {
 		StringTokenizer st = null;
 		
 		int testCase;
-		int[] coins, nums;
+		int[] coins, nums, dp;
 
 		coins = new int[MAX_SIZE];
 		nums = new int[MAX_SIZE];
+		dp = new int[MAX_SUM];
 		for (testCase = 0; testCase < T; testCase++) {
-			sb.append(solution(br, st, coins, nums)).append('\n');
+			sb.append(solution(br, st, coins, nums, dp)).append('\n');
 		}
 		System.out.print(sb);
 	}
