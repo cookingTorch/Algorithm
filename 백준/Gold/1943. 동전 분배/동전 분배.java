@@ -7,22 +7,21 @@ import java.util.StringTokenizer;
 public class Main {
 	private static final int INF = Integer.MAX_VALUE;
 	private static final int T = 3;
-	private static final int MAX_SIZE = 500;
+	private static final int MAX_SIZE = 101;
 	
 	private static int solution(BufferedReader br, StringTokenizer st, int[] coins, int[] nums) throws IOException {
-		int n, sum, coin, num, size, prev, i, j;
+		int n, sum, coin, num, prev, i, j;
 		int[] dp;
 		
 		n = Integer.parseInt(br.readLine());
 		sum = 0;
-		size = 1;
-		for (i = 0; i < n; i++) {
+		for (i = 1; i <= n; i++) {
 			st = new StringTokenizer(br.readLine());
 			coin = Integer.parseInt(st.nextToken());
 			num = Integer.parseInt(st.nextToken());
 			sum += coin * num;
-			coins[size] = coin;
-			nums[size++] = num;
+			coins[i] = coin;
+			nums[i] = num;
 		}
 		if ((sum & 1) == 1) {
 			return 0;
@@ -32,7 +31,7 @@ public class Main {
 		Arrays.fill(dp, INF);
 		dp[0] = 0;
 		prev = 0;
-		for (i = 1; i < size; i++) {
+		for (i = 1; i <= n; i++) {
 			coin = coins[i];
 			num = nums[i];
 			for (j = coin; j <= sum; j++) {
