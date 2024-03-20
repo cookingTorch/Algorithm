@@ -1,7 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -12,7 +12,7 @@ public class Main {
 	private static int n, m, size, max, cnt, ans;
 	private static int[] map;
 	private static boolean[] visited;
-	private static LinkedList<Integer> viruses;
+	private static ArrayList<Integer> viruses;
 	
 	private static void dfs(int pos) {
 		if (visited[pos] || map[pos] == WALL) {
@@ -48,7 +48,7 @@ public class Main {
 		max = (n + 2) * (m + 2);
 		sum = 0;
 		map = new int[max];
-		viruses = new LinkedList<>();
+		viruses = new ArrayList<>();
 		for (i = 1; i <= n; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (j = 1; j <= m; j++) {
@@ -68,23 +68,23 @@ public class Main {
 			if (map[i] != EMPTY) {
 				continue;
 			}
+			map[i] = WALL;
 			for (j = i + 1; j < range; j++) {
 				if (map[j] != EMPTY) {
 					continue;
 				}
+				map[j] = WALL;
 				for (k = j + 1; k < range; k++) {
 					if (map[k] != EMPTY) {
 						continue;
 					}
-					map[i] = WALL;
-					map[j] = WALL;
 					map[k] = WALL;
 					ans = Math.max(ans, sum - infect());
-					map[i] = EMPTY;
-					map[j] = EMPTY;
 					map[k] = EMPTY;
 				}
+				map[j] = EMPTY;
 			}
+			map[i] = EMPTY;
 		}
 		System.out.print(ans);
 	}
