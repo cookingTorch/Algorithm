@@ -16,13 +16,12 @@ public class Main {
 		int val;
 		
 		if (visited[node]) {
-			cnt++;
 			return node;
 		}
 		visited[node] = true;
 		val = dfs(selection[node]);
 		if (val == node) {
-			ans -= cnt;
+			ans -= ++cnt;
 		}
 		cnt++;
 		return val;
