@@ -5,34 +5,32 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final int EMPTY = 0;
-	private static final int WALL = 1;
-	private static final int VIRUS = 2;
+	private static final int EMPTY = -1;
+	private static final int WALL = 0;
+	private static final int VIRUS = 1;
 	
-	private static int n, m, cnt, max;
-	private static int[][] map;
-	private static boolean[][] visited;
-	private static LinkedList<int[]> viruses;
+	private static int n, m, size, max, cnt, ans;
+	private static int[] map;
+	private static boolean[] visited;
+	private static LinkedList<Integer> viruses;
 	
-	private static void dfs(int x, int y) {
-		if (x < 0 || x >= n || y < 0 || y >= m || visited[x][y] || map[x][y] == WALL) {
+	private static void dfs(int pos) {
+		if (visited[pos] || map[pos] == WALL) {
 			return;
 		}
-		visited[x][y] = true;
+		visited[pos] = true;
 		cnt++;
-		dfs(x - 1, y);
-		dfs(x + 1, y);
-		dfs(x, y - 1);
-		dfs(x, y + 1);
+		dfs(pos - size);
+		dfs(pos + size);
+		dfs(pos - 1);
+		dfs(pos + 1);
 	}
 	
 	private static int infect() {
 		cnt = 0;
-		visited = new boolean[n][m];
-		for (int[] virus : viruses) {
-			if (!visited[virus[0]][virus[1]]) {
-				dfs(virus[0], virus[1]);
-			}
+		visited = new boolean[max];
+		for (int virus : viruses) {
+			dfs(virus);
 		}
 		return cnt;
 	}
@@ -41,51 +39,53 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		
-		int sum, size, i, j, k;
+		int sum, pos, range, i, j, k;
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
 		m = Integer.parseInt(st.nextToken());
+		size = m + 2;
+		max = (n + 2) * (m + 2);
 		sum = 0;
-		map = new int[n][m];
+		map = new int[max];
 		viruses = new LinkedList<>();
-		for (i = 0; i < n; i++) {
+		for (i = 1; i <= n; i++) {
 			st = new StringTokenizer(br.readLine());
-			for (j = 0; j < m; j++) {
-				map[i][j] = Integer.parseInt(st.nextToken());
-				if (map[i][j] == EMPTY) {
+			for (j = 1; j <= m; j++) {
+				map[pos = i * size + j] = Integer.parseInt(st.nextToken()) - 1;
+				if (map[pos] == EMPTY) {
 					sum++;
-				} else if (map[i][j] == VIRUS) {
+				} else if (map[pos] == VIRUS) {
 					sum++;
-					viruses.add(new int[] {i, j});
+					viruses.add(pos);
 				}
 			}
 		}
-		size = n * m;
-		max = 0;
+		range = max - size - 1;
+		ans = 0;
 		sum -= 3;
-		for (i = 0; i < size; i++) {
-			if (map[i / m][i % m] != EMPTY) {
+		for (i = size + 1; i < range; i++) {
+			if (map[i] != EMPTY) {
 				continue;
 			}
-			for (j = i + 1; j < size; j++) {
-				if (map[j / m][j % m] != EMPTY) {
+			for (j = i + 1; j < range; j++) {
+				if (map[j] != EMPTY) {
 					continue;
 				}
-				for (k = j + 1; k < size; k++) {
-					if (map[k / m][k % m] != EMPTY) {
+				for (k = j + 1; k < range; k++) {
+					if (map[k] != EMPTY) {
 						continue;
 					}
-					map[i / m][i % m] = WALL;
-					map[j / m][j % m] = WALL;
-					map[k / m][k % m] = WALL;
-					max = Math.max(max, sum - infect());
-					map[i / m][i % m] = EMPTY;
-					map[j / m][j % m] = EMPTY;
-					map[k / m][k % m] = EMPTY;
+					map[i] = WALL;
+					map[j] = WALL;
+					map[k] = WALL;
+					ans = Math.max(ans, sum - infect());
+					map[i] = EMPTY;
+					map[j] = EMPTY;
+					map[k] = EMPTY;
 				}
 			}
 		}
-		System.out.print(max);
+		System.out.print(ans);
 	}
 }
