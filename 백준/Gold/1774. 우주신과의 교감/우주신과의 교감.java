@@ -56,8 +56,9 @@ public class Main {
 		StringTokenizer st;
 		
 		int n, m, u, v, size, i;
-		long[][] gods;
 		double ans;
+		long[][] gods;
+		boolean[][] connected;
 		Edge edge;
 		PriorityQueue<Edge> pq;
 		
@@ -72,16 +73,22 @@ public class Main {
 		}
 		size = n - 1;
 		root = new int[n + 1];
+		connected = new boolean[n + 1][n + 1];
 		for (i = 0; i < m; i++) {
 			st = new StringTokenizer(br.readLine());
-			if (union(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()))) {
+			u = Integer.parseInt(st.nextToken());
+			v = Integer.parseInt(st.nextToken());
+			if (union(u, v)) {
+				connected[Math.min(u, v)][Math.max(u, v)] = true;
 				size--;
 			}
 		}
 		pq = new PriorityQueue<>();
 		for (u = 1; u <= n; u++) {
 			for (v = u + 1; v <= n; v++) {
-				pq.add(new Edge(u, v, dist(gods[u], gods[v])));
+				if (!connected[u][v]) {
+					pq.add(new Edge(u, v, dist(gods[u], gods[v])));
+				}
 			}
 		}
 		ans = 0;
