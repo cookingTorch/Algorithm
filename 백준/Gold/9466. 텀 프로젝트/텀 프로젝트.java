@@ -2,40 +2,30 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.StringTokenizer;
 
 public class Main {
 	private static final int MAX_N = 100001;
 	private static final boolean[] VISITED = new boolean[MAX_N];
 	
-	private static int cnt;
+	private static int cnt, ans;
 	private static int[] selection;
-	private static boolean flag;
 	private static boolean[] visited;
-	private static HashSet<Integer> set;
 	
 	private static int dfs(int node) {
-		int start;
+		int val;
 		
 		if (visited[node]) {
-			return 0;
-		}
-		if (set.contains(node)) {
-			flag = true;
+			cnt++;
 			return node;
 		}
-		set.add(node);
-		start = dfs(selection[node]);
-		if (start == node) {
-			cnt--;
-			visited[node] = true;
-			flag = false;
-		} else if (flag) {
-			cnt--;
-		}
 		visited[node] = true;
-		return start;
+		val = dfs(selection[node]);
+		if (val == node) {
+			ans -= cnt;
+		}
+		cnt++;
+		return val;
 	}
 	
 	private static int solution(BufferedReader br, StringTokenizer st) throws IOException {
@@ -47,15 +37,12 @@ public class Main {
 			selection[i] = Integer.parseInt(st.nextToken());
 		}
 		visited = Arrays.copyOf(VISITED, n + 1);
-		cnt = n;
+		ans = n;
 		for (i = 1; i <= n; i++) {
-			if (!visited[i]) {
-				set = new HashSet<>();
-				flag = false;
-				dfs(i);
-			}
+			cnt = 0;
+			dfs(i);
 		}
-		return cnt;
+		return ans;
 	}
 	
 	public static void main(String[] args) throws IOException {
