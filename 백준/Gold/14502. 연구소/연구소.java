@@ -11,7 +11,7 @@ public class Main {
 	
 	private static int n, m, size, max, cnt, ans;
 	private static int[] map;
-	private static boolean[] visited;
+	private static boolean[] copy, visited;
 	private static ArrayList<Integer> viruses;
 	
 	private static void dfs(int pos) {
@@ -28,7 +28,7 @@ public class Main {
 	
 	private static int infect() {
 		cnt = 0;
-		visited = new boolean[max];
+		System.arraycopy(copy, 0, visited, 0, max);
 		for (int virus : viruses) {
 			dfs(virus);
 		}
@@ -62,6 +62,8 @@ public class Main {
 			}
 		}
 		range = max - size - 1;
+		copy = new boolean[max];
+		visited = new boolean[max];
 		ans = 0;
 		sum -= 3;
 		for (i = size + 1; i < range; i++) {
