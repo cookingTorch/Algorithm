@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 public class Main {
 	private static int[] arr;
 	
-	public static int binarySearch(int num, int right) {
+	public static int lowerBound(int num, int right) {
 		int left, mid;
 		
 		left = 0;
@@ -30,7 +30,7 @@ public class Main {
 		size = 0;
 		for (i = 0; i < n; i++) {
 			num = Integer.parseInt(br.readLine());
-			idx = binarySearch(num, size);
+			idx = lowerBound(num, size);
 			arr[idx] = num;
 			if (idx == size) {
 				size++;
