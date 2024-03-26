@@ -24,11 +24,8 @@ public class Main {
 		}
 		dp = new int[k + 1];
 		for (i = 1; i <= n; i++) {
-			for (j = k; j >= 1; j--) {
-				if (j < weight[i]) {
-				} else {
-					dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i]);
-				}
+			for (j = k; j >= weight[i]; j--) {
+				dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i]);
 			}
 		}
 		System.out.print(dp[k]);
