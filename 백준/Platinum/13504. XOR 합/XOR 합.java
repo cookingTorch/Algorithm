@@ -1,112 +1,72 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
+	private static final int BIT = 1 << 30;
+	
 	private static class Node {
-		int cnt;
-		Node zero, one;
+		Node[] child;
 		
 		Node() {
-			this.zero = null;
-			this.one = null;
-			this.cnt = 0;
-		}
-	}
-	
-	private static void add(Node node, int num, int bit) {
-		node.cnt++;
-		
-		if (bit == 0) {
-			return;
+			child = new Node[2];
 		}
 		
-		if ((num & bit) == 0) {
-			if (node.zero == null) {
-				node.zero = new Node();
+		void add(int num, int bit) {
+			int curr;
+			
+			if (bit == 0) {
+				return;
 			}
-			add(node.zero, num & (bit - 1), bit >> 1);
-		} else {
-			if (node.one == null) {
-				node.one = new Node();
+			curr = (num & bit) == 0 ? 0 : 1;
+			if (child[curr] == null) {
+				child[curr] = new Node();
 			}
-			add(node.one, num & (bit - 1), bit >> 1);
-		}
-	}
-	
-	private static int sum(Node node, int num, int bit, int ans) {
-		if (bit == 0) {
-			return ans;
+			child[curr].add(num & (bit - 1), bit >> 1);
 		}
 		
-		if ((num & bit) == 0) {
-			if (node.one != null && node.one.cnt > 0) {
+		int sum(int num, int bit, int ans) {
+			int curr, other;
+			
+			if (bit == 0) {
+				return ans;
+			}
+			curr = (num & bit) == 0 ? 0 : 1;
+			other = curr ^ 1;
+			if (child[other] != null) {
 				ans = (ans << 1) + 1;
-				return sum(node.one, num & (bit - 1), bit >> 1, ans);
+				return child[other].sum(num & (bit - 1), bit >> 1, ans);
 			} else {
 				ans = (ans << 1) + 0;
-				return sum(node.zero, num & (bit - 1), bit >> 1, ans);
+				return child[curr].sum(num & (bit - 1), bit >> 1, ans);
 			}
-		} else {
-			if (node.zero != null && node.zero.cnt > 0) {
-				ans = (ans << 1) + 1;
-				return sum(node.zero, num & (bit - 1), bit >> 1, ans);
-			} else {
-				ans = (ans << 1) + 0;
-				return sum(node.one, num & (bit - 1), bit >> 1, ans);
-			}
-		}
-	}
-	
-	private static void reset(Node node, int bit) {
-		node.cnt = 0;
-		
-		if (bit == 0) {
-			return;
-		}
-		
-		if (node.zero != null) {
-			reset(node.zero, bit >> 1);
-		}
-		if (node.one != null) {
-			reset(node.one, bit >> 1);
 		}
 	}
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 		
-		int t, testCase, n, a, bit, prefix, max, i;
-		Node root;
-		
-		bit = 1 << 30;
-		root = new Node();
+		int t, testCase, n, prefix, max, i;
+		Node trie;
 		
 		t = Integer.parseInt(br.readLine());
 		for (testCase = 0; testCase < t; testCase++) {
+			trie = new Node();
 			n = Integer.parseInt(br.readLine());
 			prefix = 0;
 			max = 0;
-			add(root, prefix, bit);
+			trie.add(prefix, BIT);
 			st = new StringTokenizer(br.readLine());
 			for (i = 0; i < n; i++) {
-				a = Integer.parseInt(st.nextToken());
-				prefix ^= a;
-				max = Math.max(max, sum(root, prefix, bit, 0));
-				add(root, prefix, bit);
+				prefix ^= Integer.parseInt(st.nextToken());
+				max = Math.max(max, trie.sum(prefix, BIT, 0));
+				trie.add(prefix, BIT);
 			}
 			sb.append(max).append('\n');
-			reset(root, bit);
 		}
-		
-		bw.write(sb.toString());
-		bw.flush();
-		bw.close();
+		System.out.print(sb);
 	}
 }
