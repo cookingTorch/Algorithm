@@ -34,10 +34,6 @@ public class Main {
         }
         return multiply(power(matrix, n - 1), matrix);
     }
-    
-    private static long solution(BufferedReader br) throws IOException {
-    	return power(FIRST, Long.parseLong(br.readLine()))[2][1];
-    }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -47,7 +43,7 @@ public class Main {
         
         t = Integer.parseInt(br.readLine());
         for (testCase = 0; testCase < t; testCase++) {
-        	sb.append(solution(br)).append('\n');
+        	sb.append(power(FIRST, Long.parseLong(br.readLine()))[2][1]).append('\n');
         }
         System.out.print(sb);
     }
