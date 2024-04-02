@@ -29,8 +29,7 @@ public class Main {
 	private static Item[] items;
 	
 	private static boolean promising(int depth, int weight, int profit) {
-		int totalWeight, i;
-		double bound;
+		int totalWeight, bound, i;
 		
 		if (weight >= m) {
 			return false;
