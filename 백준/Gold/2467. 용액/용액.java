@@ -1,0 +1,48 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class Main {
+	private static final int INF = Integer.MAX_VALUE;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
+		
+		int n, left, right, sum, min, numL, numR, i;
+		int[] arr;
+		
+		n = Integer.parseInt(br.readLine());
+		arr = new int[n];
+		st = new StringTokenizer(br.readLine());
+		for (i = 0; i < n; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
+		Arrays.sort(arr);
+		numL = 0;
+		numR = 0;
+		left = 0;
+		right = n - 1;
+		min = INF;
+		while (left < right) {
+			sum = arr[left] + arr[right];
+			if (Math.abs(sum) < min) {
+				min = Math.abs(sum);
+				numL = arr[left];
+				numR = arr[right];
+			}
+			if (sum < 0) {
+				left++;
+			} else if (sum > 0) {
+				right--;
+			} else {
+				break;
+			}
+		}
+		sb.append(numL).append(' ').append(numR);
+		System.out.print(sb);
+	}
+}
