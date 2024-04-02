@@ -1,40 +1,49 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-    private static long dp(long[] memo, int n) {
-        if (memo[n] == 0)
-            memo[n] = dp(memo, n - 1) + dp(memo, n - 5);
-        return memo[n];
+	private static final long[][] FIRST = {{0L, 1L, 0L}, {0L, 0L, 1L}, {1L, 1L, 0L}};
+	
+    private static long[][] multiply(long[][] a, long[][] b) {
+        long[][] c;
+
+        c = new long[3][3];
+        c[0][0] = ((a[0][0] * b[0][0]) + (a[0][1] * b[1][0]) + (a[0][2] * b[2][0]));
+        c[0][1] = ((a[0][0] * b[0][1]) + (a[0][1] * b[1][1]) + (a[0][2] * b[2][1]));
+        c[0][2] = ((a[0][0] * b[0][2]) + (a[0][1] * b[1][2]) + (a[0][2] * b[2][2]));
+        c[1][0] = ((a[1][0] * b[0][0]) + (a[1][1] * b[1][0]) + (a[1][2] * b[2][0]));
+        c[1][1] = ((a[1][0] * b[0][1]) + (a[1][1] * b[1][1]) + (a[1][2] * b[2][1]));
+        c[1][2] = ((a[1][0] * b[0][2]) + (a[1][1] * b[1][2]) + (a[1][2] * b[2][2]));
+        c[2][0] = ((a[2][0] * b[0][0]) + (a[2][1] * b[1][0]) + (a[2][2] * b[2][0]));
+        c[2][1] = ((a[2][0] * b[0][1]) + (a[2][1] * b[1][1]) + (a[2][2] * b[2][1]));
+        c[2][2] = ((a[2][0] * b[0][2]) + (a[2][1] * b[1][2]) + (a[2][2] * b[2][2]));
+        return c;
+    }
+
+    private static long[][] power(long[][] matrix, long n) {
+    	long[][] sqrt;
+    	
+        if (n == 1) {
+        	return matrix;
+        }
+        if (n % 2 == 0) {
+            sqrt = power(matrix, n / 2);
+            return multiply(sqrt, sqrt);
+        }
+        return multiply(power(matrix, n - 1), matrix);
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringBuilder sb = new StringBuilder();
-
-        int testCase, t, n;
-        long[] memo;
-
-        testCase = Integer.parseInt(br.readLine());
-        for (t = 0; t < testCase; t++) {
-            if (t > 0)
-                sb.append("\n");
-            n = Integer.parseInt(br.readLine());
-            memo = new long[n + 1];
-            memo[1] = 1;
-            if (n > 1)
-                memo[2] = 1;
-            if (n > 2)
-                memo[3] = 1;
-            if (n > 3)
-                memo[4] = 2;
-            if (n > 4)
-                memo[5] = 2;
-            sb.append(dp(memo, n));
+        
+        int t, testCase;
+        
+        t = Integer.parseInt(br.readLine());
+        for (testCase = 0; testCase < t; testCase++) {
+        	sb.append(power(FIRST, Long.parseLong(br.readLine()))[2][1]).append('\n');
         }
-
-        bw.write(sb.toString());
-        bw.flush();
-        bw.close();
+        System.out.print(sb);
     }
 }
