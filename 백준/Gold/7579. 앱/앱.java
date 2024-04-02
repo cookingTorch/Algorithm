@@ -7,36 +7,38 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
+		StringTokenizer st2;
 		
-		int n, m, weight, value, weightSum, valueSum, i, j;
+		int n, m, value, weight, weightSum, i, j;
 		int[] dp, weights, values;
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
 		m = Integer.parseInt(st.nextToken());
 		weights = new int[n + 1];
+		values = new int[n + 1];
 		weightSum = 0;
 		st = new StringTokenizer(br.readLine());
-		for (i = 1; i <= n; i++) {
-			weights[i] = Integer.parseInt(st.nextToken());
-			weightSum += weights[i];
-		}
-		values = new int[n + 1];
-		valueSum = 0;
-		st = new StringTokenizer(br.readLine());
+		st2 = new StringTokenizer(br.readLine());
 		for (i = 1; i <= n; i++) {
 			values[i] = Integer.parseInt(st.nextToken());
-			valueSum += values[i];
+			weights[i] = Integer.parseInt(st2.nextToken());
+			weightSum += weights[i];
 		}
-		m = weightSum - m;
-		dp = new int[m + 1];
+		dp = new int[weightSum + 1];
 		for (i = 1; i <= n; i++) {
 			weight = weights[i];
 			value = values[i];
-			for (j = m; j >= weight; j--) {
+			for (j = weightSum; j >= weight; j--) {
 				dp[j] = Math.max(dp[j], dp[j - weight] + value);
 			}
 		}
-		System.out.print(valueSum - dp[m]);
+		for (i = 0; i <= weightSum; i++) {
+			if (dp[i] >= m) {
+				System.out.print(i);
+				return;
+			}
+		}
+		System.out.print("-1");
 	}
 }
