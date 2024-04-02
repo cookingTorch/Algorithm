@@ -11,7 +11,6 @@ public class Main {
     private static BigInteger[][] multiply(BigInteger[][] a, BigInteger[][] b) {
     	BigInteger[][] c;
 
-        
         c = new BigInteger[2][2];
         c[0][0] = a[0][0].multiply(b[0][0]).add(a[0][1].multiply(b[1][0]));
         c[0][1] = a[0][0].multiply(b[0][1]).add(a[0][1].multiply(b[1][1]));
