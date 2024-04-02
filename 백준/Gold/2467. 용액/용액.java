@@ -28,6 +28,19 @@ public class Main {
 		right = n - 1;
 		min = INF;
 		while (left < right) {
+			if (arr[left] >= 0) {
+				if (Math.abs(arr[left] + arr[left + 1]) < min) {
+					numL = arr[left];
+					numR = arr[left + 1];
+				}
+				break;
+			} else if (arr[right] <= 0) {
+				if (Math.abs(arr[right - 1] + arr[right]) < min) {
+					numL = arr[right - 1];
+					numR = arr[right];
+				}
+				break;
+			}
 			sum = arr[left] + arr[right];
 			if (Math.abs(sum) < min) {
 				min = Math.abs(sum);
