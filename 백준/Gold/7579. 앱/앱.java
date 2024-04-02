@@ -1,44 +1,90 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
+	private static final class Item implements Comparable<Item> {
+		int weight;
+		int value;
+		double ratio;
+		
+		Item(int weight) {
+			this.weight = weight;
+		}
+		
+		void setValue(int value) {
+			this.value = value;
+			this.ratio = (double) value / weight;
+		}
+		
+		@Override
+		public int compareTo(Item o) {
+			return Double.compare(o.ratio, this.ratio);
+		}
+	}
+	
+	private static int n, m, maxProfit;
+	private static Item[] items;
+	
+	private static boolean promising(int depth, int weight, int profit) {
+		int totalWeight, i;
+		double bound;
+		
+		if (weight >= m) {
+			return false;
+		}
+		bound = profit;
+		totalWeight = weight;
+		for (i = depth + 1; i < n && totalWeight + items[i].weight <= m; i++) {
+			bound += items[i].value;
+			totalWeight += items[i].weight;
+		}
+		if (i < n) {
+			bound += (m - totalWeight) * items[i].ratio;
+		}
+		return bound > maxProfit;
+	}
+	
+	private static void knapsack(int depth, int weight, int profit) {
+		if (weight <= m && profit > maxProfit) {
+			maxProfit = profit;
+		}
+		if (promising(depth, weight, profit)) {
+			knapsack(depth + 1, weight + items[depth + 1].weight, profit + items[depth + 1].value);
+			knapsack(depth + 1, weight, profit);
+		}
+	}
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
-		StringTokenizer st2;
 		
-		int n, m, value, weight, weightSum, i, j;
-		int[] dp, weights, values;
+		int weight, value, weightSum, valueSum, i;
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
 		m = Integer.parseInt(st.nextToken());
-		weights = new int[n + 1];
-		values = new int[n + 1];
+		items = new Item[n];
 		weightSum = 0;
 		st = new StringTokenizer(br.readLine());
-		st2 = new StringTokenizer(br.readLine());
-		for (i = 1; i <= n; i++) {
-			values[i] = Integer.parseInt(st.nextToken());
-			weights[i] = Integer.parseInt(st2.nextToken());
-			weightSum += weights[i];
+		for (i = 0; i < n; i++) {
+			weight = Integer.parseInt(st.nextToken());
+			items[i] = new Item(weight);
+			weightSum += weight;
 		}
-		dp = new int[weightSum + 1];
-		for (i = 1; i <= n; i++) {
-			weight = weights[i];
-			value = values[i];
-			for (j = weightSum; j >= weight; j--) {
-				dp[j] = Math.max(dp[j], dp[j - weight] + value);
-			}
+		valueSum = 0;
+		st = new StringTokenizer(br.readLine());
+		for (i = 0; i < n; i++) {
+			value = Integer.parseInt(st.nextToken());
+			items[i].setValue(value);
+			valueSum += value;
 		}
-		for (i = 0; i <= weightSum; i++) {
-			if (dp[i] >= m) {
-				System.out.print(i);
-				return;
-			}
-		}
-		System.out.print("-1");
+		m = weightSum - m;
+		Arrays.sort(items);
+		maxProfit = 0;
+		knapsack(-1, 0, 0);
+		System.out.print(valueSum - maxProfit);
 	}
 }
