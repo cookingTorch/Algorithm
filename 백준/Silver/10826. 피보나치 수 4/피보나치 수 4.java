@@ -22,15 +22,17 @@ public class Main {
     private static BigInteger[][] power(BigInteger[][] matrix, long n) {
     	BigInteger[][] sqrt;
     	
-        if (n == 0)
-            return new BigInteger[][] {{ZERO, ZERO}, {ZERO, ZERO}};
-        if (n == 1)
-            return matrix;
+        if (n == 0) {
+        	return new BigInteger[][] {{ZERO, ZERO}, {ZERO, ZERO}};
+        }
+        if (n == 1) {
+        	return matrix;
+        }
         if (n % 2 == 0) {
             sqrt = power(matrix, n / 2);
             return multiply(sqrt, sqrt);
-        } else
-            return multiply(power(matrix, n - 1), matrix);
+        }
+        return multiply(power(matrix, n - 1), matrix);
     }
 
     public static void main(String[] args) throws IOException {
