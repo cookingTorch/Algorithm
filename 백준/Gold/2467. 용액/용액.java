@@ -21,7 +21,6 @@ public class Main {
 		for (i = 0; i < n; i++) {
 			arr[i] = Integer.parseInt(st.nextToken());
 		}
-		Arrays.sort(arr);
 		numL = 0;
 		numR = 0;
 		left = 0;
@@ -46,13 +45,14 @@ public class Main {
 				min = Math.abs(sum);
 				numL = arr[left];
 				numR = arr[right];
+                if (min == 0) {
+                    break;
+                }
 			}
 			if (sum < 0) {
 				left++;
-			} else if (sum > 0) {
-				right--;
 			} else {
-				break;
+				right--;
 			}
 		}
 		sb.append(numL).append(' ').append(numR);
