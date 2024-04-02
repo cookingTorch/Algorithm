@@ -20,15 +20,17 @@ public class Main {
     private static long[][] power(long[][] matrix, long n) {
     	long[][] sqrt;
     	
-        if (n == 0)
-            return new long[2][2];
-        if (n == 1)
-            return matrix;
+        if (n == 0) {
+        	return new long[2][2];
+        }
+        if (n == 1) {
+        	return matrix;
+        }
         if (n % 2 == 0) {
             sqrt = power(matrix, n / 2);
             return multiply(sqrt, sqrt);
-        } else
-            return multiply(power(matrix, n - 1), matrix);
+        }
+        return multiply(power(matrix, n - 1), matrix);
     }
 
     public static void main(String[] args) throws IOException {
