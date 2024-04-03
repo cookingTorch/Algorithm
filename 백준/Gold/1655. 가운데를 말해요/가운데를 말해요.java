@@ -1,55 +1,52 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.TreeSet;
 
 public class Main {
-	private static final class Node implements Comparable<Node> {
-		int idx, num;
+	private static final int DIFF = 10000;
+	private static final int SIZE = 20000;
+	
+	private static int[] tree;
+	
+	private static void add(int node, int start, int end, int num) {
+		int mid;
 		
-		Node(int idx, int num) {
-			this.idx = idx;
-			this.num = num;
+		tree[node]++;
+		if (start == end) {
+			return;
 		}
-
-		@Override
-		public int compareTo(Node o) {
-			if (this.num == o.num) {
-				return Integer.compare(this.idx, o.idx);
-			}
-			return Integer.compare(this.num, o.num);
+		mid = (start + end) / 2;
+		if (num > mid) {
+			add(node * 2 + 1, mid + 1, end, num);
+		} else {
+			add(node * 2, start, mid, num);
 		}
+	}
+	
+	private static int getNum(int node, int start, int end, int idx) {
+		int mid;
+		
+		if (start == end) {
+			return start - DIFF;
+		}
+		mid = (start + end) / 2;
+		if (tree[node * 2] < idx) {
+			return getNum(node * 2 + 1, mid + 1, end, idx - tree[node * 2]);
+		}
+		return getNum(node * 2, start, mid, idx);
 	}
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		
-		int n, num, i;
-		Node mid;
-		TreeSet<Node> set;
+		int n, i;
 		
+		tree = new int[4 * SIZE];
 		n = Integer.parseInt(br.readLine());
-		set = new TreeSet<>();
-		mid = new Node(0, Integer.parseInt(br.readLine()));
-		set.add(mid);
-		sb.append(mid.num).append('\n');
-		for (i = 1; i < n; i++) {
-			num = Integer.parseInt(br.readLine());
-			set.add(new Node(i, num));
-			if (num < mid.num) {
-				mid = set.lower(mid);
-			}
-			sb.append(mid.num).append('\n');
-			if (++i == n) {
-				break;
-			}
-			num = Integer.parseInt(br.readLine());
-			set.add(new Node(i, num));
-			if (num >= mid.num) {
-				mid = set.higher(mid);
-			}
-			sb.append(mid.num).append('\n');
+		for (i = 0; i < n; i++) {
+			add(1, 0, SIZE, Integer.parseInt(br.readLine()) + DIFF);
+			sb.append(getNum(1, 0, SIZE, (i >> 1) + 1)).append('\n');
 		}
 		System.out.print(sb);
 	}
