@@ -3,37 +3,37 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-	private static final int DIFF = 10000;
-	private static final int SIZE = 20000;
+	private static final int START = -10000;
+	private static final int END = 10000;
 	
 	private static int[] tree;
 	
-	private static void add(int node, int start, int end, int num) {
+	private static void update(int node, int start, int end, int num) {
 		int mid;
 		
 		tree[node]++;
 		if (start == end) {
 			return;
 		}
-		mid = (start + end) / 2;
+		mid = (start + end) >> 1;
 		if (num > mid) {
-			add(node * 2 + 1, mid + 1, end, num);
+			update(node * 2 + 1, mid + 1, end, num);
 		} else {
-			add(node * 2, start, mid, num);
+			update(node * 2, start, mid, num);
 		}
 	}
 	
-	private static int getNum(int node, int start, int end, int idx) {
+	private static int search(int node, int start, int end, int idx) {
 		int mid;
 		
 		if (start == end) {
-			return start - DIFF;
+			return start;
 		}
-		mid = (start + end) / 2;
+		mid = (start + end) >> 1;
 		if (tree[node * 2] < idx) {
-			return getNum(node * 2 + 1, mid + 1, end, idx - tree[node * 2]);
+			return search(node * 2 + 1, mid + 1, end, idx - tree[node * 2]);
 		}
-		return getNum(node * 2, start, mid, idx);
+		return search(node * 2, start, mid, idx);
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -42,11 +42,11 @@ public class Main {
 		
 		int n, i;
 		
-		tree = new int[4 * SIZE];
+		tree = new int[4 * (END - START)];
 		n = Integer.parseInt(br.readLine());
 		for (i = 0; i < n; i++) {
-			add(1, 0, SIZE, Integer.parseInt(br.readLine()) + DIFF);
-			sb.append(getNum(1, 0, SIZE, (i >> 1) + 1)).append('\n');
+			update(1, START, END, Integer.parseInt(br.readLine()));
+			sb.append(search(1, START, END, (i >> 1) + 1)).append('\n');
 		}
 		System.out.print(sb);
 	}
