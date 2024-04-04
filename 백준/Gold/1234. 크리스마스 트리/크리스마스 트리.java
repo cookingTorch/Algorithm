@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static int[][][] combi = {
+	private static final int[][][] combi = {
 			null,
 			{{1, 0, 0, 1}, {0, 1, 0, 1}, {0, 0, 1, 1}},
 			{{1, 1, 0, 2}, {1, 0, 1, 2}, {0, 1, 1, 2}, {2, 0, 0, 1}, {0, 2, 0, 1}, {0, 0, 2, 1}},
