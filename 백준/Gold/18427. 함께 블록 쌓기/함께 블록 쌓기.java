@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -11,7 +12,7 @@ public class Main {
 		StringTokenizer st;
 		
 		int n, m, h, i, j;
-		int[] dp;
+		int[] dp, blocks;
 		int[][] students;
 		
 		st = new StringTokenizer(br.readLine());
@@ -21,19 +22,28 @@ public class Main {
 		students = new int[n][m];
 		for (i = 0; i < n; i++) {
 			st = new StringTokenizer(br.readLine());
-			for (j = 0; st.hasMoreTokens(); j++) {
-				students[i][j] = Integer.parseInt(st.nextToken());
-			}
+			try {
+				for (j = 0;; j++) {
+					students[i][j] = Integer.parseInt(st.nextToken());
+				}
+			} catch (NoSuchElementException e) {}
 		}
 		dp = new int[h + 1];
 		dp[0] = 1;
-		for (int[] student : students) {
-			for (i = h; i >= 0; i--) {
-				for (int block : student) {
-					if (block > 0 && i >= block) {
-						dp[i] = (dp[i] + dp[i - block]) % P;
+		n--;
+		for (i = 0; i < n; i++) {
+			blocks = students[i];
+			for (j = h; j >= 0; j--) {
+				for (int block : blocks) {
+					if (block > 0 && j >= block) {
+						dp[j] = (dp[j] + dp[j - block]) % P;
 					}
 				}
+			}
+		}
+		for (int block : students[i]) {
+			if (block > 0 && h >= block) {
+				dp[h] = (dp[h] + dp[h - block]) % P;
 			}
 		}
 		System.out.print(dp[h]);
