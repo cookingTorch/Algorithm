@@ -4,50 +4,43 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 
 public class Main {
-	private static final int INF = Integer.MAX_VALUE;
+	private static final int MIN = Integer.MIN_VALUE;
 	
 	private static int bfs(int dest) {
-		int size, i, j, x, y;
+		int size, i, j;
 		int[] curr;
 		int[][] distance;
 		ArrayDeque<int[]> q;
 		
-		size = 2 * dest;
+		size = dest + 1;
 		distance = new int[size][size];
-		for (i = 1; i < size; i++) {
-			for (j = 0; j < size; j++) {
-				distance[i][j] = INF;
-			}
+		for (i = 0; i < size; i++) {
+			distance[0][i] = MIN;
 		}
-		distance[1][0] = 0;
+		distance[1][0] = MIN;
 		q = new ArrayDeque<>();
 		q.add(new int[] {1, 0});
 		while (!q.isEmpty()) {
 			curr = q.poll();
 			i = curr[0];
 			j = curr[1];
-			x = i;
-			y = i;
-			if (x < size && y < size && distance[i][j] + 1 < distance[x][y]) {
-				distance[x][y] = distance[i][j] + 1;
-				q.addLast(new int[] {x, y});
+			if (distance[i][j] + 1 < distance[i][i]) {
+				distance[i][i] = distance[i][j] + 1;
+				q.addLast(new int[] {i, i});
 			}
-			x += j;
-			if (x == dest) {
-				return distance[i][j] + 1;
+			if (i + j == dest) {
+				return distance[i][j] + 1 - MIN;
 			}
-			y = j;
-			if (x < size && y < size && distance[i][j] + 1 < distance[x][y]) {
-				distance[x][y] = distance[i][j] + 1;
-				q.addLast(new int[] {x, y});
+			if (i + j < size && distance[i][j] + 1 < distance[i + j][j]) {
+				distance[i + j][j] = distance[i][j] + 1;
+				q.addLast(new int[] {i + j, j});
 			}
-			x = i - 1;
-			if (x == dest) {
-				return distance[i][j] + 1;
+			if (i - 1 == dest) {
+				return distance[i][j] + 1 - MIN;
 			}
-			if (x < size && y < size && distance[i][j] + 1 < distance[x][y]) {
-				distance[x][y] = distance[i][j] + 1;
-				q.addLast(new int[] {x, y});
+			if (distance[i][j] + 1 < distance[i - 1][j]) {
+				distance[i - 1][j] = distance[i][j] + 1;
+				q.addLast(new int[] {i - 1, j});
 			}
 		}
 		return 0;
