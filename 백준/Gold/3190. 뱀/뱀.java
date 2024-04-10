@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -10,15 +8,15 @@ public class Main {
 	private static final int WALL = -1;
 	private static final int APPLE = 1;
 	private static final int EMPTY = 0;
+	private static final int MAX = 10000;
 	private static final char LEFT = 'L';
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		
-		int n, k, x, l, size, max, pos, next, dir, time, diff, cnt, i;
-		int[] map, d;
-		Queue<Integer> q;
+		int n, k, x, l, size, max, pos, next, dir, time, diff, cnt, head, tail, i;
+		int[] map, snake, d;
 		
 		n = Integer.parseInt(br.readLine());
 		k = Integer.parseInt(br.readLine());
@@ -46,9 +44,11 @@ public class Main {
 		} else {
 			diff = 1;
 		}
-		q = new ArrayDeque<>(max);
+		snake = new int[MAX];
+		head = 0;
+		tail = 0;
 		pos = 1 * size + 1;
-		q.add(pos);
+		snake[head] = pos;
 		for (time = 1;; time++, pos = next) {
 			next = pos + d[dir];
 			switch (map[next]) {
@@ -56,10 +56,10 @@ public class Main {
 				System.out.print(time);
 				return;
 			case EMPTY:
-				map[q.poll()] = EMPTY;
+				map[snake[tail++]] = EMPTY;
 			case APPLE:
 				map[next] = WALL;
-				q.add(next);
+				snake[++head] = next;
 			}
 			if (time == x) {
 				dir = (dir + diff) % 4;
