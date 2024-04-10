@@ -46,7 +46,7 @@ public class Main {
 		} else {
 			diff = 1;
 		}
-		q = new ArrayDeque<>();
+		q = new ArrayDeque<>(max);
 		pos = 1 * size + 1;
 		q.add(pos);
 		for (time = 1;; time++, pos = next) {
