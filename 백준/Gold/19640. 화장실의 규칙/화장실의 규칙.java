@@ -19,14 +19,13 @@ public class Main {
 		m = Integer.parseInt(st.nextToken());
 		k = Integer.parseInt(st.nextToken());
 		size = (n - 1) / m + 1;
-		map = new int[size][m][2];
+		map = new int[size][m][];
 		cnt = 0;
 		for (i = 0; i < size; i++) {
 			for (j = 0; j < m; j++) {
 				if (cnt++ < n) {
 					st = new StringTokenizer(br.readLine());
-					map[i][j][0] = Integer.parseInt(st.nextToken());
-					map[i][j][1] = Integer.parseInt(st.nextToken());
+					map[i][j] = new int[] {Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())};
 				} else {
 					map[i][j] = MIN;
 				}
