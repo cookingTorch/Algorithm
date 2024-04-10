@@ -4,10 +4,10 @@ import java.io.InputStreamReader;
 import java.util.PriorityQueue;
 
 public class Main {
-	private static final int DIFF1 = 38;
-	private static final int DIFF2 = 96;
-	private static final int BOUND = 91;
-	private static final int NONE = 48;
+	private static final int DIFF1 = 'A' - 27;
+	private static final int DIFF2 = 'a' - 1;
+	private static final char BOUND = 'Z' + 1;
+	private static final char NONE = '0';
 	private static final String IMPOSSIBLE = "-1";
 	
 	private static final class Edge implements Comparable<Edge> {
@@ -57,38 +57,49 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		int n, sum, i, j;
-		String str;
+		char[] str;
+		int[][] cables;
 		Edge edge;
 		PriorityQueue<Edge> pq;
 		
 		n = Integer.parseInt(br.readLine());
-		sum = 0;
-		pq = new PriorityQueue<>();
-		for (i = 1; i <= n; i++) {
-			str = br.readLine();
-			for (j = 1; j <= n; j++) {
-				if (str.charAt(j - 1) != NONE) {
-					if (str.charAt(j - 1) < BOUND) {
-						pq.add(new Edge(i, j, str.charAt(j - 1) - DIFF1));
-						sum += str.charAt(j - 1) - DIFF1;
-					} else if (str.charAt(j - 1) != NONE) {
-						pq.add(new Edge(i, j, str.charAt(j - 1) - DIFF2));
-						sum += str.charAt(j - 1) - DIFF2;
+		cables = new int[n][n];
+		for (i = 0; i < n; i++) {
+			str = br.readLine().toCharArray();
+			for (j = 0; j < n; j++) {
+				if (str[j] != NONE) {
+					if (str[j] < BOUND) {
+						cables[i][j] = str[j] - DIFF1;
+					} else {
+						cables[i][j] = str[j] - DIFF2;
 					}
 				}
 			}
 		}
+		sum = 0;
+		pq = new PriorityQueue<>();
+		for (i = 0; i < n; i++) {
+			sum += cables[i][i];
+			for (j = i + 1; j < n; j++) {
+				sum += cables[i][j] + cables[j][i];
+				if (cables[i][j] != 0 && (cables[j][i] == 0 || cables[i][j] < cables[j][i])) {
+					pq.add(new Edge(i + 1, j + 1, cables[i][j]));
+				} else if (cables[j][i] != 0) {
+					pq.add(new Edge(j + 1, i + 1, cables[j][i]));
+				}
+			}
+		}
 		roots = new int[n + 1];
-		for (i = 0; !pq.isEmpty() && i < n - 1;) {
+		for (i = 0; i < n - 1;) {
 			edge = pq.poll();
+            if (edge == null) {
+                System.out.print(IMPOSSIBLE);
+			    return;
+            }
 			if (union(edge.from, edge.to)) {
 				i++;
 				sum -= edge.weight;
 			}
-		}
-		if (i < n - 1) {
-			System.out.print(IMPOSSIBLE);
-			return;
 		}
 		System.out.print(sum);
 	}
