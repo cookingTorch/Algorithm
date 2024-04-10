@@ -4,40 +4,34 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 
 public class Main {
-	private static final int MIN = Integer.MIN_VALUE;
-	
 	private static int bfs(int dest) {
-		int size, i, j;
+		int i, j, dist;
 		int[] curr;
-		int[][] distance;
+		boolean[][] visited;
 		ArrayDeque<int[]> q;
 		
-		size = dest + 1;
-		distance = new int[size][size];
-		distance[1][0] = MIN;
+		visited = new boolean[dest][dest];
 		q = new ArrayDeque<>();
-		q.add(new int[] {1, 0});
+		q.add(new int[] {1, 0, 0});
 		while (!q.isEmpty()) {
-			curr = q.poll();
+			curr = q.pollFirst();
 			i = curr[0];
 			j = curr[1];
-			if (distance[i][j] + 1 < distance[i][i]) {
-				distance[i][i] = distance[i][j] + 1;
-				q.addLast(new int[] {i, i});
-			}
+			dist = curr[2] + 1;
 			if (i + j == dest) {
-				return distance[i][j] + 1 - MIN;
+				return dist;
 			}
-			if (i + j < size && distance[i][j] + 1 < distance[i + j][j]) {
-				distance[i + j][j] = distance[i][j] + 1;
-				q.addLast(new int[] {i + j, j});
+			if (!visited[i][i]) {
+				visited[i][i] = true;
+				q.addLast(new int[] {i, i, dist});
 			}
-			if (i - 1 == dest) {
-				return distance[i][j] + 1 - MIN;
+			if (i + j < dest && !visited[i + j][j]) {
+				visited[i + j][j] = true;
+				q.addLast(new int[] {i + j, j, dist});
 			}
-			if (i > 1 && distance[i][j] + 1 < distance[i - 1][j]) {
-				distance[i - 1][j] = distance[i][j] + 1;
-				q.addLast(new int[] {i - 1, j});
+			if (i > 1 && !visited[i - 1][j]) {
+				visited[i - 1][j] = true;
+				q.addLast(new int[] {i - 1, j, dist});
 			}
 		}
 		return 0;
