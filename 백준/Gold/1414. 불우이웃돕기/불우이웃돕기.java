@@ -59,8 +59,7 @@ public class Main {
 		
 		int n, sum, i, j;
 		int[] weights;
-		int[][] cables;
-		String str;
+		char[] str;
 		Edge edge;
 		PriorityQueue<Edge> pq;
 		
@@ -72,24 +71,15 @@ public class Main {
 			weights[i] = i - A + NUM;
 		}
 		n = Integer.parseInt(br.readLine());
-		cables = new int[n][n];
 		sum = 0;
 		pq = new PriorityQueue<>();
 		for (i = 0; i < n; i++) {
-			str = br.readLine();
-			for (j = 0; j < i; j++) {
-				cables[i][j] = weights[str.charAt(j)];
-				sum += cables[i][j];
-				if (cables[i][j] != 0 && (cables[j][i] == 0 || cables[i][j] < cables[j][i])) {
-					pq.add(new Edge(i + 1, j + 1, cables[i][j]));
-				} else if (cables[j][i] != 0) {
-					pq.add(new Edge(j + 1, i + 1, cables[j][i]));
+			str = br.readLine().toCharArray();
+			for (j = 0; j < n; j++) {
+				sum += weights[str[j]];
+				if (weights[str[j]] != 0) {
+					pq.offer(new Edge(i + 1, j + 1, weights[str[j]]));
 				}
-			}
-			sum += weights[str.charAt(i)];
-			for (j = i + 1; j < n; j++) {
-				cables[i][j] = weights[str.charAt(j)];
-				sum += cables[i][j];
 			}
 		}
 		roots = new int[n + 1];
