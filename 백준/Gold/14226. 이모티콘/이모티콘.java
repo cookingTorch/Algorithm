@@ -14,9 +14,6 @@ public class Main {
 		
 		size = dest + 1;
 		distance = new int[size][size];
-		for (i = 0; i < size; i++) {
-			distance[0][i] = MIN;
-		}
 		distance[1][0] = MIN;
 		q = new ArrayDeque<>();
 		q.add(new int[] {1, 0});
@@ -38,7 +35,7 @@ public class Main {
 			if (i - 1 == dest) {
 				return distance[i][j] + 1 - MIN;
 			}
-			if (distance[i][j] + 1 < distance[i - 1][j]) {
+			if (i > 1 && distance[i][j] + 1 < distance[i - 1][j]) {
 				distance[i - 1][j] = distance[i][j] + 1;
 				q.addLast(new int[] {i - 1, j});
 			}
