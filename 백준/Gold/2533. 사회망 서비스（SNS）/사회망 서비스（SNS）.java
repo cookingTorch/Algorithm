@@ -1,26 +1,36 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static int cnt;
-	private static ArrayList<ArrayList<Integer>> adj;
-	
-	private static boolean isEarly(int node, int parent) {
-		boolean early;
+	private static final class Node {
+		int idx;
+		Node next;
 		
-		early = false;
-		for (int next : adj.get(node)) {
-			if (next != parent && !isEarly(next, node)) {
-				early = true;
+		Node(int idx, Node next) {
+			this.idx = idx;
+			this.next = next;
+		}
+	}
+	
+	private static int cnt;
+	private static Node[] adj;
+	
+	private static boolean isCovered(int node, int parent) {
+		boolean cover;
+		Node child;
+		
+		cover = false;
+		for (child = adj[node]; child != null; child = child.next) {
+			if (child.idx != parent && !isCovered(child.idx, node)) {
+				cover = true;
 			}
 		}
-		if (early) {
+		if (cover) {
 			cnt++;
 		}
-		return early;
+		return cover;
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -30,20 +40,16 @@ public class Main {
 		int n, u, v, i;
 		
 		n = Integer.parseInt(br.readLine());
-		adj = new ArrayList<>(n + 1);
-		adj.add(null);
-		for (i = 1; i <= n; i++) {
-			adj.add(new ArrayList<>());
-		}
+		adj = new Node[n + 1];
 		for (i = 1; i < n; i++) {
 			st = new StringTokenizer(br.readLine());
 			u = Integer.parseInt(st.nextToken());
 			v = Integer.parseInt(st.nextToken());
-			adj.get(u).add(v);
-			adj.get(v).add(u);
+			adj[u] = new Node(v, adj[u]);
+			adj[v] = new Node(u, adj[v]);
 		}
 		cnt = 0;
-		isEarly(1, 0);
+		isCovered(1, 0);
 		System.out.print(cnt);
 	}
 }
