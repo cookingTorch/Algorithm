@@ -19,19 +19,20 @@ public class Main {
 		idx = 1;
 		notPrime = new boolean[n + 1];
 		for (i = 3; i <= n; i += 2) {
-			if (!notPrime[i]) {
-				if (prev + i > n) {
-					if ((n & 1) == 1 && !notPrime[n]) {
-						primes[idx++] = n;
-					}
-					break;
-				}
-				primes[idx++] = i;
-				for (j = i << 1; j <= n; j += i) {
-					notPrime[j] = true;
-				}
-				prev = i;
+			if (notPrime[i]) {
+				continue;
 			}
+			if (prev + i > n) {
+				if ((n & 1) == 1 && !notPrime[n]) {
+					primes[idx++] = n;
+				}
+				break;
+			}
+			primes[idx++] = i;
+			for (j = i << 1; j <= n; j += i) {
+				notPrime[j] = true;
+			}
+			prev = i;
 		}
 		cnt = 0;
 		sum = 0;
