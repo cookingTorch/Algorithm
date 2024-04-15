@@ -28,11 +28,10 @@ public class Main {
 				}
 				break;
 			}
-			primes[idx++] = i;
+			primes[idx++] = prev = i;
 			for (j = i << 1; j <= n; j += i) {
 				notPrime[j] = true;
 			}
-			prev = i;
 		}
 		cnt = 0;
 		sum = 0;
