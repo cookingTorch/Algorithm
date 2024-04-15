@@ -34,18 +34,17 @@ public class Main {
 			}
 		}
 		cnt = 0;
-		left = 0;
-		right = 0;
-		sum = 2;
-		while (right < idx) {
-			if (sum < n) {
+		sum = 0;
+		for (left = 0, right = -1; left < idx; sum -= primes[left++]) {
+			while (sum < n) {
 				sum += primes[++right];
-			} else if (sum > n) {
-				sum -= primes[left++];
-			} else {
+				if (right == idx) {
+					System.out.print(cnt);
+					return;
+				}
+			}
+			if (sum == n) {
 				cnt++;
-				sum += primes[++right];
-				sum -= primes[left++];
 			}
 		}
 		System.out.print(cnt);
