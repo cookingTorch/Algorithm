@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
+	private static final String IMPOSSIBLE = "-1";
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st1, st2;
@@ -51,7 +53,7 @@ public class Main {
 				}
 			}
 			if (i == n) {
-				System.out.print("-1");
+				System.out.print(IMPOSSIBLE);
 				return;
 			}
 		}
