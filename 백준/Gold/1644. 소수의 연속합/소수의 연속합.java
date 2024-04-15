@@ -5,14 +5,13 @@ import java.io.InputStreamReader;
 public class Main {
 	private static final int SIZE = 283147;
 	
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		int n, idx, left, right, sum, cnt, prev, i, j;
+	private static int n, idx;
+	
+	private static int[] getPrimes() {
+		int prev, i, j;
 		int[] primes;
 		boolean[] notPrime;
 		
-		n = Integer.parseInt(br.readLine());
 		primes = new int[SIZE];
 		primes[0] = 2;
 		prev = 2;
@@ -33,6 +32,17 @@ public class Main {
 				notPrime[j] = true;
 			}
 		}
+		return primes;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		int left, right, sum, cnt;
+		int[] primes;
+		
+		n = Integer.parseInt(br.readLine());
+		primes = getPrimes();
 		cnt = 0;
 		sum = 0;
 		for (left = 0, right = 0;; sum -= primes[left++]) {
