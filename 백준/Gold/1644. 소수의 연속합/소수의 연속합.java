@@ -17,17 +17,17 @@ public class Main {
 		primes[0] = 2;
 		prev = 2;
 		idx = 1;
-		notPrime = new boolean[(int) n + 1];
+		notPrime = new boolean[n + 1];
 		for (i = 3; i <= n; i += 2) {
 			if (!notPrime[i]) {
 				if (prev + i > n) {
-					if ((n & 1) == 1 && !notPrime[(int) n]) {
+					if ((n & 1) == 1 && !notPrime[n]) {
 						primes[idx++] = n;
 					}
 					break;
 				}
 				primes[idx++] = i;
-				for (j = i + i; j <= n; j += i) {
+				for (j = i << 1; j <= n; j += i) {
 					notPrime[j] = true;
 				}
 				prev = i;
@@ -35,7 +35,7 @@ public class Main {
 		}
 		cnt = 0;
 		sum = 0;
-		for (left = 0, right = -1; left < idx; sum -= primes[left++]) {
+		for (left = 0, right = -1;; sum -= primes[left++]) {
 			while (sum < n) {
 				sum += primes[++right];
 				if (right == idx) {
@@ -47,6 +47,5 @@ public class Main {
 				cnt++;
 			}
 		}
-		System.out.print(cnt);
 	}
 }
