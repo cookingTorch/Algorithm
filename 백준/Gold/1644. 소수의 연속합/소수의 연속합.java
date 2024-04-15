@@ -36,13 +36,13 @@ public class Main {
 		}
 		cnt = 0;
 		sum = 0;
-		for (left = 0, right = -1;; sum -= primes[left++]) {
+		for (left = 0, right = 0;; sum -= primes[left++]) {
 			while (sum < n) {
-				sum += primes[++right];
 				if (right == idx) {
 					System.out.print(cnt);
 					return;
 				}
+				sum += primes[right++];
 			}
 			if (sum == n) {
 				cnt++;
