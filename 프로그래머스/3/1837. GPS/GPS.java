@@ -1,53 +1,61 @@
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.Arrays;
+import java.util.ArrayDeque;
 
 class Solution {
     private static final int INF = Integer.MAX_VALUE;
+    
+    private static int[] level;
     private static ArrayList<ArrayList<Integer>> adj;
     
-    private static int dijkstra(int n, int k, int[] gpsLog) {
-        int node, cnt, i, j;
+    private static void bfs(int start) {
+    	int curr;
+    	ArrayDeque<Integer> q;
+    	
+    	Arrays.fill(level, INF);
+    	level[start] = 0;
+    	q = new ArrayDeque<>();
+    	q.addLast(start);
+    	while (!q.isEmpty()) {
+    		curr = q.pollFirst();
+    		for (int next : adj.get(curr)) {
+    			if (level[next] == INF) {
+    				level[next] = level[curr] + 1;
+    				q.addLast(next);
+    			}
+    		}
+    	}
+    }
+    
+    private static int bfs01(int n, int k, int[] gpsLog) {
+        int node, cnt, dist;
         int[] curr;
-        int[][] distance;
-        PriorityQueue<int[]> pq;
+        boolean[][] visited;
+        ArrayDeque<int[]> dq;
         
-        distance = new int[n + 1][k + 1];
-        for (i = 1; i <= n; i++) {
-            for (j = 1; j <= k; j++) {
-                distance[i][j] = INF;
-            }
-        }
-        distance[gpsLog[0]][1] = 0;
-        pq = new PriorityQueue<>(new Comparator<int[]>() {
-			@Override
-			public int compare(int[] o1, int[] o2) {
-				return Integer.compare(distance[o1[0]][o1[1]], distance[o2[0]][o2[1]]);
-			}
-		});
-        pq.offer(new int[] {gpsLog[0], 1});
-        while (!pq.isEmpty()) {
-            curr = pq.poll();
+        visited = new boolean[n + 1][k + 1];
+        dq = new ArrayDeque<>();
+        dq.addLast(new int[] {gpsLog[0], 1, 0});
+        while (!dq.isEmpty()) {
+            curr = dq.pollFirst();
             node = curr[0];
             cnt = curr[1];
+            dist = curr[2];
             if (cnt == k) {
-                continue;
+                return dist;
             }
             for (int next : adj.get(node)) {
-                if (next == gpsLog[cnt]) {
-                    if (distance[node][cnt] < distance[next][cnt + 1]) {
-                        distance[next][cnt + 1] = distance[node][cnt];
-                        pq.offer(new int[] {next, cnt + 1});
+            	if (level[next] < k - cnt && !visited[next][cnt + 1]) {
+            		if (next == gpsLog[cnt]) {
+            			dq.addFirst(new int[] {next, cnt + 1, dist});
+                    } else {
+                        dq.addLast(new int[] {next, cnt + 1, dist + 1});
                     }
-                } else {
-                    if (distance[node][cnt] + 1 < distance[next][cnt + 1]) {
-                        distance[next][cnt + 1] = distance[node][cnt] + 1;
-                        pq.offer(new int[] {next, cnt + 1});
-                    }
-                }
+            	}
+            	visited[next][cnt + 1] = true;
             }
         }
-        return distance[gpsLog[k - 1]][k] == INF ? -1 : distance[gpsLog[k - 1]][k];
+        return -1;
     }
     
     public int solution(int n, int m, int[][] edge_list, int k, int[] gps_log) {
@@ -63,6 +71,11 @@ class Solution {
             adj.get(edge[0]).add(edge[1]);
             adj.get(edge[1]).add(edge[0]);
         }
-        return dijkstra(n, k, gps_log);
+        level = new int[n + 1];
+        bfs(gps_log[k - 1]);
+        if (level[gps_log[0]] > k - 1) {
+        	return -1;
+        }
+        return bfs01(n, k, gps_log);
     }
 }
