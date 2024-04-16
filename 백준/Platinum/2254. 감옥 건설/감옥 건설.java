@@ -7,7 +7,7 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final long INF = Integer.MAX_VALUE;
+	private static final long INF = Long.MAX_VALUE;
 	private static final Point BASE = new Point(INF, INF);
 	
 	private static class Point implements Comparable<Point> {
