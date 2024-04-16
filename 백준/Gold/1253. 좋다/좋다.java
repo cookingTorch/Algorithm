@@ -9,29 +9,24 @@ public class Main {
 	private static int[] arr;
 	
 	private static boolean isGood(int idx, int num) {
-		int left, right;
+		int left, right, sum;
 		
-		if (idx == 0) {
-			left = 1;
-		} else {
-			left = 0;
-		}
-		if (idx == n - 1) {
-			right = n - 2;
-		} else {
-			right = n - 1;
-		}
+		left = 0;
+		right = n - 1;
 		while (left < right) {
-			if (arr[left] + arr[right] < num) {
-				if (++left == idx) {
-					left++;
-				}
-			} else if (arr[left] + arr[right] > num) {
-				if (--right == idx) {
-					right--;
-				}
+			sum = arr[left] + arr[right];
+			if (sum < num) {
+				left++;
+			} else if (sum > num) {
+				right--;
 			} else {
-				return true;
+				if (left == idx) {
+					left++;
+				} else if (right == idx) {
+					right--;
+				} else {
+					return true;
+				}
 			}
 		}
 		return false;
