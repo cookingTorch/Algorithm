@@ -12,7 +12,7 @@ public class Main {
 		int left, right;
 		
 		left = 0;
-		right = n - 1;
+		right = n;
 		while (left < right) {
 			if (arr[left] + arr[right] < num) {
 				left++;
@@ -45,7 +45,8 @@ public class Main {
 		}
 		Arrays.sort(arr);
 		cnt = 0;
-		for (i = 0; i < n; i++) {
+		n--;
+		for (i = 0; i <= n; i++) {
 			if (isGood(i, arr[i])) {
 				cnt++;
 			}
