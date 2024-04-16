@@ -9,15 +9,14 @@ public class Main {
 	private static int[] arr;
 	
 	private static boolean isGood(int idx, int num) {
-		int left, right, sum;
+		int left, right;
 		
 		left = 0;
 		right = n - 1;
 		while (left < right) {
-			sum = arr[left] + arr[right];
-			if (sum < num) {
+			if (arr[left] + arr[right] < num) {
 				left++;
-			} else if (sum > num) {
+			} else if (arr[left] + arr[right] > num) {
 				right--;
 			} else {
 				if (left == idx) {
