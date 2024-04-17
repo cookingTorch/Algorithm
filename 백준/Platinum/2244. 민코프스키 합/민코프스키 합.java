@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -93,30 +92,12 @@ public class Main {
 			for (j = 0; j < n; j++) {
 				point = new Point(x + a[j][0], y + a[j][1]);
 				points.add(point);
-				if (point.y < base.y || (point.y == base.y && point.x < base.x)) {
+				if (point.x < base.x || (point.x == base.x && point.y < base.y)) {
 					base = point;
 				}
 			}
 		}
 		hull = convexHull(points);
-		base = BASE;
-		for (Point hullPoint : hull) {
-			if (hullPoint.x < base.x || (hullPoint.x == base.x && hullPoint.y < base.y)) {
-				base = hullPoint;
-			}
-		}
-		Collections.sort(hull, new Comparator<Point>() {
-			@Override
-			public int compare(Point o1, Point o2) {
-				long val;
-				
-				val = ccw(base, o1, o2);
-				if (val == 0) {
-					return Long.compare(dist(base, o1), dist(base, o2));
-				}
-				return val > 0 ? -1 : 1;
-			}
-		});
 		sb.append(hull.size());
 		for (Point hullPoint : hull) {
 			sb.append('\n').append(hullPoint.x).append(' ').append(hullPoint.y);
