@@ -68,7 +68,7 @@ public class Main {
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 		
-		int n, m, i, j;
+		int n, m, i;
 		long x, y;
 		long[][] a;
 		Point point;
@@ -89,8 +89,8 @@ public class Main {
 			st = new StringTokenizer(br.readLine());
 			x = Long.parseLong(st.nextToken());
 			y = Long.parseLong(st.nextToken());
-			for (j = 0; j < n; j++) {
-				point = new Point(x + a[j][0], y + a[j][1]);
+			for (long[] xy : a) {
+				point = new Point(x + xy[0], y + xy[1]);
 				points.add(point);
 				if (point.x < base.x || (point.x == base.x && point.y < base.y)) {
 					base = point;
