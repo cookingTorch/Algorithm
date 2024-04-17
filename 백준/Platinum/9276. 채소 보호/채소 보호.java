@@ -91,21 +91,29 @@ public class Main {
 	private static final double rotatingCalipers(ArrayList<Point> hull) {
 		int i, j, ni, nj, l, r, nl, nr;
 		double min;
+		boolean reached;
 		Point foot;
 		
+		reached = true;
 		min = POS_INF;
-		for (i = 0, j = 1; i < hull.size(); i++) {
+		for (i = 0, j = 1, l = 1, r = 1; i < hull.size(); i++) {
 			ni = (i + 1) % hull.size();
 			for (;;) {
 				nj = (j + 1) % hull.size();
 				if (ccw(hull.get(i), hull.get(ni), hull.get(j), hull.get(nj)) > 0) {
 					j = nj;
+					if (j == l) {
+						reached = true;
+					}
 				} else {
 					break;
 				}
 			}
 			foot = getFoot(hull.get(i), hull.get(ni), hull.get(j));
-			l = j;
+			if (reached) {
+				l = j;
+				reached = false;
+			}
 			for (;;) {
 				nl = (l + 1) % hull.size();
 				if (ccw(foot, hull.get(j), hull.get(l), hull.get(nl)) > 0) {
@@ -114,9 +122,8 @@ public class Main {
 					break;
 				}
 			}
-			r = j;
 			for (;;) {
-				nr = (r + hull.size() - 1) % hull.size();
+				nr = (r + 1) % hull.size();
 				if (ccw(foot, hull.get(j), hull.get(r), hull.get(nr)) < 0) {
 					r = nr;
 				} else {
@@ -131,7 +138,7 @@ public class Main {
 	private static final double solution(BufferedReader br, StringTokenizer st, int n) throws IOException {
 		int i;
 		Point point;
-		ArrayList<Point> points;
+		ArrayList<Point> points, hull;
 		
 		points = new ArrayList<>(n);
 		base = BASE;
@@ -143,7 +150,11 @@ public class Main {
 				base = point;
 			}
 		}
-		return rotatingCalipers(convexHull(points));
+		hull = convexHull(points);
+		if (hull.size() == 2) {
+			return 2 * Math.sqrt(dist(hull.get(0), hull.get(1)));
+		}
+		return rotatingCalipers(hull);
 	}
 	
 	public static void main(String[] args) throws IOException {
