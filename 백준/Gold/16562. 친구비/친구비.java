@@ -25,15 +25,23 @@ public class Main {
 		}
 		if (roots[ru] > roots[rv]) {
 			roots[ru] = rv;
-			sum -= Math.max(costs[ru], costs[rv]);
-			costs[rv] = Math.min(costs[ru], costs[rv]);
+			if (costs[ru] < costs[rv]) {
+				sum -= costs[rv];
+				costs[rv] = costs[ru];
+			} else {
+				sum -= costs[ru];
+			}
 		} else {
 			if (roots[ru] == roots[rv]) {
 				roots[ru]--;
 			}
 			roots[rv] = ru;
-			sum -= Math.max(costs[ru], costs[rv]);
-			costs[ru] = Math.min(costs[ru], costs[rv]);
+			if (costs[ru] > costs[rv]) {
+				sum -= costs[ru];
+				costs[ru] = costs[rv];
+			} else {
+				sum -= costs[rv];
+			}
 		}
 	}
 	
