@@ -16,12 +16,12 @@ public class Main {
 			return table[num];
 		}
 		if (num == 0) {
-			return table[num] = 1;
+			return table[num] = 1L;
 		}
 		if ((num & 1) == 0) {
 			return table[num] = pow(num >> 1) * pow(num >> 1) % NUM;
 		}
-		return table[num] = 2 * pow(num - 1);
+		return table[num] = 2L * pow(num - 1) % NUM;
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -45,7 +45,7 @@ public class Main {
 		for (i = 0; i < n; i++) {
 			switch (str[i]) {
 			case R:
-				r = (r + (long) pow(i)) % NUM;
+				r = (r + pow(i)) % NUM;
 				break;
 			case O:
 				o = (r + o) % NUM;
