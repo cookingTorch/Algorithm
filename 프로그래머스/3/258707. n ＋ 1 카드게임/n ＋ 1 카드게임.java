@@ -1,6 +1,12 @@
 class Solution {
     public int solution(int coin, int[] cards) {
-        int i, len, size, num, pair1, pair2, end;
+        int i;
+        int len;
+        int num;
+        int end;
+        int size;
+        int pair1;
+        int pair2;
         int[] cnt;
         
         len = cards.length;
