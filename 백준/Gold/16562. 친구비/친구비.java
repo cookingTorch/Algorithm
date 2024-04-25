@@ -5,7 +5,8 @@ import java.util.StringTokenizer;
 
 public class Main {
 	private static int sum;
-	private static int[] costs, roots;
+	private static int[] costs;
+	private static int[] roots;
 	private static String IMPOSSIBLE = "Oh no";
 	
 	private static final int find(int v) {
@@ -16,7 +17,8 @@ public class Main {
 	}
 	
 	private static final void union(int u, int v) {
-		int ru, rv;
+		int ru;
+		int rv;
 		
 		ru = find(u);
 		rv = find(v);
@@ -49,7 +51,10 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		
-		int n, m, k, i;
+		int n;
+		int m;
+		int k;
+		int i;
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
