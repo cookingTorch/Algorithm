@@ -29,11 +29,14 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		int len, i, j, index;
+        int i;
+        int j;
+		int len;
+        int index;
 		String str;
+        BufferedReader br;
 		
+        br = new BufferedReader(new InputStreamReader(System.in));
 		str = br.readLine();
 		len = str.length() - 1;
 		if (len == 0) {
