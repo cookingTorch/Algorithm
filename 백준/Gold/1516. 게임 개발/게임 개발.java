@@ -42,10 +42,20 @@ public class Main {
 		}
 	}
 	
+	private static final void dfs(int curr) {
+		Node next;
+		
+		for (next = adj[curr]; next != null; next = next.next) {
+			ans[next.idx] = Math.max(ans[next.idx], ans[curr]);
+			if (--degree[next.idx] == 0) {
+				ans[next.idx] += time[next.idx];
+				dfs(next.idx);
+			}
+		}
+	}
+	
 	private static final void topoSort() {
 		int i;
-		int curr;
-		Node next;
 		ArrayDeque<Integer> q;
 		
 		ans = new int[n + 1];
@@ -57,13 +67,7 @@ public class Main {
 			}
 		}
 		while (!q.isEmpty()) {
-			curr = q.poll();
-			for (next = adj[curr]; next != null; next = next.next) {
-				ans[next.idx] = Math.max(ans[next.idx], ans[curr] + time[next.idx]);
-				if (--degree[next.idx] == 0) {
-					q.add(next.idx);
-				}
-			}
+			dfs(q.pollFirst());
 		}
 	}
 	
