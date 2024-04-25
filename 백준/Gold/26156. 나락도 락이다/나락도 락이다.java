@@ -9,21 +9,6 @@ public class Main {
 	private static final char C = 'C';
 	private static final char K = 'K';
 	
-	private static long[] table;
-	
-	private static final long pow(int num) {
-		if (table[num] != 0) {
-			return table[num];
-		}
-		if (num == 0) {
-			return table[num] = 1L;
-		}
-		if ((num & 1) == 0) {
-			return table[num] = pow(num >> 1) * pow(num >> 1) % NUM;
-		}
-		return table[num] = 2L * pow(num - 1) % NUM;
-	}
-	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -33,19 +18,20 @@ public class Main {
 		long o;
 		long c;
 		long k;
+		long pow;
 		char[] str;
 		
 		n = Integer.parseInt(br.readLine());
 		str = br.readLine().toCharArray();
-		table = new long[n];
 		r = 0L;
 		o = 0L;
 		c = 0L;
 		k = 0L;
+		pow = 1L;
 		for (i = 0; i < n; i++) {
 			switch (str[i]) {
 			case R:
-				r = (r + pow(i)) % NUM;
+				r = (r + pow) % NUM;
 				break;
 			case O:
 				o = (r + o) % NUM;
@@ -56,6 +42,7 @@ public class Main {
 			case K:
 				k = (k + c) % NUM;
 			}
+			pow = (pow << 1) % NUM;
 		}
 		System.out.print(k);
 	}
