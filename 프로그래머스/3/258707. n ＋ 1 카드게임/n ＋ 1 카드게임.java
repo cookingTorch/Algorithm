@@ -16,7 +16,6 @@ class Solution {
         end = size + 2;
         for (i = 0; i < size; i++) {
             if (cnt[cards[i]] == 0) {
-                cnt[cards[i]]--;
                 cnt[num - cards[i]]--;
             } else {
                 end += 2;
@@ -42,7 +41,6 @@ class Solution {
                 }
             }
             if (cnt[cards[i]] == 0) {
-                cnt[cards[i]]++;
                 cnt[num - cards[i]]++;
             } else if (cnt[cards[i]] == 1) {
                 pair2++;
