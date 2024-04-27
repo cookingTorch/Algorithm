@@ -28,13 +28,13 @@ public class Main {
 		c = 0L;
 		k = 0L;
 		pow = 1L;
-		for (i = 0; i < n; i++) {
-			switch (str[i]) {
+		for (char ch : str) {
+			switch (ch) {
 			case R:
 				r = (r + pow) % NUM;
 				break;
 			case O:
-				o = (r + o) % NUM;
+				o = (o + r) % NUM;
 				break;
 			case C:
 				c = (c + o) % NUM;
