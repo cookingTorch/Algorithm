@@ -139,12 +139,12 @@ public class Main {
 		}
 		max = 0;
 		tree = new Node[4 * xLen];
-		build(1, 1, n);
+		build(1, 0, xLen - 1);
 		for (i = 0; i < yLen; i++) {
-			init(1, 1, n);
+			init(1, 0, xLen - 1);
 			for (j = i; j < yLen; j++) {
 				for (curr = mineList[j]; curr != null; curr = curr.next) {
-					update(1, 1, xLen, curr.idx, curr.num);
+					update(1, 0, xLen - 1, curr.idx, curr.num);
 				}
 				max = Math.max(max, tree[1].max);
 			}
