@@ -14,9 +14,10 @@ class Solution {
         for (int[] edge : edges) {
             outDegree[edge[0]]++;
             in[edge[1]] = true;
+            max = Math.max(max, Math.max(edge[0], edge[1]));
         }
         result = new int[4];
-        for (i = 1; i < SIZE; i++) {
+        for (i = 1; i <= max; i++) {
             if (outDegree[i] > 1) {
                 if (in[i]) {
                     result[3]++;
