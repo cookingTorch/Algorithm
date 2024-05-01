@@ -37,7 +37,7 @@ public class Main {
 		}
 		bound = profit;
 		totalWeight = weight;
-		for (i = depth + 1; i < n && totalWeight + items[i].weight <= t; i++) {
+		for (i = depth; i < n && totalWeight + items[i].weight <= t; i++) {
 			bound += items[i].value;
 			totalWeight += items[i].weight;
 		}
@@ -52,7 +52,7 @@ public class Main {
 			maxProfit = profit;
 		}
 		if (promising(depth, weight, profit)) {
-			knapsack(depth + 1, weight + items[depth + 1].weight, profit + items[depth + 1].value);
+			knapsack(depth + 1, weight + items[depth].weight, profit + items[depth].value);
 			knapsack(depth + 1, weight, profit);
 		}
 	}
@@ -73,7 +73,7 @@ public class Main {
 		}
 		Arrays.sort(items);
 		maxProfit = 0;
-		knapsack(-1, 0, 0);
+		knapsack(0, 0, 0);
 		System.out.print(maxProfit);
 	}
 }
