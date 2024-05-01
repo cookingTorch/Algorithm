@@ -38,10 +38,9 @@ class Solution {
         }
     }
     
-    private static Trie root;
-    
     public int solution(String[] words) {
         int cnt;
+        Trie root;
         
         root = new Trie();
         for (String word : words) {
@@ -53,4 +52,4 @@ class Solution {
         }
         return cnt;
     }
-}
+} 
