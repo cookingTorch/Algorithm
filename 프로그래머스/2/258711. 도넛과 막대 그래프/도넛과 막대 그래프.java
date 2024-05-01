@@ -30,5 +30,5 @@ class Solution {
         }
         result[1] = outDegree[result[0]] - result[2] - result[3];
         return result;
-    }
+    } 
 }
