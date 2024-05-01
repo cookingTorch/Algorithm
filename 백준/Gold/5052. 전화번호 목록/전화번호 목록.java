@@ -17,26 +17,29 @@ public class Main {
 			next = new Trie[SIZE];
 		}
 		
-		final boolean insert(String str, int depth) {
+		final boolean insert(String str) {
+			int i;
+			int len;
 			int idx;
+			Trie curr;
 			
-			if (output) {
-				return false;
-			}
-			if (str.length() == depth) {
-				if (visited) {
+			len = str.length();
+			for (curr = this, i = 0; i < len; curr = curr.next[idx], i++) {
+				if (curr.output) {
 					return false;
 				}
-				visited = true;
-				output = true;
-				return true;
+				curr.visited = true;
+				idx = str.charAt(i) - DIFF;
+				if (curr.next[idx] == null) {
+					curr.next[idx] = new Trie();
+				}
 			}
-			visited = true;
-			idx = str.charAt(depth) - DIFF;
-			if (next[idx] == null) {
-				next[idx] = new Trie();
+			if (curr.visited) {
+				return false;
 			}
-			return next[idx].insert(str, depth + 1);
+			curr.visited = true;
+			curr.output = true;
+			return true;
 		}
 	}
 
@@ -52,7 +55,7 @@ public class Main {
 		result = true;
 		n = Integer.parseInt(br.readLine());
 		for (i = 0; i < n; i++) {
-			if (!root.insert(br.readLine(), 0)) {
+			if (!root.insert(br.readLine())) {
 				result = false;
 				break;
 			}
