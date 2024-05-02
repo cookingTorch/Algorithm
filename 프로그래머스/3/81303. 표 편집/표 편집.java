@@ -9,88 +9,98 @@ class Solution {
 	private static final char O = 'O';
 	private static final char X = 'X';
 	
-	private static int[] tree;
+	private static int root;
+	private static int[] ft;
 	private static char[] ans;
 	
-	private static void init(int node, int start, int end) {
-		int mid;
+	private static int find(int prefix) {
+		int idx;
+		int sum;
 		
-		if (start == end) {
-			tree[node] = 1;
-			return;
-		}
-		mid = (start + end) >> 1;
-		init(node << 1, start, mid);
-		init(node << 1 | 1, mid + 1, end);
-		tree[node] = tree[node << 1] + tree[node << 1 | 1];
+		idx = 0;
+		sum = 0;
+	    for (int i = root; i > 0; i >>= 1) {
+	        if (sum + ft[idx + i] < prefix) {
+	            sum += ft[idx += i];
+	        }
+	    }
+	    return idx + 1;
 	}
 	
-	private static int delete(int node, int start, int end, int idx) {
-		int mid;
+	private static void update(int idx, int diff) {
+		int i;
 		
-		tree[node]--;
-		if (start == end) {
-			ans[start] = X;
-			return start;
-		}
-		mid = (start + end) >> 1;
-		if (tree[node << 1] < idx) {
-			return delete(node << 1 | 1, mid + 1, end, idx - tree[node << 1]);
+		if (diff == 1) {
+			ans[idx - 1] = O;
 		} else {
-			return delete(node << 1, start, mid, idx);
+			ans[idx - 1] = X;
+		}
+		for (i = idx; i <= root; i += (i & -i)) {
+			ft[i] += diff;
 		}
 	}
 	
-	private static int add(int node, int start, int end, int idx) {
-		int mid;
+	private static int sum(int idx) {
+		int i;
+		int sum;
 		
-		tree[node]++;
-		if (start == end) {
-			ans[start] = O;
-			return 1;
+		sum = 0;
+		for (i = idx; i != 0; i -= (i & -i)) {
+			sum += ft[i];
 		}
-		mid = (start + end) >> 1;
-		if (idx > mid) {
-			return tree[node << 1] + add(node << 1 | 1, mid + 1, end, idx);
-		}
-		return add(node << 1, start, mid, idx);
+		return sum;
 	}
 	
     public String solution(int n, int k, String[] cmd) {
+    	int i;
+    	int len;
+    	int idx;
+    	int size;
+    	int prefix;
     	StringTokenizer st;
-    	
-    	int len, size, end, idx, i;
     	ArrayDeque<Integer> stack;
     	
     	ans = new char[n];
     	for (i = 0; i < n; i++) {
     		ans[i] = O;
     	}
-        end = n - 1;
-        tree = new int[4 * n];
-        init(1, 0, end);
+    	for (root = 1; root < n; root <<= 1);
+        ft = new int[root + 1];
+        for (i = 1; i <= n; i++) {
+        	ft[i]++;
+        	if (i < root) {
+        		ft[i + (i & -i)] += ft[i];
+        	}
+        }
+        for (; i < root; i++) {
+        	ft[i + (i & -i)] += ft[i];
+        }
         size = n;
-        idx = k + 1;
+        prefix = k + 1;
         stack = new ArrayDeque<>();
         len = cmd.length;
         for (i = 0; i < len; i++) {
         	st = new StringTokenizer(cmd[i]);
         	switch (st.nextToken().charAt(0)) {
         	case U:
-        		idx -= Integer.parseInt(st.nextToken());
+        		prefix -= Integer.parseInt(st.nextToken());
         		break;
         	case D:
-        		idx += Integer.parseInt(st.nextToken());
+        		prefix += Integer.parseInt(st.nextToken());
         		break;
         	case C:
-        		stack.addFirst(delete(1, 0, end, idx));
-        		if (idx == size--) {
-        			idx--;
+        		idx = find(prefix);
+        		stack.addFirst(idx);
+        		update(idx, -1);
+        		if (prefix == size--) {
+        			prefix--;
         		}
         		break;
         	case Z:
-        		if (add(1, 0, end, stack.removeFirst()) <= idx) {
-        			idx++;
+        		idx = stack.removeFirst();
+        		update(idx, 1);
+        		if (sum(idx) <= prefix) {
+        			prefix++;
         		}
         		size++;
         	}
