@@ -107,11 +107,13 @@ public class Main {
 		if (idx <= 0 || idx > len) {
 			return;
 		}
-		arr[idx] += num;
-		if (arr[idx] == 0) {
-			update(1, 1, len, idx, 1);
-		} else {
-			update(1, 1, len, idx, 0);
+		if (num != 0) {
+			if (arr[idx] == 0) {
+				update(1, 1, len, idx, 0);
+			} else if (arr[idx] + num == 0) {
+				update(1, 1, len, idx, 1);
+			}
+			arr[idx] += num;
 		}
 	}
 	
