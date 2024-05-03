@@ -41,11 +41,9 @@ public class Main {
 		int idx;
 		int len;
 		Output next;
-		Output tail;
 		
 		Output(int idx) {
 			this.idx = idx;
-			this.tail = this;
 		}
 		
 		Output(int idx, int len) {
@@ -54,8 +52,11 @@ public class Main {
 		}
 		
 		final void merge(Output output) {
-			this.tail.next = output;
-			this.tail = output.tail;
+			if (next == null) {
+				next = output;
+			} else {
+				next.next = output;
+			}
 		}
 		
 		final void found(int x, int y, char dir) {
