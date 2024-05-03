@@ -41,9 +41,11 @@ public class Main {
 		int idx;
 		int len;
 		Output next;
+		Output tail;
 		
 		Output(int idx) {
 			this.idx = idx;
+			this.tail = this;
 		}
 		
 		Output(int idx, int len) {
@@ -52,11 +54,8 @@ public class Main {
 		}
 		
 		final void merge(Output output) {
-			if (next == null) {
-				next = output;
-			} else {
-				next.next = output;
-			}
+			this.tail.next = output;
+			this.tail = output.tail;
 		}
 		
 		final void found(int x, int y, char dir) {
@@ -242,22 +241,18 @@ public class Main {
 		int i;
 		
 		result = new Result[w + 1];
-		for (i = 0; i < c; i++) {
-			root.searchA(i);
-		}
-		for (i = 0; i < l; i++) {
-			root.searchB(i, 0);
-		}
+		root.searchA(0);
+		root.searchB(0, 0);
+		root.searchC(0);
+		root.searchD(0, 0);
 		for (i = 1; i < c; i++) {
+			root.searchA(i);
 			root.searchB(l - 1, i);
-		}
-		for (i = 0; i < l; i++) {
-			root.searchC(i);
-		}
-		for (i = 0; i < c; i++) {
 			root.searchD(0, i);
 		}
 		for (i = 1; i < l; i++) {
+			root.searchB(i, 0);
+			root.searchC(i);
 			root.searchD(i, 0);
 		}
 	}
