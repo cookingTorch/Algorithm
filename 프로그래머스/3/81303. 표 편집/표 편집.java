@@ -6,105 +6,86 @@ class Solution {
 	private static final char D = 'D';
 	private static final char Z = 'Z';
 	private static final char C = 'C';
-	private static final char O = 'O';
-	private static final char X = 'X';
+	private static final char[] XO = new char[] {'X', 'O'};
 	
-	private static int root;
-	private static int[] ft;
+	private static int block;
+	private static int[] arr;
+	private static int[] bucket;
 	private static char[] ans;
 	
-	private static int find(int prefix) {
+	private static int delete(int prefix) {
+		int i;
 		int idx;
 		int sum;
 		
-		idx = 0;
-		sum = 0;
-	    for (int i = root; i > 0; i >>= 1) {
-	        if (sum + ft[idx + i] < prefix) {
-	            sum += ft[idx += i];
-	        }
-	    }
-	    return idx + 1;
+		for (i = -1, sum = 0; sum < prefix; sum += bucket[++i]);
+		sum -= bucket[i]--;
+		for (idx = block * i - 1; sum < prefix; sum += arr[++idx]);
+		arr[idx]--;
+		return idx;
 	}
 	
-	private static void update(int idx, int diff) {
+	private static int undo(int idx) {
 		int i;
+		int num;
+		int prefix;
 		
-		if (diff == 1) {
-			ans[idx - 1] = O;
-		} else {
-			ans[idx - 1] = X;
-		}
-		for (i = idx; i <= root; i += (i & -i)) {
-			ft[i] += diff;
-		}
+		num = idx / block;
+		arr[idx]++;
+		bucket[num]++;
+		for (i = 0, prefix = 0; i < num; prefix += bucket[i++]);
+		for (i = block * num - 1; i < idx; prefix += arr[++i]);
+		return prefix;
 	}
 	
-	private static int sum(int idx) {
+	public String solution(int n, int k, String[] cmd) {
 		int i;
-		int sum;
+		int idx;
+		int size;
+		StringTokenizer st;
+		ArrayDeque<Integer> stack;
 		
-		sum = 0;
-		for (i = idx; i != 0; i -= (i & -i)) {
-			sum += ft[i];
+		arr = new int[n];
+		for (i = 0; i < n; i++) {
+			arr[i] = 1;
 		}
-		return sum;
+		block = (int) Math.sqrt(n);
+		bucket = new int[(n - 1) / block + 1];
+		for (i = 0; i < n / block; i++) {
+			bucket[i] = block;
+		}
+		if (i < bucket.length) {
+			bucket[i] = n % block;
+		}
+		idx = k + 1;
+		size = n;
+		stack = new ArrayDeque<>();
+		for (String str : cmd) {
+			st = new StringTokenizer(str);
+			switch (st.nextToken().charAt(0)) {
+			case U:
+				idx -= Integer.parseInt(st.nextToken());
+				break;
+			case D:
+				idx += Integer.parseInt(st.nextToken());
+				break;
+			case C:
+				stack.addFirst(delete(idx));
+				if (idx == size--) {
+					idx--;
+				}
+				break;
+			case Z:
+				if (undo(stack.removeFirst()) <= idx) {
+					idx++;
+				}
+				size++;
+			}
+		}
+		ans = new char[n];
+		for (i = 0; i < n; i++) {
+			ans[i] = XO[arr[i]];
+		}
+		return new String(ans);
 	}
-	
-    public String solution(int n, int k, String[] cmd) {
-    	int i;
-    	int len;
-    	int idx;
-    	int size;
-    	int prefix;
-    	StringTokenizer st;
-    	ArrayDeque<Integer> stack;
-    	
-    	ans = new char[n];
-    	for (i = 0; i < n; i++) {
-    		ans[i] = O;
-    	}
-    	for (root = 1; root < n; root <<= 1);
-        ft = new int[root + 1];
-        for (i = 1; i <= n; i++) {
-        	ft[i]++;
-        	if (i < root) {
-        		ft[i + (i & -i)] += ft[i];
-        	}
-        }
-        for (; i < root; i++) {
-        	ft[i + (i & -i)] += ft[i];
-        }
-        size = n;
-        prefix = k + 1;
-        stack = new ArrayDeque<>();
-        len = cmd.length;
-        for (i = 0; i < len; i++) {
-        	st = new StringTokenizer(cmd[i]);
-        	switch (st.nextToken().charAt(0)) {
-        	case U:
-        		prefix -= Integer.parseInt(st.nextToken());
-        		break;
-        	case D:
-        		prefix += Integer.parseInt(st.nextToken());
-        		break;
-        	case C:
-        		idx = find(prefix);
-        		stack.addFirst(idx);
-        		update(idx, -1);
-        		if (prefix == size--) {
-        			prefix--;
-        		}
-        		break;
-        	case Z:
-        		idx = stack.removeFirst();
-        		update(idx, 1);
-        		if (sum(idx) <= prefix) {
-        			prefix++;
-        		}
-        		size++;
-        	}
-        }
-        return new String(ans);
-    }
 }
