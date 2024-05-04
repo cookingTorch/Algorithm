@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final long MAX = 1_000_000_000_000_000_000L;
+	private static final Long MAX = 1_000_000_000L;
 	
 	public static void main(String[] args) throws IOException {
 		int n;
@@ -27,19 +27,19 @@ public class Main {
 			t[i] = Long.parseLong(br.readLine());
 		}
 		left = 1;
-		right = MAX;
-		while (left <= right) {
+		right = ((m - 1) / n + 1) * MAX;
+		while (left < right) {
 			mid = left + right >> 1;
 			people = m;
-			for (i = 0; i < n && people > 0; i++) {
+			for (i = 0; people > 0 && i < n; i++) {
 				people -= mid / t[i];
 			}
 			if (people > 0) {
 				left = mid + 1;
 			} else {
-				right = mid - 1;
+				right = mid;
 			}
 		}
-		System.out.print(left);
+		System.out.print(right);
 	}
 }
