@@ -15,11 +15,10 @@ class Solution {
     private static void init(int node, int start, int end) {
         int mid;
         
+        tree[node] = end - start + 1;
         if (start == end) {
-        	tree[node] = 1;
             return;
         }
-        tree[node] = end - start + 1;
         mid = start + end >> 1;
         init(node << 1, start, mid);
         init(node << 1 | 1, mid + 1, end);
