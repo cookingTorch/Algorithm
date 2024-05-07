@@ -18,25 +18,39 @@ public class Main {
 	
 	private static final class Node {
 		int val;
-		int start;
-		int end;
-		int mid;
 		Node left;
 		Node right;
 		
-		Node(int start, int end) {
-			this.start = start;
-			this.end = end;
-			this.mid = start + end >> 1;
+		final void init(int start, int end) {
+			int mid;
+			
+			if (start == end) {
+				return;
+			}
+			mid = start + end >> 1;
+			left = new Node();
+			right = new Node();
+			left.init(start, mid);
+			right.init(mid + 1, end);
 		}
 		
-		void build() {
-			this.left = new Node(start, mid);
-			this.right = new Node(mid + 1, end);
-		}
-		
-		boolean isLeaf() {
-			return start == end;
+		final Node attach(int start, int end, int num) {
+			int mid;
+			Node node;
+			
+			node = new Node();
+			if (start != end) {
+				mid = start + end >> 1;
+				if (num <= mid) {
+					node.left = left.attach(start, mid, num);
+					node.right = right;
+				} else {
+					node.left = left;
+					node.right = right.attach(mid + 1, end, num);
+				}
+			}
+			node.val = val + 1;
+			return node;
 		}
 	}
 	
@@ -66,23 +80,12 @@ public class Main {
 		}
 	}
 	
-	private static final void buildGraph(int curr, int parent) {
-		Edge child;
-		
-		parents[curr] = parent;
-		for (child = adj[curr]; child != null; child = child.next) {
-			if (child.idx == parent) {
-				continue;
-			}
-			buildGraph(child.idx, curr);
-		}
-	}
-	
 	private static final void dfs(int curr, int parent) {
 		Edge child;
 		
 		dp[0][curr] = parent;
 		depth[curr] = depth[parent] + 1;
+		parents[curr] = parent;
 		for (child = adj[curr]; child != null; child = child.next) {
 			if (child.idx == parent) {
 				continue;
@@ -91,41 +94,15 @@ public class Main {
 		}
 	}
 	
-	private static final void init(Node curr) {
-		if (curr.isLeaf()) {
-			return;
-		}
-		curr.build();
-		init(curr.left);
-		init(curr.right);
-	}
-	
-	private static final Node attach(Node parentNode, int num) {
-		Node node;
-		
-		node = new Node(parentNode.start, parentNode.end);
-		if (!parentNode.isLeaf()) {
-			if (num <= parentNode.mid) {
-				node.left = attach(parentNode.left, num);
-				node.right = parentNode.right;
-			} else {
-				node.left = parentNode.left;
-				node.right = attach(parentNode.right, num);
-			}
-		}
-		node.val = parentNode.val + 1;
-		return node;
-	}
-	
 	private static final Node getTree(int idx) {
 		if (trees[idx] != null) {
 			return trees[idx];
 		}
-		trees[idx] = attach(getTree(parents[idx]), arr[idx]);
+		trees[idx] = getTree(parents[idx]).attach(0, n - 1, arr[idx]);
 		return trees[idx];
 	}
 	
-	private static final int lca(int u, int v) {
+	private static final int getLca(int u, int v) {
 		int i;
 		int temp;
 		int diff;
@@ -152,33 +129,35 @@ public class Main {
 		return dp[0][u];
 	}
 	
-	private static final int query(Node node, int num) {
-		if (num < node.start) {
-			return 0;
+	private static final int query(Node x, Node y, Node lca, Node par, int start, int end, int k) {
+		int val;
+		int mid;
+		
+		if (start == end) {
+			return start;
 		}
-		if (node.end <= num) {
-			return node.val;
+		mid = start + end >> 1;
+		val = x.left.val + y.left.val - lca.left.val - par.left.val;
+		if (val >= k) {
+			return query(x.left, y.left, lca.left, par.left, start, mid, k);
+		} else {
+			return query(x.right, y.right, lca.right, par.right, mid + 1, end, k - val);
 		}
-		return query(node.left, num) + query(node.right, num);
 	}
 	
-	private static final int query(int x, int y, int val) {
-		int ancestor;
+	private static final int query(int x, int y, int k) {
+		int lca;
 		
-		ancestor = lca(x, y);
-		return query(getTree(x), val) + query(getTree(y), val) - query(getTree(ancestor), val) - query(getTree(parents[ancestor]), val);
+		lca = getLca(x, y);
+		return query(getTree(x), getTree(y), getTree(lca), getTree(parents[lca]), 0, n - 1, k);
 	}
 	
 	public static void main(String[] args) throws IOException {
 		int m;
 		int x;
 		int y;
-		int k;
 		int i;
 		int j;
-		int mid;
-		int left;
-		int right;
 		StringBuilder sb;
 		BufferedReader br;
 		StringTokenizer st;
@@ -201,6 +180,7 @@ public class Main {
 			adj[x] = new Edge(y, adj[x]);
 			adj[y] = new Edge(x, adj[y]);
 		}
+		parents = new int[n + 1];
 		logN = (int) Math.ceil(Math.log(n) / Math.log(2));
 		dp = new int[logN + 1][n + 1];
 		depth = new int[n + 1];
@@ -210,28 +190,13 @@ public class Main {
 				dp[i][j] = dp[i - 1][dp[i - 1][j]];
 			}
 		}
-		parents = new int[n + 1];
-		buildGraph(1, 0);
 		trees = new Node[n + 1];
-		trees[0] = new Node(0, n - 1);
-		init(trees[0]);
+		trees[0] = new Node();
+		trees[0].init(0, n - 1);
 		sb = new StringBuilder();
 		for (i = 0; i < m; i++) {
 			st = new StringTokenizer(br.readLine());
-			x = Integer.parseInt(st.nextToken());
-			y = Integer.parseInt(st.nextToken());
-			k = Integer.parseInt(st.nextToken());
-			left = 0;
-			right = n;
-			while (left < right) {
-				mid = left + right >> 1;
-				if (query(x, y, mid) < k) {
-					left = mid + 1;
-				} else {
-					right = mid;
-				}
-			}
-			sb.append(unique[right]).append('\n');
+			sb.append(unique[query(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()))]).append('\n');
 		}
 		System.out.print(sb);
 	}
