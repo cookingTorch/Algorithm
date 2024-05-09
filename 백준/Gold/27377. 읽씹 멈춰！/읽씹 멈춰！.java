@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final long INF = Long.MAX_VALUE;
+	private static final long MAX = 1_000_000_000L;
 	
 	private static BufferedReader br;
 	
@@ -21,7 +21,7 @@ public class Main {
 		for (ans = 0; n != 0;) {
 			if ((n & 1) == 0) {
 				n >>= 1;
-				if (n > INF / s || t <= n * s) {
+				if (n > MAX / s || t <= n * s) {
 					ans += t;
 				} else {
 					ans += n * s;
