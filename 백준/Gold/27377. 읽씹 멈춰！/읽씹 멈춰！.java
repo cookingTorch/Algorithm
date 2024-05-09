@@ -1,37 +1,34 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final BigInteger ZERO = new BigInteger("0");
-	private static final BigInteger ONE = new BigInteger("1");
-	private static final BigInteger TWO = new BigInteger("2");
+	private static final long INF = Long.MAX_VALUE;
 	
 	private static BufferedReader br;
 	
-	private static final BigInteger solution() throws IOException {
-		BigInteger n;
-		BigInteger s;
-		BigInteger t;
-		BigInteger ans;
+	private static final long solution() throws IOException {
+		long n;
+		long s;
+		long t;
+		long ans;
 		StringTokenizer st;
-		n = new BigInteger(br.readLine());
+		n = Long.parseLong(br.readLine());
 		st = new StringTokenizer(br.readLine());
-		s = new BigInteger(st.nextToken());
-		t = new BigInteger(st.nextToken());
-		for (ans = ZERO; n.compareTo(ZERO) != 0;) {
-			if (n.mod(TWO).compareTo(ZERO) == 0) {
-				n = n.divide(TWO);
-				if (t.compareTo(n.multiply(s)) <= 0) {
-					ans = ans.add(t);
+		s = Long.parseLong(st.nextToken());
+		t = Long.parseLong(st.nextToken());
+		for (ans = 0; n != 0;) {
+			if ((n & 1) == 0) {
+				n >>= 1;
+				if (n > INF / s || t <= n * s) {
+					ans += t;
 				} else {
-					ans = ans.add(n.multiply(s));
+					ans += n * s;
 				}
 			} else {
-				ans = ans.add(s);
-				n = n.subtract(ONE);
+				ans += s;
+				n--;
 			}
 		}
 		return ans;
