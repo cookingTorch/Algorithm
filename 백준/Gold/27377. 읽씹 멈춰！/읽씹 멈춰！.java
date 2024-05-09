@@ -4,8 +4,6 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final long MAX = 1_000_000_000L;
-	
 	private static BufferedReader br;
 	
 	private static final long solution() throws IOException {
@@ -13,15 +11,17 @@ public class Main {
 		long s;
 		long t;
 		long ans;
+		long ratio;
 		StringTokenizer st;
 		n = Long.parseLong(br.readLine());
 		st = new StringTokenizer(br.readLine());
 		s = Long.parseLong(st.nextToken());
 		t = Long.parseLong(st.nextToken());
+		ratio = (t - 1) / s + 1;
 		for (ans = 0; n != 0;) {
 			if ((n & 1) == 0) {
 				n >>= 1;
-				if (n > MAX / s || t <= n * s) {
+				if (n >= ratio) {
 					ans += t;
 				} else {
 					ans += n * s;
