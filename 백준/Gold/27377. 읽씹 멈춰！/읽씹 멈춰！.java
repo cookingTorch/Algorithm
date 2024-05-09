@@ -19,17 +19,16 @@ public class Main {
 		t = Long.parseLong(st.nextToken());
 		ratio = (t - 1) / s + 1;
 		for (ans = 0; n != 0;) {
-			if ((n & 1) == 0) {
+			while ((n & 1L) == 0L) {
 				n >>= 1;
 				if (n >= ratio) {
 					ans += t;
 				} else {
 					ans += n * s;
 				}
-			} else {
-				ans += s;
-				n--;
 			}
+			ans += s;
+			n--;
 		}
 		return ans;
 	}
