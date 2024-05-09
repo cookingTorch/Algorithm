@@ -13,22 +13,27 @@ public class Main {
 		long ans;
 		long ratio;
 		StringTokenizer st;
+		
 		n = Long.parseLong(br.readLine());
 		st = new StringTokenizer(br.readLine());
 		s = Long.parseLong(st.nextToken());
 		t = Long.parseLong(st.nextToken());
 		ratio = (t - 1) / s + 1;
-		for (ans = 0; n != 0;) {
-			while ((n & 1L) == 0L) {
+		if ((n & 1L) == 0L) {
+			ans = 0;
+		} else {
+			ans = s;
+			n--;
+		}
+		for (; n != 0; ans += s, n--) {
+			do {
 				n >>= 1;
 				if (n >= ratio) {
 					ans += t;
 				} else {
 					ans += n * s;
 				}
-			}
-			ans += s;
-			n--;
+			} while ((n & 1L) == 0L);
 		}
 		return ans;
 	}
