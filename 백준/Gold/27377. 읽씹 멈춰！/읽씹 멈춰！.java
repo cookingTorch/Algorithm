@@ -5,6 +5,10 @@ import java.math.BigInteger;
 import java.util.StringTokenizer;
 
 public class Main {
+	private static final BigInteger ZERO = new BigInteger("0");
+	private static final BigInteger ONE = new BigInteger("1");
+	private static final BigInteger TWO = new BigInteger("2");
+	
 	private static BufferedReader br;
 	
 	private static final BigInteger solution() throws IOException {
@@ -17,9 +21,9 @@ public class Main {
 		st = new StringTokenizer(br.readLine());
 		s = new BigInteger(st.nextToken());
 		t = new BigInteger(st.nextToken());
-		for (ans = BigInteger.ZERO; n.compareTo(BigInteger.ZERO) != 0;) {
-			if (n.mod(BigInteger.TWO).compareTo(BigInteger.ZERO) == 0) {
-				n = n.divide(BigInteger.TWO);
+		for (ans = ZERO; n.compareTo(ZERO) != 0;) {
+			if (n.mod(TWO).compareTo(ZERO) == 0) {
+				n = n.divide(TWO);
 				if (t.compareTo(n.multiply(s)) <= 0) {
 					ans = ans.add(t);
 				} else {
@@ -27,7 +31,7 @@ public class Main {
 				}
 			} else {
 				ans = ans.add(s);
-				n = n.subtract(BigInteger.ONE);
+				n = n.subtract(ONE);
 			}
 		}
 		return ans;
