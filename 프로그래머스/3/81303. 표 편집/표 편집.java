@@ -1,64 +1,98 @@
+import java.util.Arrays;
+import java.util.Stack;
+
 class Solution {
-	private static final int BEGIN = 2;
-    private static final int RADIX = 10;
-    private static final char U = 'U';
-    private static final char D = 'D';
-    private static final char C = 'C';
-    private static final char Z = 'Z';
-    private static final char O = 'O';
-    private static final char X = 'X';
-    
-    public String solution(int n, int k, String[] cmd) {
-        int i;
-        int head;
-        int move;
-        int[] node;
-        int[] prev;
-        int[] next;
-        int[][] stack;
-        char[] ans;
-        
-        ans = new char[n];
-        for (i = 0; i != n; i++) {
-            ans[i] = O;
-        }
-        prev = new int[n + 1];
-        next = new int[n + 1];
-        for (i = 0; i <= n; i++) {
-            prev[i] = i - 1;
-            next[i] = i + 1;
-        }
-        prev[0] = n;
-        next[n] = 0;
-        move = 0;
-        head = 0;
-        stack = new int[cmd.length][];
-        for (String query : cmd) {
-            switch (query.charAt(0)) {
-            case U:
-                move -= Integer.parseInt(query, BEGIN, query.length(), RADIX);
-                break;
-            case D:
-                move += Integer.parseInt(query, BEGIN, query.length(), RADIX);
-                break;
-            case C:
-                for (; move < 0; move++, k = prev[k]);
-                for (; move > 0; move--, k = next[k]);
-                ans[k] = X;
-                stack[head++] = new int[] {prev[k], k, next[k]};
-                prev[next[k]] = prev[k];
-                next[prev[k]] = next[k];
-                k = next[k] == n ? prev[k] : next[k];
-                break;
-            case Z:
-                for (; move < 0; move++, k = prev[k]);
-                for (; move > 0; move--, k = next[k]);
-                node = stack[--head];
-                prev[node[2]] = node[1];
-                next[node[0]] = node[1];
-                ans[node[1]] = O;
+	private static final class 현우 {
+		private static int thr;
+		private static int[] tree;
+		
+		static final int init(int node, int start, int end) {
+			int mid;
+			
+			if (start == end) {
+				return tree[node] = 1;
+			}
+			mid = start + end >> 1;
+			return tree[node] = init(node << 1, start, mid) + init(node << 1 | 1, mid + 1, end);
+		}
+		
+		static final void init(int size) {
+			thr = size - 1;
+			tree = new int[size << 2];
+			init(1, 0, thr);
+		}
+		
+		static final int delete(int node, int start, int end, int prefix) {
+			int mid;
+			
+			tree[node]--;
+			if (start == end) {
+				return start;
+			}
+			mid = start + end >> 1;
+			if (prefix <= tree[node << 1]) {
+				return delete(node << 1, start, mid, prefix);
+			}
+			return delete(node << 1 | 1, mid + 1, end, prefix - tree[node << 1]);
+		}
+		
+		static final int delete(int prefix) {
+			return delete(1, 0, thr, prefix);
+		}
+		
+		static final int undo(int node, int start, int end, int idx) {
+			int mid;
+			
+			tree[node]++;
+			if (start == end) {
+				return 1;
+			}
+			mid = start + end >> 1;
+			if (idx <= mid) {
+				return undo(node << 1, start, mid, idx);
+			}
+			return tree[node << 1] + undo(node << 1 | 1, mid + 1, end, idx);
+		}
+		
+		static final int undo(int idx) {
+			return undo(1, 0, thr, idx);
+		}
+	}
+	
+	public String solution(int n, int k, String[] cmd) {
+		현우.init(n);
+		k++;
+        StringBuilder answer = new StringBuilder();
+        boolean[] isUse = new boolean[n];
+        Arrays.fill(isUse, true);
+        Stack<int[]> stack = new Stack<>();
+        int size = n;
+        for (int i = 0; i < cmd.length; i++) {
+            String[] command = cmd[i].split(" ");
+            if (command[0].equals("D")) {
+                k += Integer.parseInt(command[1]);
+            } else if (command[0].equals("C")) {
+                stack.push(new int[] {n, 현우.delete(k)});
+                n -= 1;
+                if (k > n) k -= 1;
+            } else if (command[0].equals("U")) {
+                k -= Integer.parseInt(command[1]);
+            } else if (command[0].equals("Z")) {
+                int[] d = stack.pop();
+                n += 1;
+                if (현우.undo(d[1]) <= k) k += 1;
             }
         }
-        return new String(ans, 0, n);
+
+        while (!stack.isEmpty()) {
+            int[] now = stack.pop();
+            isUse[now[1]] = false;
+        }
+        for (int i = 0; i < size; i++) {
+            if (isUse[i]) answer.append("O");
+            else answer.append("X");
+        }
+
+        return answer.toString();
     }
 }
