@@ -49,9 +49,9 @@ public class Main {
 		roots = new int[n + 1];
 		for (i = 1; i <= n; i++) {
 			str = br.readLine();
-			for (j = i; j < n; j++) {
-				if (str.charAt(j << 1) == CONNECTED) {
-					union(i, j + 1);
+			for (j = i; j < n;) {
+				if (str.charAt(j++ << 1) == CONNECTED) {
+					union(i, j);
 				}
 			}
 		}
