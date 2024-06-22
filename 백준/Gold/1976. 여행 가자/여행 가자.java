@@ -39,31 +39,33 @@ public class Main {
 		int i;
 		int j;
 		int start;
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String str;
+		BufferedReader br;
 		StringTokenizer st;
 		
+		br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
 		m = Integer.parseInt(br.readLine());
 		roots = new int[n + 1];
 		for (i = 1; i <= n; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (j = 1; j <= i; j++) {
-				st.nextToken();
-			}
-			for (; j <= n; j++) {
-				if (st.nextToken().charAt(0) == CONNECTED) {
-					union(i, j);
+			str = br.readLine();
+			for (j = i; j < n; j++) {
+				if (str.charAt(j << 1) == CONNECTED) {
+					union(i, j + 1);
 				}
 			}
 		}
 		st = new StringTokenizer(br.readLine());
 		start = find(Integer.parseInt(st.nextToken()));
-		for (i = 1; i < m; i++) {
+		while (--m > 0) {
 			if (start != find(Integer.parseInt(st.nextToken()))) {
-				System.out.print(NO);
-				return;
+				break;
 			}
 		}
-		System.out.print(YES);
+		if (m == 0) {
+			System.out.print(YES);
+		} else {
+			System.out.print(NO);
+		}
 	}
 }
