@@ -3,50 +3,50 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-	private static final int START = -10000;
-	private static final int END = 10000;
+	private static final int DIFF = 10_001;
+	private static final int RANGE = 20_001;
+	private static final char LINE_BREAK = '\n';
 	
-	private static int[] tree;
+	private static int root;
+	private static int[] ft;
 	
-	private static void update(int node, int start, int end, int num) {
-		int mid;
+	private static final void insert(int num) {
+		int i;
 		
-		tree[node]++;
-		if (start == end) {
-			return;
-		}
-		mid = (start + end) >> 1;
-		if (num > mid) {
-			update(node * 2 + 1, mid + 1, end, num);
-		} else {
-			update(node * 2, start, mid, num);
+		for (i = num; i <= root; i += i & -i) {
+			ft[i]++;
 		}
 	}
 	
-	private static int search(int node, int start, int end, int idx) {
-		int mid;
+	private static final int query(int mid) {
+		int i;
+		int idx;
+		int prefix;
 		
-		if (start == end) {
-			return start;
+		idx = 0;
+		prefix = 0;
+		for (i = root; i > 0; i >>= 1) {
+			if (prefix + ft[idx + i] < mid) {
+				prefix += ft[idx += i];
+			}
 		}
-		mid = (start + end) >> 1;
-		if (tree[node * 2] < idx) {
-			return search(node * 2 + 1, mid + 1, end, idx - tree[node * 2]);
-		}
-		return search(node * 2, start, mid, idx);
+		return idx + 1;
 	}
 	
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+		int n;
+		int i;
+		StringBuilder sb;
+		BufferedReader br;
 		
-		int n, i;
-		
-		tree = new int[4 * (END - START)];
+		br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
-		for (i = 0; i < n; i++) {
-			update(1, START, END, Integer.parseInt(br.readLine()));
-			sb.append(search(1, START, END, (i >> 1) + 1)).append('\n');
+		for (root = 1; root < RANGE; root <<= 1);
+		ft = new int[root + 1];
+		sb = new StringBuilder();
+		for (i = 1; i <= n; i++) {
+			insert(Integer.parseInt(br.readLine()) + DIFF);
+			sb.append(query((i + 1) >> 1) - DIFF).append(LINE_BREAK);
 		}
 		System.out.print(sb);
 	}
