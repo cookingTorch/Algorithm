@@ -10,14 +10,14 @@ public class Main {
 	
 	private static int[] roots;
 	
-	private static int find(int v) {
+	private static final int find(int v) {
 		if (roots[v] <= 0) {
 			return v;
 		}
 		return roots[v] = find(roots[v]);
 	}
 	
-	private static void union(int u, int v) {
+	private static final void union(int u, int v) {
 		int ru, rv;
 		
 		if ((ru = find(u)) == (rv = find(v))) {
@@ -59,13 +59,10 @@ public class Main {
 		start = find(Integer.parseInt(st.nextToken()));
 		while (--m > 0) {
 			if (start != find(Integer.parseInt(st.nextToken()))) {
-				break;
+				System.out.print(NO);
+				return;
 			}
 		}
-		if (m == 0) {
-			System.out.print(YES);
-		} else {
-			System.out.print(NO);
-		}
+		System.out.print(YES);
 	}
 }
