@@ -72,6 +72,10 @@ public class Main {
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
 		m = Integer.parseInt(st.nextToken());
+		if (m < 2) {
+			System.out.print(YES);
+			return;
+		}
 		k = Long.parseLong(st.nextToken());
 		pq = new PriorityQueue<>();
 		st = new StringTokenizer(br.readLine());
@@ -106,10 +110,6 @@ public class Main {
 		if (!constructions[n] && union(n, 1)) {
 			thr--;
 		}
-		if (thr == 1) {
-			System.out.print(YES);
-			return;
-		}
 		island = n + 1;
 		for (i = 0; i < thr;) {
 			edge = pq.poll();
@@ -120,10 +120,6 @@ public class Main {
 				i++;
 			}
 		}
-		if (i == thr) {
-			System.out.print(YES);
-		} else {
-			System.out.print(NO);
-		}
+		System.out.print(i == thr ? YES : NO);
 	}
 }
