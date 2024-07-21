@@ -9,6 +9,12 @@ struct priority_queue_s {
 };
 
 void
+priority_queue_init(priority_queue_t *pq, int (*cmp)(int, int)) {
+    pq->size = 0;
+    pq->cmp = cmp;
+}
+
+void
 priority_queue_offer(priority_queue_t *pq, int val)
 {
 	int idx;
@@ -89,8 +95,7 @@ main()
 	int x;
 	priority_queue_t pq;
 
-	pq.size = 0;
-	pq.cmp = &cmp_reverse_order;
+    priority_queue_init(&pq, &cmp_reverse_order);
 	scanf("%d", &n);
 	while (n-- > 0) {
 		scanf("%d", &x);
