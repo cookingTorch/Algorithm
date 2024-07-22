@@ -2,21 +2,21 @@
 
 int _n;
 int _ans;
-int _line;
+int _full;
 
 void
-n_queen_dfs(int depth, int full, int left, int right)
+n_queen_dfs(int visited, int left, int right)
 {
 	int bit;
 	int pos;
 
-	if (depth == _n) {
+	if (visited == _full) {
 		_ans++;
 		return;
 	}
-	for (bit = ~(full | left | right) & _line; bit != 0; bit ^= pos) {
+	for (bit = ~(visited | left | right) & _full; bit != 0; bit ^= pos) {
 		pos = bit & -bit;
-		n_queen_dfs(depth + 1, full | pos, (left | pos) << 1, (right | pos) >> 1);
+		n_queen_dfs(visited | pos, (left | pos) << 1, (right | pos) >> 1);
 	}
 }
 
@@ -24,8 +24,8 @@ int
 main()
 {
 	scanf("%d", &_n);
-	_ans = 0;
-	_line = (1 << _n) - 1;
-	n_queen_dfs(0, 0, 0, 0);
+	_full = (1 << _n) - 1;
+	n_queen_dfs(0, 0, 0);
 	printf("%d", _ans);
+	return 0;
 }
