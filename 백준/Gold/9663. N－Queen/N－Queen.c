@@ -1,7 +1,6 @@
 #include <stdio.h>
 
-int _n;
-int _ans;
+int _cnt;
 int _full;
 
 void
@@ -11,7 +10,7 @@ n_queen_dfs(int visited, int left, int right)
 	int pos;
 
 	if (visited == _full) {
-		_ans++;
+		_cnt++;
 		return;
 	}
 	for (bit = ~(visited | left | right) & _full; bit != 0; bit ^= pos) {
@@ -23,9 +22,19 @@ n_queen_dfs(int visited, int left, int right)
 int
 main()
 {
-	scanf("%d", &_n);
-	_full = (1 << _n) - 1;
-	n_queen_dfs(0, 0, 0);
-	printf("%d", _ans);
+	int n;
+	int pos;
+	int mid;
+
+	scanf("%d", &n);
+	_full = (1 << n) - 1;
+	mid = 1 << (n >> 1);
+	for (pos = 1; pos < mid; pos <<= 1) {
+		n_queen_dfs(pos, pos << 1, pos >> 1);
+	}
+	_cnt <<= 1;
+	if ((n & 1) == 1)
+		n_queen_dfs(mid, mid << 1, mid >> 1);
+	printf("%d", _cnt);
 	return 0;
 }
