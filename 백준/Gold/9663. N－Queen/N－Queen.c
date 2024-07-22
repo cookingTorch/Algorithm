@@ -33,7 +33,7 @@ main()
 		n_queen_dfs(pos, pos << 1, pos >> 1);
 	}
 	_cnt <<= 1;
-	if ((n & 1) == 1)
+	if (n & 1)
 		n_queen_dfs(mid, mid << 1, mid >> 1);
 	printf("%d", _cnt);
 	return 0;
