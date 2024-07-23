@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ROBOT_WALL  '1'
-#define ROBOT_EMPTY '0'
+#define ROBOT_WALL	'1'
+#define ROBOT_EMPTY	'0'
 
 int
 robot_clean(int m, int pos, int d, char *map)
@@ -12,14 +12,13 @@ robot_clean(int m, int pos, int d, char *map)
 	int i;
 	int rc;
 
-	for (rc = 0;;) {
-		if (map[pos] == ROBOT_EMPTY) {
-			map[pos]--;
+	map[pos]--;
+	for (rc = 1;;) {
+		for (i = 4; i > 0 && map[pos + delta[d = (d + 3) % 4]] != ROBOT_EMPTY; i--);
+		if (i) {
+			map[pos += delta[d]]--;
 			rc++;
 		}
-		for (i = 4; i > 0 && map[pos + delta[d = (d + 3) % 4]] != ROBOT_EMPTY; i--);
-		if (i)
-			pos += delta[d];
 		else if (map[pos += delta[(d + 2) % 4]] == ROBOT_WALL)
 			break;
 	}
