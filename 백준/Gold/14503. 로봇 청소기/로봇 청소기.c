@@ -14,7 +14,7 @@ robot_clean(int m, int pos, int d, char *map)
 
 	map[pos]--;
 	for (rc = 1;;) {
-		for (i = 4; i > 0 && map[pos + delta[d = (d + 3) % 4]] != ROBOT_EMPTY; i--);
+		for (i = 4; i && map[pos + delta[d = (d + 3) % 4]] != ROBOT_EMPTY; i--);
 		if (i) {
 			map[pos += delta[d]]--;
 			rc++;
