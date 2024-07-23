@@ -12,30 +12,35 @@ struct array_deque_s {
 };
 
 void
-array_deque_init(array_deque_t *dq) {
+array_deque_init(array_deque_t *dq)
+{
     dq->head = 0;
     dq->tail = 0;
 }
 
 void
-array_deque_add_last(array_deque_t *dq, int val) {
+array_deque_add_last(array_deque_t *dq, int val)
+{
     dq->tail = (dq->tail + 1) % ARRAY_DEQUE_SIZE;
     dq->elements[dq->tail] = val;
 }
 
 void
-array_deque_add_first(array_deque_t *dq, int val) {
+array_deque_add_first(array_deque_t *dq, int val)
+{
     dq->elements[dq->head] = val;
     dq->head = (dq->head + ARRAY_DEQUE_SIZE - 1) % ARRAY_DEQUE_SIZE;
 }
 
 int
-array_deque_poll_first(array_deque_t *dq) {
+array_deque_poll_first(array_deque_t *dq)
+{
     return dq->elements[dq->head = (dq->head + 1) % ARRAY_DEQUE_SIZE];
 }
 
 int
-hide_and_seek_bfs_0_1(int n, int k) {
+hide_and_seek_bfs_0_1(int n, int k)
+{
     int i;
     int size;
     int curr;
@@ -73,7 +78,8 @@ hide_and_seek_bfs_0_1(int n, int k) {
 }
 
 int
-main() {
+main()
+{
     int n;
     int k;
 
