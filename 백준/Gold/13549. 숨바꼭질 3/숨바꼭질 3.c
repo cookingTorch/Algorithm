@@ -30,11 +30,8 @@ main()
     int k;
 
     scanf("%d %d", &_n, &k);
-    if (_n >= k) {
-        printf("%d", _n - k);
-        return 0;
-    }
-    _min = k - _n;
+    if ((_min = _n - k) < 0)
+        _min = -_min;
     if (_n) {
         hide_and_seek_dfs(k, 0);
     }
