@@ -14,7 +14,6 @@ int
 main()
 {
     int n;
-    int m;
     int r;
     int c;
     int d;
@@ -22,7 +21,7 @@ main()
     int cnt;
 
     scanf("%d", &n);
-    scanf("%d", &m);
+    scanf("%*s");
     scanf("%d", &r);
     scanf("%d", &c);
     scanf("%d", &d);
