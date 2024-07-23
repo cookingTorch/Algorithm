@@ -51,11 +51,7 @@ main()
     int m;
     int i;
 
-    scanf("%d", &n);
-    scanf("%d", &m);
-    scanf("%d", &_r);
-    scanf("%d", &_c);
-    scanf("%d", &_d);
+    scanf("%d %d\n%d %d %d", &n, &m, &_r, &_c, &_d);
     m <<= 1;
     _map = (char **) malloc(n * sizeof(char *));
     for (i = 0; i < n; i++) {
