@@ -5,11 +5,14 @@
 #define TRIE_ROOT           0
 #define TRIE_MAX_NODE       728279
 #define TRIE_ALPHABET       26
-#define TRIE_STR_MAX_LEN    16
+#define TRIE_BUFF_SIZE      3249992
+#define TRIE_STR_MAX_LEN    11
 
 int _idx;
 int _num[TRIE_MAX_NODE];
 int _next[TRIE_MAX_NODE][TRIE_ALPHABET];
+char *_ptr;
+char _buff[TRIE_BUFF_SIZE];
 
 int
 trie_new()
@@ -24,27 +27,26 @@ trie_insert(char *str)
 {
     int idx;
     int curr;
-    char *ch;
+    char *start;
 
-    ch = str;
-    for (curr = TRIE_ROOT; *ch; ch++, curr = _next[curr][idx]) {
-        idx = *ch - TRIE_DIFF;
+    for (curr = TRIE_ROOT; *str; str++, curr = _next[curr][idx]) {
+        *(_ptr++) = *str;
+        idx = *str - TRIE_DIFF;
         if (!_next[curr][idx]) {
-            _next[curr][idx] = trie_new();
+            curr = _next[curr][idx] = trie_new();
+            str++;
             break;
         }
     }
-    if (*ch) {
-        str = ch + 1;
-        for (; *ch; ch++, curr = _next[curr][idx]) {
-            idx = *ch - TRIE_DIFF;
+    if (*str) {
+        for (; *str; str++, curr = _next[curr][idx]) {
+            idx = *str - TRIE_DIFF;
             if (!_next[curr][idx])
                 _next[curr][idx] = trie_new();
         }
-        *str = '\0';
     }
     else if (_num[curr])
-        sprintf(ch, "%d", _num[curr] + 1);
+        _ptr += sprintf(_ptr, "%d", _num[curr] + 1);
     _num[curr]++;
 }
 
@@ -56,11 +58,14 @@ main()
 
     _idx = 0;
     trie_new();
+    _ptr = _buff;
     scanf("%d", &n);
     while (n--) {
         scanf("%s", str);
         trie_insert(str);
-        printf("%s\n", str);
+        *(_ptr++) = '\n';
     }
+    *_ptr = '\0';
+    printf("%s", _buff);
     return 0;
 }
