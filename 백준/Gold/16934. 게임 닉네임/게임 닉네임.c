@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define TRIE_DIFF           'a'
 #define TRIE_ALPHABET       26
@@ -8,16 +9,17 @@
 typedef struct trie_s trie_t;
 struct trie_s {
     int num;
-    trie_t **next;
+    trie_t *next[TRIE_ALPHABET];
 };
 
 trie_t *
 trie_new()
 {
+    int i;
     trie_t* trie;
 
     trie = (trie_t *) malloc(sizeof(trie_t));
-    trie->next = (trie_t **) calloc(TRIE_ALPHABET, sizeof(trie_t *));
+    memset(trie->next, 0, TRIE_ALPHABET);
     return trie;
 }
 
