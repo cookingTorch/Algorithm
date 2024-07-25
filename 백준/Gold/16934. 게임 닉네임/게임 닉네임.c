@@ -1,55 +1,51 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #define TRIE_DIFF           'a'
+#define TRIE_ROOT           0
+#define TRIE_MAX_NODE       728279
 #define TRIE_ALPHABET       26
 #define TRIE_STR_MAX_LEN    16
 
-typedef struct trie_s trie_t;
-struct trie_s {
-    int num;
-    trie_t *next[TRIE_ALPHABET];
-};
+int _idx;
+int _num[TRIE_MAX_NODE];
+int _next[TRIE_MAX_NODE][TRIE_ALPHABET];
 
-trie_t *
+int
 trie_new()
 {
-    int i;
-    trie_t* trie;
-
-    trie = (trie_t *) malloc(sizeof(trie_t));
-    memset(trie->next, 0, TRIE_ALPHABET);
-    return trie;
+    _num[_idx] = 0;
+    memset(&_next[_idx], 0, TRIE_ALPHABET * sizeof(int));
+    return _idx++;
 }
 
 void
-trie_insert(trie_t *trie, char *str)
+trie_insert(char *str)
 {
     int idx;
+    int curr;
     char *ch;
-    trie_t *curr;
 
     ch = str;
-    for (curr = trie; *ch; ch++, curr = curr->next[idx]) {
+    for (curr = TRIE_ROOT; *ch; ch++, curr = _next[curr][idx]) {
         idx = *ch - TRIE_DIFF;
-        if (!(curr->next[idx])) {
-            curr->next[idx] = trie_new();
+        if (!_next[curr][idx]) {
+            _next[curr][idx] = trie_new();
             break;
         }
     }
     if (*ch) {
         str = ch + 1;
-        for (; *ch; ch++, curr = curr->next[idx]) {
+        for (; *ch; ch++, curr = _next[curr][idx]) {
             idx = *ch - TRIE_DIFF;
-            if (!(curr->next[idx]))
-                curr->next[idx] = trie_new();
+            if (!_next[curr][idx])
+                _next[curr][idx] = trie_new();
         }
         *str = '\0';
     }
-    else if (curr->num)
-        sprintf(ch, "%d", curr->num + 1);
-    curr->num++;
+    else if (_num[curr])
+        sprintf(ch, "%d", _num[curr] + 1);
+    _num[curr]++;
 }
 
 int
@@ -57,13 +53,13 @@ main()
 {
     int n;
     char str[TRIE_STR_MAX_LEN];
-    trie_t *trie;
 
+    _idx = 0;
+    trie_new();
     scanf("%d", &n);
-    trie = trie_new();
-    while (n-- > 0) {
+    while (n--) {
         scanf("%s", str);
-        trie_insert(trie, str);
+        trie_insert(str);
         printf("%s\n", str);
     }
     return 0;
