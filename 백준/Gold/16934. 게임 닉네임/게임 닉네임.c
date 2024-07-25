@@ -14,7 +14,6 @@ struct trie_s {
 trie_t *
 trie_new()
 {
-    int i;
     trie_t* trie;
 
     trie = (trie_t *) malloc(sizeof(trie_t));
@@ -25,12 +24,9 @@ trie_new()
 void
 trie_insert(trie_t *trie, char *str)
 {
-    int i;
     int idx;
-    int len;
     char *ch;
     trie_t *curr;
-    trie_t *next;
 
     ch = str;
     for (curr = trie; *ch; ch++, curr = curr->next[idx]) {
