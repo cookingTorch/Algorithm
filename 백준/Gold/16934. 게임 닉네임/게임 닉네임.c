@@ -27,7 +27,6 @@ trie_insert(char *str)
 {
     int idx;
     int curr;
-    char *start;
 
     for (curr = TRIE_ROOT; *str; str++, curr = _next[curr][idx]) {
         *(_ptr++) = *str;
