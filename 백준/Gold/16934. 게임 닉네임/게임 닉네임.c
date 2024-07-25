@@ -36,17 +36,18 @@ trie_insert(trie_t *trie, char *str)
             break;
         }
     }
-    printf("%.*s", (int) (ch - str + 1), str);
-    if (*ch)
+    if (*ch) {
+        str = ch + 1;
         for (; *ch; ch++, curr = curr->next[idx]) {
             idx = *ch - TRIE_DIFF;
             if (!(curr->next[idx]))
                 curr->next[idx] = trie_new();
         }
+        *str = '\0';
+    }
     else if (curr->num)
-        printf("%d", curr->num + 1);
+        sprintf(ch, "%d", curr->num + 1);
     curr->num++;
-    printf("\n");
 }
 
 int
@@ -61,6 +62,7 @@ main()
     while (n-- > 0) {
         scanf("%s", str);
         trie_insert(trie, str);
+        printf("%s\n", str);
     }
     return 0;
 }
