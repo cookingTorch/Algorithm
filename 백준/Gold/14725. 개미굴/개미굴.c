@@ -25,7 +25,7 @@ typedef struct hash_map_s hash_map_t;
 struct hash_map_s
 {
     unsigned int (*hash_code)(void *);
-    int (*equals)(void *, void *);
+    int (*cmp)(void *, void *);
     linked_list_t *table[HASH_MAP_CAPACITY];
 };
 
@@ -67,14 +67,14 @@ void linked_list_add_first(linked_list_t **list, void *data)
 }
 
 hash_map_t *
-hash_map_new(unsigned int (*hash_code)(void *), int (*equals)(void *, void *))
+hash_map_new(unsigned int (*hash_code)(void *), int (*cmp)(void *, void *))
 {
     int i;
     hash_map_t *map;
 
     map = (hash_map_t *)malloc(sizeof(hash_map_t));
     map->hash_code = hash_code;
-    map->equals = equals;
+    map->cmp = cmp;
     memset(map->table, 0, HASH_MAP_CAPACITY * sizeof(linked_list_t *));
     return map;
 }
@@ -85,11 +85,11 @@ void hash_map_put(hash_map_t *map, void *key, void *value)
 }
 
 entry_t *
-hash_map_get_enrty(linked_list_t *list, void *key, int (*equals)(void *, void *))
+hash_map_get_enrty(linked_list_t *list, void *key, int (*cmp)(void *, void *))
 {
     for (; list; list = list->next)
     {
-        if (equals(((entry_t *)(list->data))->key, key))
+        if (!cmp(((entry_t *)(list->data))->key, key))
             return (entry_t *)(list->data);
     }
     return NULL;
@@ -99,7 +99,7 @@ void *
 hash_map_get(hash_map_t *map, void *key)
 {
     entry_t *entry;
-    entry = hash_map_get_enrty(map->table[(map->hash_code(key)) & (HASH_MAP_CAPACITY - 1)], key, map->equals);
+    entry = hash_map_get_enrty(map->table[(map->hash_code(key)) & (HASH_MAP_CAPACITY - 1)], key, map->cmp);
     if (!entry)
         return NULL;
     return entry->value;
@@ -179,12 +179,12 @@ priority_queue_poll(priority_queue_t *pq)
 }
 
 trie_t *
-trie_new(unsigned int (*hash_code)(void *), int (*equals)(void *, void *), int (*cmp)(void *, void *))
+trie_new(unsigned int (*hash_code)(void *), int (*cmp)(void *, void *))
 {
     trie_t *trie;
 
     trie = (trie_t *)malloc(sizeof(trie_t));
-    trie->next = hash_map_new(hash_code, equals);
+    trie->next = hash_map_new(hash_code, cmp);
     trie->pq = priority_queue_new(cmp);
     return trie;
 }
@@ -198,7 +198,7 @@ void trie_insert(trie_t *trie, char *token)
     if (child == NULL)
     {
         key = strdup(token);
-        child = trie_new(trie->next->hash_code, trie->next->equals, trie->pq->cmp);
+        child = trie_new(trie->next->hash_code, trie->pq->cmp);
         hash_map_put(trie->next, key, child);
         priority_queue_offer(trie->pq, key);
     }
@@ -234,18 +234,6 @@ string_hash_code(void *ptr)
     return rc;
 }
 
-int string_equals(void *ptr1, void *ptr2)
-{
-    unsigned char *str1;
-    unsigned char *str2;
-
-    str1 = (unsigned char *)ptr1;
-    str2 = (unsigned char *)ptr2;
-    for (; *str1 && *str1 == *str2; str1++, str2++)
-        ;
-    return *str1 == *str2;
-}
-
 int string_compare(void *ptr1, void *ptr2)
 {
     unsigned char *str1;
@@ -274,7 +262,7 @@ int main()
     trie_t *trie;
 
     scanf("%d", &n);
-    trie = trie_new(&string_hash_code, &string_equals, &string_compare);
+    trie = trie_new(&string_hash_code, &string_compare);
     max = 0;
     for (i = 0; i < n; i++)
     {
