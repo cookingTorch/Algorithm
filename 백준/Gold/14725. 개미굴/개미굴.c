@@ -164,8 +164,7 @@ priority_queue_poll(priority_queue_t *pq)
     size = --pq->size;
     parent = 1;
     child = parent << 1;
-    while (child <= size)
-    {
+    while (child <= size) {
         if (child < size && cmp(heap[child], heap[child + 1]) > 0)
             child++;
         if (cmp(val, heap[child]) <= 0)
