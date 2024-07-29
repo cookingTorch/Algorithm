@@ -56,7 +56,8 @@ entry_new(void *key, void *value)
     return entry;
 }
 
-void linked_list_add_first(linked_list_t **list, void *data)
+void
+linked_list_add_first(linked_list_t **list, void *data)
 {
     linked_list_t *node;
 
@@ -79,7 +80,8 @@ hash_map_new(unsigned int (*hash_code)(void *), int (*cmp)(void *, void *))
     return map;
 }
 
-void hash_map_put(hash_map_t *map, void *key, void *value)
+void
+hash_map_put(hash_map_t *map, void *key, void *value)
 {
     linked_list_add_first(&(map->table[(map->hash_code(key)) & (HASH_MAP_CAPACITY - 1)]), entry_new(key, value));
 }
@@ -117,7 +119,8 @@ priority_queue_new(int (*cmp)(void *, void *))
     return pq;
 }
 
-void priority_queue_offer(priority_queue_t *pq, void *val)
+void
+priority_queue_offer(priority_queue_t *pq, void *val)
 {
     int child;
     int parent;
@@ -186,7 +189,8 @@ trie_new(unsigned int (*hash_code)(void *), int (*cmp)(void *, void *))
     return trie;
 }
 
-void trie_insert(trie_t *trie, char *token)
+void
+trie_insert(trie_t *trie, char *token)
 {
     char *key;
     trie_t *child;
@@ -202,7 +206,8 @@ void trie_insert(trie_t *trie, char *token)
         trie_insert(child, token);
 }
 
-void trie_print(trie_t *trie, char *indent)
+void
+trie_print(trie_t *trie, char *indent)
 {
     char *key;
     hash_map_t *map;
@@ -229,7 +234,8 @@ string_hash_code(void *ptr)
     return rc;
 }
 
-int string_compare(void *ptr1, void *ptr2)
+int
+string_compare(void *ptr1, void *ptr2)
 {
     unsigned char *str1;
     unsigned char *str2;
@@ -244,7 +250,8 @@ int string_compare(void *ptr1, void *ptr2)
     return 1;
 }
 
-int main()
+int
+main()
 {
     int n;
     int i;
