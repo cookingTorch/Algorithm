@@ -65,7 +65,6 @@ linked_list_add_first(linked_list_t **list, void *data)
 hash_map_t *
 hash_map_new(unsigned int (*hash_code)(void *), int (*cmp)(void *, void *))
 {
-    int i;
     hash_map_t *map;
 
     map = (hash_map_t *)malloc(sizeof(hash_map_t));
@@ -187,17 +186,16 @@ void
 trie_insert(trie_t *trie, char *token)
 {
     char *key;
-    trie_t *child;
+    trie_t *next;
 
-    child = hash_map_get(trie->next, token);
-    if (child == NULL) {
-        key = strdup(token);
-        child = trie_new(trie->next->hash_code, trie->pq->cmp);
-        hash_map_put(trie->next, key, child);
-        priority_queue_offer(trie->pq, key);
+    for (; token; token = strtok(NULL, " "), trie = next) {
+        if (!(next = hash_map_get(trie->next, token))) {
+            key = strdup(token);
+            next = trie_new(trie->next->hash_code, trie->next->cmp);
+            hash_map_put(trie->next, key, next);
+            priority_queue_offer(trie->pq, key);
+        }
     }
-    if ((token = strtok(NULL, " ")))
-        trie_insert(child, token);
 }
 
 void
