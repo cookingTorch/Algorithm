@@ -8,30 +8,26 @@
 #define STRING_SIZE             240
 
 typedef struct entry_s entry_t;
-struct entry_s
-{
+struct entry_s {
     void *key;
     void *value;
 };
 
 typedef struct linked_list_s linked_list_t;
-struct linked_list_s
-{
+struct linked_list_s {
     void *data;
     linked_list_t *next;
 };
 
 typedef struct hash_map_s hash_map_t;
-struct hash_map_s
-{
+struct hash_map_s {
     unsigned int (*hash_code)(void *);
     int (*cmp)(void *, void *);
     linked_list_t *table[HASH_MAP_CAPACITY];
 };
 
 typedef struct priority_queue_s priority_queue_t;
-struct priority_queue_s
-{
+struct priority_queue_s {
     int cap;
     int size;
     int (*cmp)(void *, void *);
@@ -39,8 +35,7 @@ struct priority_queue_s
 };
 
 typedef struct trie_s trie_t;
-struct trie_s
-{
+struct trie_s {
     hash_map_t *next;
     priority_queue_t *pq;
 };
