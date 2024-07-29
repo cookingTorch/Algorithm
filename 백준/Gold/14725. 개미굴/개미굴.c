@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define HASH_PRIME 31U
-#define HASH_MAP_CAPACITY 1024
+#define HASH_PRIME              31U
+#define HASH_MAP_CAPACITY       1024
 #define PRIORITY_QUEUE_CAPACITY 10
-#define STRING_SIZE 240
+#define STRING_SIZE             240
 
 typedef struct entry_s entry_t;
 struct entry_s
@@ -87,8 +87,7 @@ void hash_map_put(hash_map_t *map, void *key, void *value)
 entry_t *
 hash_map_get_enrty(linked_list_t *list, void *key, int (*cmp)(void *, void *))
 {
-    for (; list; list = list->next)
-    {
+    for (; list; list = list->next) {
         if (!cmp(((entry_t *)(list->data))->key, key))
             return (entry_t *)(list->data);
     }
@@ -131,8 +130,7 @@ void priority_queue_offer(priority_queue_t *pq, void *val)
         pq->heap = (void **)realloc(pq->heap, (pq->cap <<= 1) * sizeof(void *));
     heap = pq->heap;
     heap[child] = val;
-    while (child > 1)
-    {
+    while (child > 1) {
         parent = child >> 1;
         if (cmp(val, heap[parent]) >= 0)
             break;
@@ -153,8 +151,7 @@ priority_queue_poll(priority_queue_t *pq)
     void *val;
     void **heap;
 
-    if (!pq->size)
-    {
+    if (!pq->size) {
         return NULL;
     }
     cmp = pq->cmp;
@@ -195,8 +192,7 @@ void trie_insert(trie_t *trie, char *token)
     trie_t *child;
 
     child = hash_map_get(trie->next, token);
-    if (child == NULL)
-    {
+    if (child == NULL) {
         key = strdup(token);
         child = trie_new(trie->next->hash_code, trie->pq->cmp);
         hash_map_put(trie->next, key, child);
@@ -214,8 +210,7 @@ void trie_print(trie_t *trie, char *indent)
 
     map = trie->next;
     pq = trie->pq;
-    while (pq->size)
-    {
+    while (pq->size) {
         key = priority_queue_poll(pq);
         printf("%s%s\n", indent, key);
         trie_print(hash_map_get(map, key), indent - 2);
@@ -241,8 +236,7 @@ int string_compare(void *ptr1, void *ptr2)
 
     str1 = (unsigned char *)ptr1;
     str2 = (unsigned char *)ptr2;
-    for (; *str1 && *str1 == *str2; str1++, str2++)
-        ;
+    for (; *str1 && *str1 == *str2; str1++, str2++);
     if (*str1 == *str2)
         return 0;
     if (*str1 < *str2)
@@ -264,8 +258,7 @@ int main()
     scanf("%d", &n);
     trie = trie_new(&string_hash_code, &string_compare);
     max = 0;
-    for (i = 0; i < n; i++)
-    {
+    for (i = 0; i < n; i++) {
         scanf("%d %[^\n]", &num, str);
         if (num > max)
             max = num;
