@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define HASH_PRIME              31U
-#define HASH_MAP_CAPACITY       32
+#define HASH_MAP_CAPACITY       16
 #define PRIORITY_QUEUE_CAPACITY 10
 #define STRING_SIZE             240
 
