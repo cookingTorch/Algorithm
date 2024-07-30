@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define HASH_PRIME              31U
-#define HASH_MAP_CAPACITY       1024
+#define HASH_MAP_CAPACITY       32
 #define PRIORITY_QUEUE_CAPACITY 10
 #define STRING_SIZE             240
 
@@ -265,7 +265,7 @@ main()
     }
     len = (max << 1) - 1;
     indent = (char *)malloc(len * sizeof(char));
-    memset(indent, '-', len * sizeof(char));
+    memset(indent, '-', (len - 1) * sizeof(char));
     indent[len - 1] = '\0';
     trie_print(trie, &(indent[len - 1]));
     return 0;
