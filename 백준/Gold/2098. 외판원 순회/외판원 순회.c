@@ -3,8 +3,6 @@
 
 #define TSP_INF 1073741823
 
-int **_dp;
-
 int
 main()
 {
