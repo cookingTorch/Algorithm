@@ -3,45 +3,61 @@
 
 #define TSP_INF 1073741823
 
-int _n;
 int **_dp;
-int **_cost;
-
-int
-tsp_get_dp(int curr, int visited)
-{
-    int rc;
-    int sum;
-    int next;
-
-    if (_dp[curr][visited])
-        return _dp[curr][visited];
-    rc = TSP_INF;
-    for (next = 1; next < _n; next++) {
-        if (!(visited & (1 << next)) && _cost[curr][next]) {
-            if ((sum = tsp_get_dp(next, visited | (1 << next)) + _cost[curr][next]) < rc)
-                rc = sum;
-        }
-    }
-    return _dp[curr][visited] = rc;
-}
 
 int
 main()
 {
+    int n;
     int i;
     int j;
+    int bit;
+    int val;
+    int min;
+    int full;
+    int visited;
+    int **dp;
+    int **cost;
 
-    scanf("%d", &_n);
-    _cost = (int **) malloc(_n * sizeof(int *));
-    _dp = (int **) malloc(_n * sizeof(int *));
-    for (i = 0; i < _n; i++) {
-        _cost[i] = (int *) malloc(_n * sizeof(int));
-        _dp[i] = (int *) calloc(1 << _n, sizeof(int));
-        scanf("%d", _cost[i]);
-        _dp[i][(1 << _n) - 1] = (_cost[i][0] ? _cost[i][0] : TSP_INF);
-        for (j = 1; j < _n; j++)
-            scanf("%d", &(_cost[i][j]));
+    scanf("%d", &n);
+    full = (1 << n) - 1;
+    cost = (int **) malloc(n * sizeof(int *));
+    dp = (int **) malloc(n * sizeof(int *));
+    for (i = 0; i < n; i++) {
+        cost[i] = (int *) malloc(n * sizeof(int));
+        dp[i] = (int *) malloc((full + 1) * sizeof(int));
+        scanf("%d", cost[i]);
+        for (j = 1; j < n; j++)
+            scanf("%d", &(cost[i][j]));
+        for (j = 0; j <= full; j++)
+            dp[i][j] = TSP_INF;
     }
-    printf("%d", tsp_get_dp(0, 1));
+    dp[0][1] = 0;
+    for (visited = 1; visited <= full; visited++) {
+        if (!(visited & 1))
+            continue;
+        for (i = 1; (1 << i) < visited; i++) {
+            if (!(visited & (1 << i)) || !(visited - (1 << i)))
+                continue;
+            bit = visited ^ (1 << i);
+            min = TSP_INF;
+            for (j = 0; j < n; j++) {
+                if (!cost[j][i])
+                    continue;
+                val = dp[j][bit] + cost[j][i];
+                if (val < min)
+                    min = val;
+            }
+            dp[i][visited] = min;
+        }
+    }
+    min = TSP_INF;
+    for (i = 0; i < n; i++) {
+        if (!cost[i][0])
+            continue;
+        val = dp[i][full] + cost[i][0];
+        if (val < min)
+            min = val;
+    }
+    printf("%d", min);
 }
