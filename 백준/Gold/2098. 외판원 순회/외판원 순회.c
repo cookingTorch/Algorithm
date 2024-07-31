@@ -24,8 +24,7 @@ main()
     for (i = 0; i < n; i++) {
         cost[i] = (int *) malloc(n * sizeof(int));
         dp[i] = (int *) malloc((full + 1) * sizeof(int));
-        scanf("%d", cost[i]);
-        for (j = 1; j < n; j++)
+        for (j = 0; j < n; j++)
             scanf("%d", &(cost[i][j]));
         for (j = 0; j <= full; j++)
             dp[i][j] = TSP_INF;
