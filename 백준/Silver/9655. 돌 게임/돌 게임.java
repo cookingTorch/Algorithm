@@ -8,9 +8,10 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		int n;
+		BufferedReader br;
 
-		n = Integer.parseInt(new BufferedReader(new InputStreamReader(System.in)).readLine());
-		if (((n & 3) & 1) == 0) {
+		br = new BufferedReader(new InputStreamReader(System.in));
+		if ((Integer.parseInt(br.readLine()) & 1) == 0) {
 			System.out.print(CY);
 		} else {
 			System.out.print(SK);
