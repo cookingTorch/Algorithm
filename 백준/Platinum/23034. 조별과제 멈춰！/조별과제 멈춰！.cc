@@ -1,36 +1,16 @@
-#include <iostream>
-#include <sstream>
-#include <queue>
+#include <bits/stdc++.h>
 
 using namespace std;
+using Line = tuple<int, int, int>;
+using Edge = tuple<int, int, void *>;
 
 constexpr int kMaxN = 1'001;
-
-struct Line {
-    int u;
-    int v;
-    int weight;
-    Line(const int from, const int to, const int weight) : u(from), v(to), weight(weight) {}
-};
-
-struct Cmp {
-    bool operator()(const Line *edge1, const Line *edge2) const {
-        return edge1->weight > edge2->weight;
-    }
-};
-
-struct Edge {
-    int to;
-    int weight;
-    Edge *next;
-    Edge(const int to, const int weight, Edge *next) : to(to), weight(weight), next(next) {}
-};
+constexpr int kMaxM = 100'001;
 
 int n;
+int dest;
+int max_weight;
 int roots[kMaxN];
-int path[kMaxN];
-int previous[kMaxN];
-bool visited[kMaxN];
 Edge *adj[kMaxN];
 
 int Find(int v) {
@@ -58,92 +38,76 @@ bool Union(const int u, const int v) {
     return true;
 }
 
-void Bfs(int x, int y) {
-    int i;
-    int curr;
-    int next;
+bool Dfs(const int parent, const int curr) {
+    int to;
+    int weight;
+    void *next;
     Edge *edge;
-    queue<int> q;
 
-    for (i = 1; i <= n; i++) {
-        visited[i] = false;
+    if (curr == dest) {
+        return true;
     }
-    q.push(x);
-    visited[x] = true;
-    for(;;) {
-        curr = q.front();
-        for (edge = adj[curr]; edge; edge = edge->next) {
-            if (visited[next = edge->to]) {
-                continue;
-            }
-            path[next] = edge->weight;
-            previous[next] = curr;
-            if (next == y) {
-                return;
-            }
-            visited[next] = true;
-            q.push(next);
+    for (edge = adj[curr]; edge; edge = static_cast<Edge *>(next)) {
+        tie(to, weight, next) = *edge;
+        if (to == parent) {
+            continue;
         }
-        q.pop();
-    }
-}
-
-int MaxEdgeWeight(const int x, const int y) {
-    int max = 0;
-
-    Bfs(x, y);
-    for (int i = y; i != x; i = previous[i]) {
-        if (max < path[i]) {
-            max = path[i];
+        if (Dfs(curr, to)) {
+            if (max_weight < weight) {
+                max_weight = weight;
+            }
+            return true;
         }
     }
-    return max;
+    return false;
 }
 
 int main() {
     int m;
-    int a;
-    int b;
-    int c;
     int q;
     int u;
     int v;
-    int x;
-    int y;
     int i;
+    int cnt;
     int sum;
+    int start;
     int weight;
-    Line *line;
+    Line *lines[kMaxM];
     ostringstream os;
-    priority_queue<Line *, vector<Line *>, Cmp> pq;
 
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cin >> n >> m;
-    while (m--) {
-        cin >> a >> b >> c;
-        pq.push(new Line(a, b, c));
+    for (i = 0; i < m; i++) {
+        cin >> u >> v >> weight;
+        lines[i] = new Line(weight, u, v);
     }
+    sort(lines, lines + m, [](const Line *line1, const Line *line2) {
+        return get<0>(*line1) < get<0>(*line2);
+    });
     for (i = 1; i <= n; i++) {
         roots[i] = 0;
         adj[i] = nullptr;
     }
     sum = 0;
-    for (i = 1; i < n;) {
-        line = pq.top();
-        if (Union(u = line->u, v = line->v)) {
-            weight = line->weight;
+    cnt = 1;
+    for (i = 0;; i++) {
+        tie(weight, u, v) = *lines[i];
+        if (Union(u, v)) {
             adj[u] = new Edge(v, weight, adj[u]);
             adj[v] = new Edge(u, weight, adj[v]);
             sum += weight;
-            i++;
+            if (++cnt == n) {
+                break;
+            }
         }
-        pq.pop();
     }
     cin >> q;
     while (q--) {
-        cin >> x >> y;
-        os << sum - MaxEdgeWeight(x, y) << '\n';
+        cin >> start >> dest;
+        max_weight = 0;
+        Dfs(0, start);
+        os << sum - max_weight << '\n';
     }
     cout << os.str();
 }
