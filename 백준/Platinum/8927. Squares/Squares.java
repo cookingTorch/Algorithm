@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 public class Main {
     private static final int CAP = 400_000;
     private static final int INF = Integer.MAX_VALUE >> 1;
+    private static final char LINE_BREAK = '\n';
     private static final Point BASE = new Point(INF, INF);
 
     private static final class Point implements Comparable<Point> {
@@ -55,8 +56,8 @@ public class Main {
             return arr[idx];
         }
 
-        Point pop() {
-            return arr[--size];
+        void pop() {
+            size--;
         }
 
         void add(int x, int y) {
@@ -131,9 +132,14 @@ public class Main {
         return max;
     }
 
-    private static int solution(BufferedReader br, StringTokenizer st) throws IOException {
-        int n, x, y, len, i;
+    private static int solution(BufferedReader br) throws IOException {
+        int n;
+        int x;
+        int y;
+        int i;
+        int len;
         Point point;
+        StringTokenizer st;
 
         n = Integer.parseInt(br.readLine());
         points.clear();
@@ -156,18 +162,19 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        StringTokenizer st = null;
+        int t;
+        int testCase;
+        StringBuilder sb;
+        BufferedReader br;
 
-        int t, testCase;
-
+        br = new BufferedReader(new InputStreamReader(System.in));
         points = new PointArr(CAP);
         hull = new PointArr(CAP);
         stack = new PointArr(CAP);
         t = Integer.parseInt(br.readLine());
+        sb = new StringBuilder();
         for (testCase = 0; testCase < t; testCase++) {
-            sb.append(solution(br, st)).append('\n');
+            sb.append(solution(br)).append(LINE_BREAK);
         }
         System.out.print(sb);
     }
