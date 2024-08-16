@@ -1,102 +1,108 @@
-import java.io.*;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static void qAdd(Queue<int[]> q, int[][][] box, boolean[][][] visited, int[] next, int n, int m, int h) {
-        if (next[0] < 0 || next[1] < 0 || next[2] < 0 || next[0] >= h || next[1] >= m || next[2] >= n || visited[next[0]][next[1]][next[2]] || box[next[0]][next[1]][next[2]] != 0)
-            return ;
-        visited[next[0]][next[1]][next[2]] = true;
-        box[next[0]][next[1]][next[2]] = 1;
-        q.add(new int[]{next[0], next[1], next[2]});
+    private static final int FAIL = -1;
+    private static final int RIPE = 2;
+    private static final int UNRIPE = 1;
+
+    private static int cnt;
+    private static int dimension;
+    private static int[] arr;
+    private static int[] delta;
+    private static int[] map;
+    private static ArrayDeque<Integer> q;
+    private static BufferedReader br;
+
+    private static void input(int pos, int depth) throws IOException {
+        int i;
+        StringTokenizer st;
+
+        if (depth == dimension - 1) {
+            st = new StringTokenizer(br.readLine());
+            for (i = 0; i < arr[depth]; i++) {
+                map[pos] = Integer.parseInt(st.nextToken());
+                if (++map[pos] == RIPE) {
+                    q.addLast(pos);
+                } else if (map[pos] == UNRIPE) {
+                    cnt++;
+                }
+                pos += delta[depth];
+            }
+            return;
+        }
+        for (i = 0; i < arr[depth]; i++) {
+            input(pos, depth + 1);
+            pos += delta[depth];
+        }
     }
 
-    private static int bfs(int[][][] box, boolean[][][] visited, int n, int m, int h) {
-        int cnt, size, i, j, k;
-        int[] node, next;
-        Queue<int[]> q = new LinkedList<>();
+    private static int bfs() {
+        int i;
+        int d;
+        int pos;
+        int size;
+        int next;
+        int time;
 
-        for (i = 0; i < h; i++) {
-            for (j = 0; j < m; j++) {
-                for (k = 0; k < n; k++) {
-                    if (box[i][j][k] == 1) {
-                        visited[i][j][k] = true;
-                        q.add(new int[]{i, j, k});
+        for (time = 0; cnt > 0 && !q.isEmpty(); time++) {
+            size = q.size();
+            for (i = 0; i < size; i++) {
+                pos = q.pollFirst();
+                for (d = 0; d < dimension; d++) {
+                    if ((d == 0 ? pos : pos % delta[d - 1]) / delta[d] > 0) {
+                        next = pos - delta[d];
+                        if (map[next] == UNRIPE) {
+                            q.addLast(next);
+                            map[next]++;
+                            cnt--;
+                        }
+                    }
+                    if ((d == 0 ? pos : pos % delta[d - 1]) / delta[d] < arr[d] - 1) {
+                        next = pos + delta[d];
+                        if (map[next] == UNRIPE) {
+                            q.addLast(next);
+                            map[next]++;
+                            cnt--;
+                        }
                     }
                 }
             }
         }
-        if (q.isEmpty())
-            return 0;
-        cnt = -1;
-        while (!q.isEmpty()) {
-            size = q.size();
-            for (i = 0; i < size; i++) {
-                node = q.poll();
-                next = new int[]{node[0] - 1, node[1], node[2]};
-                qAdd(q, box, visited, next, n, m, h);
-                next = new int[]{node[0], node[1] - 1, node[2]};
-                qAdd(q, box, visited, next, n, m, h);
-                next = new int[]{node[0], node[1], node[2] - 1};
-                qAdd(q, box, visited, next, n, m, h);
-                next = new int[]{node[0] + 1, node[1], node[2]};
-                qAdd(q, box, visited, next, n, m, h);
-                next = new int[]{node[0], node[1] + 1, node[2]};
-                qAdd(q, box, visited, next, n, m, h);
-                next = new int[]{node[0], node[1], node[2] + 1};
-                qAdd(q, box, visited, next, n, m, h);
-            }
-            cnt++;
-        }
-        return cnt;
+        return cnt == 0 ? time : FAIL;
     }
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder sb = new StringBuilder();
+        int i;
+        int size;
         StringTokenizer st;
+        ArrayDeque<Integer> stack;
 
-        int n, m, h, i, j, k, cnt;
-        boolean flag = true;
-        int[][][] box;
-        boolean[][][] visited;
-
+        br = new BufferedReader(new InputStreamReader(System.in));
         st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        h = Integer.parseInt(st.nextToken());
-        box = new int[h][m][n];
-        visited = new boolean[h][m][n];
-        for (i = 0; i < h; i++) {
-            for (j = 0; j < m; j++) {
-                st = new StringTokenizer(br.readLine());
-                for (k = 0; k < n; k++)
-                    box[i][j][k] = Integer.parseInt(st.nextToken());
-            }
+        stack = new ArrayDeque<>();
+        while (st.hasMoreTokens()) {
+            stack.addFirst(Integer.parseInt(st.nextToken()));
         }
-        cnt = bfs(box, visited, n, m, h);
-        for (i = 0; i < h; i++) {
-            for (j = 0; j < m; j++) {
-                for (k = 0; k < n; k++) {
-                    if (box[i][j][k] == 0) {
-                        sb.append(-1);
-                        flag = false;
-                        break;
-                    }
-                }
-                if (!flag)
-                    break;
-            }
-            if (!flag)
-                break;
+        dimension = stack.size();
+        arr = new int[dimension];
+        size = 1;
+        for (i = 0; i < dimension; i++) {
+            arr[i] = stack.pollFirst();
+            size *= arr[i];
         }
-        if (flag)
-            sb.append(cnt);
-
-        bw.write(sb.toString());
-        bw.flush();
-        bw.close();
+        delta = new int[dimension];
+        delta[dimension - 1] = 1;
+        for (i = dimension - 1; i > 0; i--) {
+            delta[i - 1] = delta[i] * arr[i];
+        }
+        map = new int[size];
+        cnt = 0;
+        q = new ArrayDeque<>();
+        input(0, 0);
+        System.out.print(bfs());
     }
 }
