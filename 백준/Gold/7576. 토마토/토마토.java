@@ -1,90 +1,108 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class Main {
-	
-	private static int n, m;
-	private static int[][] box;
-	private static Queue<int[]> cell = new LinkedList<>();
-	
-	private static void bfs(int[] node) {
-		if (node[0] > 0 && box[node[0] - 1][node[1]] == 0) {
-			box[node[0] - 1][node[1]] = box[node[0]][node[1]] + 1;
-			cell.add(new int[] {node[0] - 1, node[1]});
-		}
-		if (node[1] > 0 && box[node[0]][node[1] - 1] == 0) {
-			box[node[0]][node[1] - 1] = box[node[0]][node[1]] + 1;
-			cell.add(new int[] {node[0], node[1] - 1});
-		}
-		if (node[0] < n - 1 && box[node[0] + 1][node[1]] == 0) {
-			box[node[0] + 1][node[1]] = box[node[0]][node[1]] + 1;
-			cell.add(new int[] {node[0] + 1, node[1]});
-		}
-		if (node[1] < m - 1 && box[node[0]][node[1] + 1] == 0) {
-			box[node[0]][node[1] + 1] = box[node[0]][node[1]] + 1;
-			cell.add(new int[] {node[0], node[1] + 1});
-		}
-		if (!cell.isEmpty()) {
-			bfs(cell.poll());
-		}
-	}
+    private static final int FAIL = -1;
+    private static final int RIPE = 2;
+    private static final int UNRIPE = 1;
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		StringBuilder sb = new StringBuilder();
-		StringTokenizer st;
+    private static int cnt;
+    private static int dimension;
+    private static int[] arr;
+    private static int[] delta;
+    private static int[] map;
+    private static ArrayDeque<Integer> q;
+    private static BufferedReader br;
 
-		int i, j, tomato, max = 1;
-		boolean flag = true;
-		
-		st = new StringTokenizer(br.readLine());
-		m = Integer.parseInt(st.nextToken());
-		n = Integer.parseInt(st.nextToken());
-		box = new int[n][m];
-		
-		for (i = 0; i < n; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (j = 0; j < m; j++) {
-				tomato = Integer.parseInt(st.nextToken());
-				if (tomato == 1) {
-					cell.add(new int[] {i, j});
-				}
-				box[i][j] = tomato;
-			}
-		}
-		
-		if (!cell.isEmpty()) {
-			bfs(cell.poll());
-		}
-		
-		for (i = 0; i < n; i++) {
-			for (j = 0; j < m; j++) {
-				if (box[i][j] > max) {
-					max = box[i][j];
-				}
-				if (box[i][j] == 0) {
-					flag = false;
-					max = 0;
-					break;
-				}
-			}
-			if (!flag) {
-				break;
-			}
-		}
-		
-		sb.append(max - 1);
-		
-		bw.write(sb.toString());
-		bw.flush();
-		bw.close();
-	}
+    private static void input(int pos, int depth) throws IOException {
+        int i;
+        StringTokenizer st;
 
+        if (depth == dimension - 1) {
+            st = new StringTokenizer(br.readLine());
+            for (i = 0; i < arr[depth]; i++) {
+                map[pos] = Integer.parseInt(st.nextToken());
+                if (++map[pos] == RIPE) {
+                    q.addLast(pos);
+                } else if (map[pos] == UNRIPE) {
+                    cnt++;
+                }
+                pos += delta[depth];
+            }
+            return;
+        }
+        for (i = 0; i < arr[depth]; i++) {
+            input(pos, depth + 1);
+            pos += delta[depth];
+        }
+    }
+
+    private static int bfs() {
+        int i;
+        int d;
+        int pos;
+        int size;
+        int next;
+        int time;
+
+        for (time = 0; cnt > 0 && !q.isEmpty(); time++) {
+            size = q.size();
+            for (i = 0; i < size; i++) {
+                pos = q.pollFirst();
+                for (d = 0; d < dimension; d++) {
+                    if ((d == 0 ? pos : pos % delta[d - 1]) / delta[d] > 0) {
+                        next = pos - delta[d];
+                        if (map[next] == UNRIPE) {
+                            q.addLast(next);
+                            map[next]++;
+                            cnt--;
+                        }
+                    }
+                    if ((d == 0 ? pos : pos % delta[d - 1]) / delta[d] < arr[d] - 1) {
+                        next = pos + delta[d];
+                        if (map[next] == UNRIPE) {
+                            q.addLast(next);
+                            map[next]++;
+                            cnt--;
+                        }
+                    }
+                }
+            }
+        }
+        return cnt == 0 ? time : FAIL;
+    }
+
+    public static void main(String[] args) throws IOException {
+        int i;
+        int size;
+        StringTokenizer st;
+        ArrayDeque<Integer> stack;
+
+        br = new BufferedReader(new InputStreamReader(System.in));
+        st = new StringTokenizer(br.readLine());
+        stack = new ArrayDeque<>();
+        while (st.hasMoreTokens()) {
+            stack.addFirst(Integer.parseInt(st.nextToken()));
+        }
+        dimension = stack.size();
+        arr = new int[dimension];
+        size = 1;
+        for (i = 0; i < dimension; i++) {
+            arr[i] = stack.pollFirst();
+            size *= arr[i];
+        }
+        delta = new int[dimension];
+        delta[dimension - 1] = 1;
+        for (i = dimension - 1; i > 0; i--) {
+            delta[i - 1] = delta[i] * arr[i];
+        }
+        map = new int[size];
+        cnt = 0;
+        q = new ArrayDeque<>();
+        input(0, 0);
+        System.out.print(bfs());
+    }
 }
