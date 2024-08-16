@@ -14,7 +14,6 @@ constexpr int kTreeSize = kMaxM << 2;
 constexpr long long kMod = 1'000'000LL;
 
 struct Range {
-public:
     int left;
     int right;
     Range *next;
@@ -22,12 +21,51 @@ public:
     Range(const int left, Range *next) : left(left), right(kMaxM), next(next) {};
 };
 
-int depth[kMaxN];
 int roots[kMaxN];
 int queries[kMaxM][2];
-stack<int *> undo_logs;
 unordered_set<long long> tree[kTreeSize];
 ostringstream os;
+
+class UndoLog {
+    int u;
+    int v;
+    int root_u;
+    int root_v;
+
+public:
+    UndoLog *next;
+
+    UndoLog(int u, int v, int root_u, int root_v, UndoLog *next) : u(u), v(v), root_u(root_u), root_v(root_v), next(next) {};
+
+    void Undo() {
+        roots[u] = root_u;
+        roots[v] = root_v;
+    }
+};
+
+int Find(int v) {
+    for (; roots[v] > 0; v = roots[v]);
+    return v;
+}
+
+void Union(int u, int v, UndoLog** undo_log) {
+    if (u == v) {
+        return;
+    }
+    *undo_log = new UndoLog(u, v, roots[u], roots[v], *undo_log);
+    if (roots[u] > roots[v]) {
+        roots[u] = v;
+    } else {
+        if (roots[u] == roots[v]) {
+            roots[u]--;
+        }
+        roots[v] = u;
+    }
+}
+
+int Connected(int query[]) {
+    return Find(query[0]) == Find(query[1]);
+}
 
 void Update(int node, int start, int end, int left, int right, long long key) {
     int mid;
@@ -39,71 +77,28 @@ void Update(int node, int start, int end, int left, int right, long long key) {
         tree[node].insert(key);
         return;
     }
-    mid = start + end >> 1;
+    mid = (start + end) >> 1;
     Update(node << 1, start, mid, left, right, key);
     Update(node << 1 | 1, mid + 1, end, left, right, key);
 }
 
-int find(int v) {
-    for (; roots[v] != v; v = roots[v]);
-    return v;
-}
-
-void Undo() {
-    int u;
-    int v;
-    int *undo_log;
-
-    undo_log = undo_logs.top();
-    u = undo_log[0];
-    v = undo_log[1];
-    depth[u] = undo_log[2];
-    roots[v] = v;
-    undo_logs.pop();
-}
-
-bool Union(int u, int v) {
-    int temp;
-
-    if (u == v) {
-        return false;
-    }
-    if (depth[u] < depth[v]) {
-        temp = u;
-        u = v;
-        v = temp;
-    }
-    undo_logs.push(new int[3] {u, v, depth[u]});
-    if (depth[u] == depth[v]) {
-        depth[u]++;
-    }
-    roots[v] = u;
-    return true;
-}
-
-int Connected(int query[]) {
-    return find(query[0]) == find(query[1]);
-}
-
 void Divide(int node, int start, int end) {
-    int cnt;
     int mid;
+    UndoLog *undo_log;
 
-    cnt = 0;
+    undo_log = nullptr;
     for (long long key : tree[node]) {
-        if (Union(find(key / kMod), find(key % kMod))) {
-            cnt++;
-        }
+        Union(Find(key / kMod), Find(key % kMod), &undo_log);
     }
     if (start == end) {
         os << Connected(queries[start]) << kLineBreak;
     } else {
-        mid = start + end >> 1;
+        mid = (start + end) >> 1;
         Divide(node << 1, start, mid);
         Divide(node << 1 | 1, mid + 1, end);
     }
-    while (cnt--) {
-        Undo();
+    for (; undo_log; undo_log = undo_log->next) {
+        undo_log->Undo();
     }
 }
 
@@ -152,8 +147,7 @@ int main() {
         }
     }
     for (i = 1; i <= n; i++) {
-        depth[i] = 1;
-        roots[i] = i;
+        roots[i] = 0;
     }
     for (auto& entry : um) {
         key = entry.first;
