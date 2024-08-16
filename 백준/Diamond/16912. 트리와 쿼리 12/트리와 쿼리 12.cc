@@ -1,8 +1,6 @@
 #include <iostream>
 #include <unordered_set>
 #include <unordered_map>
-#include <vector>
-#include <stack>
 #include <sstream>
 
 using namespace std;
@@ -149,7 +147,7 @@ int main() {
     for (i = 1; i <= n; i++) {
         roots[i] = 0;
     }
-    for (auto& entry : um) {
+    for (pair<const long long, Range *>& entry : um) {
         key = entry.first;
         for (range = entry.second; range; range = range->next) {
             if (range->left > range->right) {
