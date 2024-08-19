@@ -9,7 +9,6 @@ public class Main {
 		int t;
 		int p;
 		int i;
-		int max;
 		int curr;
 		int[] dp;
 		BufferedReader br;
@@ -18,7 +17,6 @@ public class Main {
 		br = new BufferedReader(new InputStreamReader(System.in));
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
-		max = 0;
 		curr = 0;
 		dp = new int[n + 1];
 		for (i = 0; i < n; i++) {
@@ -27,9 +25,9 @@ public class Main {
 			p = Integer.parseInt(st.nextToken());
 			curr = Math.max(curr, dp[i]);
 			if (t <= n) {
-				max = Math.max(max, dp[t] = Math.max(dp[t], curr + p));
+				dp[t] = Math.max(dp[t], curr + p);
 			}
 		}
-		System.out.print(max);
+		System.out.print(Math.max(curr, dp[n]));
 	}
 }
