@@ -30,8 +30,15 @@ public class Main {
     }
 
     private static long getDp(int idx, int max, int min, int num) {
+        int temp;
         long sum;
 
+        if (num >= HALF) {
+            num = DIGIT - num - 1;
+            temp = max;
+            max = DIGIT - min - 1;
+            min = DIGIT - temp - 1;
+        }
         if (dp[idx][max][min][num] != EMPTY) {
             return dp[idx][max][min][num];
         }
@@ -39,9 +46,7 @@ public class Main {
         if (num > 0) {
             sum = (sum + getDp(idx + 1, max, Math.min(min, num - 1), num - 1)) % MOD;
         }
-        if (num < 9) {
-            sum = (sum + getDp(idx + 1, Math.max(max, num + 1), min, num + 1)) % MOD;
-        }
+        sum = (sum + getDp(idx + 1, Math.max(max, num + 1), min, num + 1)) % MOD;
         return dp[idx][max][min][num] = sum;
     }
 
@@ -63,9 +68,9 @@ public class Main {
                 stair[i][j] = EMPTY;
             }
             for (j = 0; j < DIGIT; j++) {
-                dp[i][j] = new long[j + 1][DIGIT];
+                dp[i][j] = new long[j + 1][HALF];
                 for (k = 0; k <= j; k++) {
-                    for (l = 0; l < DIGIT; l++) {
+                    for (l = 0; l < HALF; l++) {
                         dp[i][j][k][l] = EMPTY;
                     }
                 }
@@ -76,13 +81,13 @@ public class Main {
         }
         for (i = 0; i < DIGIT; i++) {
             for (j = 0; j <= i; j++) {
-                for (k = 0; k < DIGIT; k++) {
+                for (k = 0; k < HALF; k++) {
                     dp[n - 1][i][j][k] = 1;
                 }
             }
         }
         for (i = 0; i < n; i++) {
-            for (j = 0; j < DIGIT; j++) {
+            for (j = 0; j < HALF; j++) {
                 dp[i][9][0][j] = 0;
             }
         }
