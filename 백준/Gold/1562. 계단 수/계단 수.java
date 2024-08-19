@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 public class Main {
     private static final int MOD = 1_000_000_000;
     private static final int DIGIT = 10;
+    private static final int HALF = DIGIT >> 1;
     private static final int EMPTY = -1;
 
     private static int n;
@@ -14,6 +15,9 @@ public class Main {
     private static long getStair(int idx, int num) {
         long sum;
 
+        if (num >= HALF) {
+            num = DIGIT - num - 1;
+        }
         if (stair[idx][num] != EMPTY) {
             return stair[idx][num];
         }
@@ -21,9 +25,7 @@ public class Main {
         if (num > 0) {
             sum = (sum + getStair(idx + 1, num - 1)) % MOD;
         }
-        if (num < 9) {
-            sum = (sum + getStair(idx + 1, num + 1)) % MOD;
-        }
+        sum = (sum + getStair(idx + 1, num + 1)) % MOD;
         return stair[idx][num] = sum;
     }
 
@@ -49,15 +51,18 @@ public class Main {
         int k;
         int l;
         long sum;
+        long ans;
         BufferedReader br;
 
         br = new BufferedReader(new InputStreamReader(System.in));
         n = Integer.parseInt(br.readLine());
-        stair = new long[n][DIGIT];
+        stair = new long[n][HALF];
         dp = new long[n][DIGIT][][];
         for (i = 0; i < n; i++) {
-            for (j = 0; j < DIGIT; j++) {
+            for (j = 0; j < HALF; j++) {
                 stair[i][j] = EMPTY;
+            }
+            for (j = 0; j < DIGIT; j++) {
                 dp[i][j] = new long[j + 1][DIGIT];
                 for (k = 0; k <= j; k++) {
                     for (l = 0; l < DIGIT; l++) {
@@ -66,8 +71,10 @@ public class Main {
                 }
             }
         }
-        for (i = 0; i < DIGIT; i++) {
+        for (i = 0; i < HALF; i++) {
             stair[n - 1][i] = 1;
+        }
+        for (i = 0; i < DIGIT; i++) {
             for (j = 0; j <= i; j++) {
                 for (k = 0; k < DIGIT; k++) {
                     dp[n - 1][i][j][k] = 1;
@@ -80,15 +87,17 @@ public class Main {
             }
         }
         sum = 0;
-        for (i = 1; i < DIGIT; i++) {
+        for (i = 0; i < HALF; i++) {
             sum = (sum + getStair(0, i)) % MOD;
         }
-        for (i = 1; i < DIGIT; i++) {
-            sum = (sum - getDp(0, i, i, i)) % MOD;
+        sum = (sum << 1) % MOD;
+        ans = (sum - getStair(0, 0)) % MOD;
+        sum = 0;
+        for (i = 0; i < HALF; i++) {
+            sum = (sum + getDp(0, i, i, i)) % MOD;
         }
-        if (sum < 0) {
-            sum += MOD;
-        }
-        System.out.print(sum);
+        sum = (sum << 1) % MOD;
+        ans = (ans - ((sum - getDp(0, 0, 0, 0)) % MOD)) % MOD;
+        System.out.print(ans < 0 ? ans + MOD : ans);
     }
 }
