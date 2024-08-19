@@ -17,9 +17,6 @@ public class Main {
         if (stair[idx][num] != EMPTY) {
             return stair[idx][num];
         }
-        if (idx == n - 1) {
-            return stair[idx][num] = 1;
-        }
         sum = 0;
         if (num > 0) {
             sum = (sum + getStair(idx + 1, num - 1)) % MOD;
@@ -35,12 +32,6 @@ public class Main {
 
         if (dp[idx][max][min][num] != EMPTY) {
             return dp[idx][max][min][num];
-        }
-        if (max == 9 && min == 0) {
-            return dp[idx][max][min][num] = 0;
-        }
-        if (idx == n - 1) {
-            return dp[idx][max][min][num] = 1;
         }
         sum = 0;
         if (num > 0) {
@@ -73,6 +64,19 @@ public class Main {
                         dp[i][j][k][l] = EMPTY;
                     }
                 }
+            }
+        }
+        for (i = 0; i < DIGIT; i++) {
+            stair[n - 1][i] = 1;
+            for (j = 0; j <= i; j++) {
+                for (k = 0; k < DIGIT; k++) {
+                    dp[n - 1][i][j][k] = 1;
+                }
+            }
+        }
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < DIGIT; j++) {
+                dp[i][9][0][j] = 0;
             }
         }
         sum = 0;
