@@ -7,7 +7,6 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		int n;
 		int t;
-		int p;
 		int i;
 		int curr;
 		int[] dp;
@@ -20,12 +19,10 @@ public class Main {
 		curr = 0;
 		dp = new int[n + 1];
 		for (i = 0; i < n; i++) {
-			st = new StringTokenizer(br.readLine());
-			t = i + Integer.parseInt(st.nextToken());
-			p = Integer.parseInt(st.nextToken());
 			curr = Math.max(curr, dp[i]);
-			if (t <= n) {
-				dp[t] = Math.max(dp[t], curr + p);
+			st = new StringTokenizer(br.readLine());
+			if ((t = i + Integer.parseInt(st.nextToken())) <= n) {
+				dp[t] = Math.max(dp[t], curr + Integer.parseInt(st.nextToken()));
 			}
 		}
 		System.out.print(Math.max(curr, dp[n]));
