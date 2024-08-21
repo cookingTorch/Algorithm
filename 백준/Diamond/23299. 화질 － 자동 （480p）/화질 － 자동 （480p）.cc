@@ -29,7 +29,7 @@ void Add(int node, int start, int end, int left, int right, int idx) {
         tree[node].push_back(idx);
         return;
     }
-    mid = (start + end) / 2;
+    mid = start + end >> 1;
     Add(node << 1, start, mid, left, right, idx);
     Add(node << 1 | 1, mid + 1, end, left, right, idx);
 }
@@ -77,7 +77,8 @@ int main() {
         }
     }
     for (i = 1; i <= n; i++) {
-        times.push_back(range[i][0]), times.push_back(range[i][1]);
+        times.push_back(range[i][0]);
+        times.push_back(range[i][1]);
     }
     sort(times.begin(), times.end());
     for (i = 1; i <= n; i++) {
@@ -92,7 +93,7 @@ int main() {
     Divide(1, 0, kSize - 1);
     sum = 0;
     for(i = 1; i < times.size(); i++) {
-        sum += ((long long) *max_element(dp[i | kSize], dp[i | kSize] + w + 1)) * (long long) (times[i] - times[i - 1]);
+        sum += *max_element(dp[i | kSize], dp[i | kSize] + w + 1) * (long long) (times[i] - times[i - 1]);
     }
     cout << sum;
 }
