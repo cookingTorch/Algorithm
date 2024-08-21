@@ -76,6 +76,7 @@ int main() {
             cin >> satisfaction[i][j];
         }
     }
+    times.push_back(0);
     for (i = 1; i <= n; i++) {
         times.push_back(range[i][0]);
         times.push_back(range[i][1]);
