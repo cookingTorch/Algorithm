@@ -9,7 +9,6 @@ constexpr int kFive = 5;
 int main() {
     int t;
     int n;
-    int i;
     int cnt;
     ostringstream os;
 
@@ -19,8 +18,8 @@ int main() {
     while (t--) {
         cin >> n;
         cnt = 0;
-        for (i = kFive; i <= n; i *= kFive) {
-            cnt += n / i;
+        for (n /= 5; n; n /= 5) {
+            cnt += n;
         }
         os << cnt << kLineBreak;
     }
