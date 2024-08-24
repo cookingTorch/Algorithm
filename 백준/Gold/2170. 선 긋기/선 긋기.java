@@ -5,54 +5,50 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final class Partition implements Comparable<Partition> {
-		int idx;
-		boolean start;
+	private static final class Line implements Comparable<Line> {
+		int start;
+		int end;
 
-		Partition(int idx, boolean start) {
-			this.idx = idx;
+		Line(int start, int end) {
 			this.start = start;
+			this.end = end;
 		}
 
 		@Override
-		public int compareTo(Partition o) {
-			return Integer.compare(this.idx, o.idx);
+		public int compareTo(Line o) {
+			return Integer.compare(this.start, o.start);
 		}
 	}
 
 	public static void main(String[] args) throws IOException {
 		int n;
-		int cnt;
-		int idx;
+		int start;
+		int end;
 		int ans;
-		Partition partition;
+		Line line;
+		PriorityQueue<Line> pq;
 		BufferedReader br;
 		StringTokenizer st;
-		PriorityQueue<Partition> pq;
 
 		br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
 		pq = new PriorityQueue<>();
 		while (n-- > 0) {
 			st = new StringTokenizer(br.readLine());
-			pq.add(new Partition(Integer.parseInt(st.nextToken()), true));
-			pq.add(new Partition(Integer.parseInt(st.nextToken()), false));
+			pq.add(new Line(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
 		}
-		idx = 0;
-		cnt = 0;
 		ans = 0;
+		line = pq.poll();
+		start = line.start;
+		end = line.end;
 		while (!pq.isEmpty()) {
-			partition = pq.poll();
-			if (partition.start) {
-				if (cnt++ == 0) {
-					idx = partition.idx;
-				}
-			} else {
-				if (--cnt == 0) {
-					ans += partition.idx - idx;
-				}
+			line = pq.poll();
+			if (line.start > end) {
+				ans += end - start;
+				start = line.start;
 			}
+			end = Math.max(line.end, end);
 		}
-		System.out.print(ans);
+		System.out.print(ans + end - start);
 	}
 }
