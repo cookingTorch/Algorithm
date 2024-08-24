@@ -1,10 +1,13 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.PriorityQueue;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class Main {
+	private static final int MIN = Integer.MIN_VALUE >> 1;
+
 	private static final class Line implements Comparable<Line> {
 		int start;
 		int end;
@@ -25,24 +28,22 @@ public class Main {
 		int start;
 		int end;
 		int ans;
-		Line line;
-		PriorityQueue<Line> pq;
+		ArrayList<Line> lines;
 		BufferedReader br;
 		StringTokenizer st;
 
 		br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
-		pq = new PriorityQueue<>();
+		lines = new ArrayList<>(n);
 		while (n-- > 0) {
 			st = new StringTokenizer(br.readLine());
-			pq.add(new Line(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
+			lines.add(new Line(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
 		}
+		Collections.sort(lines);
+		start = MIN;
+		end = MIN;
 		ans = 0;
-		line = pq.poll();
-		start = line.start;
-		end = line.end;
-		while (!pq.isEmpty()) {
-			line = pq.poll();
+		for (Line line : lines) {
 			if (line.start > end) {
 				ans += end - start;
 				start = line.start;
