@@ -12,23 +12,23 @@ public class Main {
         int[] curr;
         int[] temp;
         char ch;
-        String str1;
-        String str2;
+        char[] str1;
+        char[] str2;
         BufferedReader br;
 
         br = new BufferedReader(new InputStreamReader(System.in));
-        len1 = (str1 = br.readLine()).length();
-        len2 = (str2 = br.readLine()).length();
+        len1 = (str1 = br.readLine().toCharArray()).length;
+        len2 = (str2 = br.readLine().toCharArray()).length;
         prev = new int[len1 + 1];
         curr = new int[len1 + 1];
         for (i = 0; i <= len1; i++) {
             prev[i] = i;
         }
         for (i = 0; i < len2; i++) {
-            ch = str2.charAt(i);
+            ch = str2[i];
             curr[0] = prev[0] + 1;
             for (j = 1; j <= len1; j++) {
-                if (ch == str1.charAt(j - 1)) {
+                if (ch == str1[j - 1]) {
                     curr[j] = prev[j - 1];
                 } else {
                     curr[j] = Math.min(prev[j - 1], Math.min(prev[j], curr[j - 1])) + 1;
