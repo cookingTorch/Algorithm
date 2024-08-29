@@ -3,35 +3,39 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
+    private static final int EOF = -1;
+    private static final int LINE_BREAK = '\n';
+
     public static void main(String[] args) throws IOException {
         int i;
-        int j;
-        int len1;
-        int len2;
-        int[][] dp;
-        String str1;
-        String str2;
+        int ch;
+        int len;
+        int[] prev;
+        int[] curr;
+        int[] temp;
+        String str;
         BufferedReader br;
 
         br = new BufferedReader(new InputStreamReader(System.in));
-        len1 = (str1 = br.readLine()).length();
-        len2 = (str2 = br.readLine()).length();
-        dp = new int[len1 + 1][len2 + 1];
-        for (i = 0; i <= len1; i++) {
-            dp[i][0] = i;
+        len = (str = br.readLine()).length();
+        prev = new int[len + 1];
+        curr = new int[len + 1];
+        for (i = 0; i <= len; i++) {
+            prev[i] = i;
         }
-        for (i = 0; i <= len2; i++) {
-            dp[0][i] = i;
-        }
-        for (i = 1; i <= len1; i++) {
-            for (j = 1; j <= len2; j++) {
-                if (str1.charAt(i - 1) == str2.charAt(j - 1)) {
-                    dp[i][j] = dp[i - 1][j - 1];
+        while ((ch = br.read()) != EOF && ch != LINE_BREAK) {
+            curr[0] = prev[0] + 1;
+            for (i = 1; i <= len; i++) {
+                if (ch == str.codePointAt(i - 1)) {
+                    curr[i] = prev[i - 1];
                 } else {
-                    dp[i][j] = Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i][j - 1])) + 1;
+                    curr[i] = Math.min(prev[i - 1], Math.min(prev[i], curr[i - 1])) + 1;
                 }
             }
+            temp = prev;
+            prev = curr;
+            curr = temp;
         }
-        System.out.print(dp[len1][len2]);
+        System.out.print(prev[len]);
     }
 }
