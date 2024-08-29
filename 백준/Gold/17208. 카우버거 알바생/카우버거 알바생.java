@@ -22,7 +22,7 @@ public class Main {
         m = Integer.parseInt(st.nextToken());
         k = Integer.parseInt(st.nextToken());
         dp = new int[m + 1][k + 1];
-        while (n-- > 0) {
+        while (--n > 0) {
             st = new StringTokenizer(br.readLine());
             burgers = Integer.parseInt(st.nextToken());
             fries = Integer.parseInt(st.nextToken());
@@ -32,6 +32,13 @@ public class Main {
                 }
             }
         }
-        System.out.print(dp[m][k]);
+        st = new StringTokenizer(br.readLine());
+        burgers = Integer.parseInt(st.nextToken());
+        fries = Integer.parseInt(st.nextToken());
+        if (m >= burgers && k >= fries) {
+            System.out.print(Math.max(dp[m][k], dp[m - burgers][k - fries] + 1));
+        } else {
+            System.out.print(dp[m][k]);
+        }
     }
 }
