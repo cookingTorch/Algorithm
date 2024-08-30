@@ -7,42 +7,39 @@ public class Main {
     private static final int MAX_N = 100_001;
     private static final char LINE_BREAK = '\n';
 
-    private static int cnt;
-    private static int ans;
-    private static int[] selection;
-    private static boolean[] visited;
+    private static int[] next;
     private static BufferedReader br;
-
-    private static int dfs(int node) {
-        int val;
-
-        if (visited[node]) {
-            return node;
-        }
-        visited[node] = true;
-        val = dfs(selection[node]);
-        cnt++;
-        if (val == node) {
-            ans -= cnt;
-        }
-        return val;
-    }
 
     private static int solution() throws IOException {
         int n;
         int i;
+        int j;
+        int end;
+        int cnt;
+        int ans;
+        int[] prev;
         StringTokenizer st;
 
         n = Integer.parseInt(br.readLine());
         st = new StringTokenizer(br.readLine());
         for (i = 1; i <= n; i++) {
-            selection[i] = Integer.parseInt(st.nextToken());
+            next[i] = Integer.parseInt(st.nextToken());
         }
-        visited = new boolean[n + 1];
+        prev = new int[n + 1];
         ans = n;
         for (i = 1; i <= n; i++) {
-            cnt = 0;
-            dfs(i);
+            if (prev[i] != 0) {
+                continue;
+            }
+            prev[i] = -1;
+            for (j = i; prev[next[j]] == 0; prev[next[j]] = j, j = next[j]);
+            end = next[j];
+            for (cnt = 1; j != end && j != -1; j = prev[j]) {
+                cnt++;
+            }
+            if (j == end) {
+                ans -= cnt;
+            }
         }
         return ans;
     }
@@ -52,7 +49,7 @@ public class Main {
         StringBuilder sb;
 
         br = new BufferedReader(new InputStreamReader(System.in));
-        selection = new int[MAX_N];
+        next = new int[MAX_N];
         sb = new StringBuilder();
         t = Integer.parseInt(br.readLine());
         while (t-- > 0) {
