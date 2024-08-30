@@ -6,7 +6,6 @@ import java.util.StringTokenizer;
 public class Main {
     private static final int MAX_N = 100_001;
     private static final char LINE_BREAK = '\n';
-    private static final boolean[] VISITED = new boolean[MAX_N];
 
     private static int cnt;
     private static int ans;
@@ -39,7 +38,7 @@ public class Main {
         for (i = 1; i <= n; i++) {
             selection[i] = Integer.parseInt(st.nextToken());
         }
-        System.arraycopy(VISITED, 1, visited, 1, n);
+        visited = new boolean[n + 1];
         ans = n;
         for (i = 1; i <= n; i++) {
             cnt = 0;
@@ -51,10 +50,9 @@ public class Main {
     public static void main(String[] args) throws IOException {
         int t;
         StringBuilder sb;
-        
+
         br = new BufferedReader(new InputStreamReader(System.in));
         selection = new int[MAX_N];
-        visited = new boolean[MAX_N];
         sb = new StringBuilder();
         t = Integer.parseInt(br.readLine());
         while (t-- > 0) {
