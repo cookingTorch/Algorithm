@@ -7,10 +7,13 @@ public class Main {
     private static final int DIGIT = 10;
     private static final int HALF = DIGIT >> 1;
     private static final int EMPTY = -1;
+    private static final int NONE = 0;
+    private static final int ZERO = 1;
+    private static final int NINE = 1 << 1;
+    private static final int BOTH = ZERO | NINE;
 
-    private static int n;
     private static long[][] stair;
-    private static long[][][][] dp;
+    private static long[][][] dp;
 
     private static long getStair(int idx, int num) {
         long sum;
@@ -29,32 +32,32 @@ public class Main {
         return stair[idx][num] = sum;
     }
 
-    private static long getDp(int idx, int max, int min, int num) {
-        int temp;
+    private static long getDp(int idx, int num, int bit) {
         long sum;
 
         if (num >= HALF) {
             num = DIGIT - num - 1;
-            temp = max;
-            max = DIGIT - min - 1;
-            min = DIGIT - temp - 1;
+            bit = ((bit & ZERO) << 1) | ((bit & NINE) >> 1);
         }
-        if (dp[idx][max][min][num] != EMPTY) {
-            return dp[idx][max][min][num];
+        if (dp[idx][num][bit] != EMPTY) {
+            return dp[idx][num][bit];
         }
         sum = 0;
-        if (num > 0) {
-            sum = (sum + getDp(idx + 1, max, Math.min(min, num - 1), num - 1)) % MOD;
+        if (num == 1) {
+            sum = (sum + getDp(idx + 1, 0, bit | ZERO)) % MOD;
+        } else if (num > 1) {
+            sum = (sum + getDp(idx + 1, num - 1, bit)) % MOD;
         }
-        sum = (sum + getDp(idx + 1, Math.max(max, num + 1), min, num + 1)) % MOD;
-        return dp[idx][max][min][num] = sum;
+        sum = (sum + getDp(idx + 1, num + 1, bit)) % MOD;
+        return dp[idx][num][bit] = sum;
     }
 
     public static void main(String[] args) throws IOException {
+        int n;
         int i;
         int j;
         int k;
-        int l;
+        int end;
         long sum;
         long ans;
         BufferedReader br;
@@ -62,33 +65,22 @@ public class Main {
         br = new BufferedReader(new InputStreamReader(System.in));
         n = Integer.parseInt(br.readLine());
         stair = new long[n][HALF];
-        dp = new long[n][DIGIT][][];
-        for (i = 0; i < n; i++) {
+        dp = new long[n][HALF][BOTH + 1];
+        end = n - 1;
+        for (i = 0; i < end; i++) {
             for (j = 0; j < HALF; j++) {
                 stair[i][j] = EMPTY;
-            }
-            for (j = 0; j < DIGIT; j++) {
-                dp[i][j] = new long[j + 1][HALF];
-                for (k = 0; k <= j; k++) {
-                    for (l = 0; l < HALF; l++) {
-                        dp[i][j][k][l] = EMPTY;
-                    }
+                for (k = 0; k < BOTH; k++) {
+                    dp[i][j][k] = EMPTY;
                 }
             }
         }
-        for (i = 0; i < HALF; i++) {
-            stair[n - 1][i] = 1;
-        }
-        for (i = 0; i < DIGIT; i++) {
-            for (j = 0; j <= i; j++) {
-                for (k = 0; k < HALF; k++) {
-                    dp[n - 1][i][j][k] = 1;
-                }
-            }
-        }
-        for (i = 0; i < n; i++) {
-            for (j = 0; j < HALF; j++) {
-                dp[i][9][0][j] = 0;
+        dp[end][0][ZERO] = 1;
+        stair[end][0] = 1;
+        for (i = 1; i < HALF; i++) {
+            stair[end][i] = 1;
+            for (j = 0; j < BOTH; j++) {
+                dp[end][i][j] = 1;
             }
         }
         sum = 0;
@@ -97,12 +89,12 @@ public class Main {
         }
         sum = (sum << 1) % MOD;
         ans = (sum - getStair(0, 0)) % MOD;
-        sum = 0;
-        for (i = 0; i < HALF; i++) {
-            sum = (sum + getDp(0, i, i, i)) % MOD;
+        sum = getDp(0, 0, ZERO) % MOD;
+        for (i = 1; i < HALF; i++) {
+            sum = (sum + getDp(0, i, NONE)) % MOD;
         }
         sum = (sum << 1) % MOD;
-        ans = (ans - ((sum - getDp(0, 0, 0, 0)) % MOD)) % MOD;
+        ans = (ans - ((sum - getDp(0, 0, ZERO)) % MOD)) % MOD;
         System.out.print(ans < 0 ? ans + MOD : ans);
     }
 }
