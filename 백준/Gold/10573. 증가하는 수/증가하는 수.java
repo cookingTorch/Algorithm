@@ -6,10 +6,10 @@ public class Main {
 	private static final int DIGIT = 10;
 	private static final int DIFF = '0';
 	private static final int MAX_LEN = 81;
+	private static final int FLAGS = 2;
 	private static final char LINE_BREAK = '\n';
 	private static final long FAIL = -1L;
 
-	private static int len;
 	private static char[] str;
 	private static long[][][] dp;
 	private static BufferedReader br;
@@ -17,9 +17,6 @@ public class Main {
 	private static long getDp(int idx, int num, int flag) {
 		int i;
 
-		if (idx == len) {
-			return dp[idx][num][flag] = 1;
-		}
 		if (dp[idx][num][flag] != FAIL) {
 			return dp[idx][num][flag];
 		}
@@ -41,6 +38,7 @@ public class Main {
 		int i;
 		int j;
 		int k;
+		int len;
 		long ans;
 
 		len = (str = br.readLine().toCharArray()).length;
@@ -51,9 +49,14 @@ public class Main {
 		}
 		for (i = 0; i < len; i++) {
 			for (j = 0; j < DIGIT; j++) {
-				for (k = 0; k < 2; k++) {
+				for (k = 0; k < FLAGS; k++) {
 					dp[i][j][k] = FAIL;
 				}
+			}
+		}
+		for (i = 0; i < DIGIT; i++) {
+			for (j = 0; j < FLAGS; j++) {
+				dp[len][i][j] = 1;
 			}
 		}
 		ans = 0;
