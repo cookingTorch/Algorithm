@@ -10,22 +10,24 @@ public class Main {
 	private static final char LINE_BREAK = '\n';
 	private static final long FAIL = -1L;
 
-	private static char[] str;
+	private static int[] arr;
 	private static long[][][] dp;
 	private static BufferedReader br;
 
 	private static long getDp(int idx, int num, int flag) {
 		int i;
+		int thr;
 
 		if (dp[idx][num][flag] != FAIL) {
 			return dp[idx][num][flag];
 		}
 		dp[idx][num][flag] = 0;
 		if (flag == 1) {
-			for (i = num; i < str[idx] - DIFF; i++) {
+			thr = arr[idx];
+			for (i = num; i < thr; i++) {
 				dp[idx][num][flag] += getDp(idx + 1, i, 0);
 			}
-			dp[idx][num][flag] += getDp(idx + 1, i, 1);
+			dp[idx][num][flag] += getDp(idx + 1, thr, 1);
 		} else {
 			for (i = num; i < DIGIT; i++) {
 				dp[idx][num][flag] += getDp(idx + 1, i, 0);
@@ -39,13 +41,16 @@ public class Main {
 		int j;
 		int k;
 		int len;
+		char[] str;
 		long ans;
 
 		len = (str = br.readLine().toCharArray()).length;
+		arr[0] = str[0] - DIFF;
 		for (i = 1; i < len; i++) {
 			if (str[i] < str[i - 1]) {
 				return FAIL;
 			}
+			arr[i] = str[i] - DIFF;
 		}
 		for (i = 0; i < len; i++) {
 			for (j = 0; j < DIGIT; j++) {
@@ -60,10 +65,10 @@ public class Main {
 			}
 		}
 		ans = 0;
-		for (i = 0; i < str[0] - DIFF; i++) {
+		for (i = 0; i < arr[0]; i++) {
 			ans += getDp(1, i, 0);
 		}
-		ans += getDp(1, str[0] - DIFF, 1);
+		ans += getDp(1, arr[0], 1);
 		return ans - 1;
 	}
 
@@ -71,7 +76,8 @@ public class Main {
 		int t;
 		StringBuilder sb;
 
-		dp = new long[MAX_LEN][DIGIT][2];
+		arr = new int[MAX_LEN];
+		dp = new long[MAX_LEN][DIGIT][FLAGS];
 		br = new BufferedReader(new InputStreamReader(System.in));
 		sb = new StringBuilder();
 		t = Integer.parseInt(br.readLine());
