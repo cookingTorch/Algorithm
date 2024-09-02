@@ -14,6 +14,8 @@ public class Main {
         int x;
         int i;
         int j;
+        int[] curr;
+        int[] prev;
         int[][] dp;
         StringBuilder sb;
         BufferedReader br;
@@ -23,13 +25,16 @@ public class Main {
         m = Integer.parseInt(br.readLine());
         dp = new int[LOG][m + 1];
         st = new StringTokenizer(br.readLine());
+        prev = dp[0];
         for(i = 1; i <= m; i++) {
-            dp[0][i] = Integer.parseInt(st.nextToken());
+            prev[i] = Integer.parseInt(st.nextToken());
         }
         for (i = 1; i < LOG; i++) {
+            curr = dp[i];
             for (j = 1; j <= m; j++) {
-                dp[i][j] = dp[i - 1][dp[i - 1][j]];
+                curr[j] = prev[prev[j]];
             }
+            prev = curr;
         }
         sb = new StringBuilder();
         q = Integer.parseInt(br.readLine());
