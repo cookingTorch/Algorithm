@@ -13,8 +13,7 @@ public class Main {
         int n;
         int x;
         int i;
-        int node;
-        int child;
+        int j;
         int[][] dp;
         StringBuilder sb;
         BufferedReader br;
@@ -28,11 +27,8 @@ public class Main {
             dp[i][0] = Integer.parseInt(st.nextToken());
         }
         for (i = 1; i <= LOG; i++) {
-            for (node = 1; node <= m; node++) {
-                child = dp[node][i - 1];
-                if (child != 0) {
-                    dp[node][i] = dp[child][i - 1];
-                }
+            for (j = 1; j <= m; j++) {
+                dp[j][i] = dp[dp[j][i - 1]][i - 1];
             }
         }
         sb = new StringBuilder();
@@ -42,12 +38,12 @@ public class Main {
             n = Integer.parseInt(st.nextToken());
             x = Integer.parseInt(st.nextToken());
             for (i = 0; n != 0; n >>= 1, i++) {
-                if ((n & 1) == 1) {
+                if ((n & 1) != 0) {
                     x = dp[x][i];
                 }
             }
             sb.append(x).append(LINE_BREAK);
         }
-        System.out.print(sb.toString());
+        System.out.print(sb);
     }
 }
