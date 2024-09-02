@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static final int LOG = (int) (Math.log(500_000) / Math.log(2));
+    private static final int LOG = 18;
     private static final char LINE_BREAK = '\n';
 
     public static void main(String[] args) throws IOException {
