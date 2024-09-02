@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static final int LOG = 18;
+    private static final int LOG = 19;
     private static final char LINE_BREAK = '\n';
 
     public static void main(String[] args) throws IOException {
@@ -21,14 +21,14 @@ public class Main {
 
         br = new BufferedReader(new InputStreamReader(System.in));
         m = Integer.parseInt(br.readLine());
-        dp = new int[m + 1][LOG + 1];
+        dp = new int[LOG][m + 1];
         st = new StringTokenizer(br.readLine());
         for(i = 1; i <= m; i++) {
-            dp[i][0] = Integer.parseInt(st.nextToken());
+            dp[0][i] = Integer.parseInt(st.nextToken());
         }
-        for (i = 1; i <= LOG; i++) {
+        for (i = 1; i < LOG; i++) {
             for (j = 1; j <= m; j++) {
-                dp[j][i] = dp[dp[j][i - 1]][i - 1];
+                dp[i][j] = dp[i - 1][dp[i - 1][j]];
             }
         }
         sb = new StringBuilder();
@@ -39,7 +39,7 @@ public class Main {
             x = Integer.parseInt(st.nextToken());
             for (i = 0; n != 0; n >>= 1, i++) {
                 if ((n & 1) != 0) {
-                    x = dp[x][i];
+                    x = dp[i][x];
                 }
             }
             sb.append(x).append(LINE_BREAK);
