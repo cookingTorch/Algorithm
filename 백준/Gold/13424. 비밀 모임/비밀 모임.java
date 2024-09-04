@@ -33,7 +33,7 @@ public class Main {
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
         for (i = 1; i <= n; i++) {
-            System.arraycopy(infs, 1, dist[i], 1, n);
+            System.arraycopy(infs, MAX_N - i, dist[i], 1, n);
         }
         while (m-- > 0) {
             st = new StringTokenizer(br.readLine());
@@ -42,9 +42,6 @@ public class Main {
             weight = Integer.parseInt(st.nextToken());
             dist[u][v] = weight;
             dist[v][u] = weight;
-        }
-        for (i = 1; i <= n; i++) {
-            dist[i][i] = 0;
         }
         for (i = 1; i <= n; i++) {
             distI = dist[i];
@@ -81,10 +78,11 @@ public class Main {
         int i;
         StringBuilder sb;
 
-        infs = new int[MAX_N + 1];
-        for (i = 1; i <= MAX_N; i++) {
+        infs = new int[(MAX_N << 1) - 1];
+        for (i = MAX_N - 2; i >= 0; i--) {
             infs[i] = INF;
         }
+        System.arraycopy(infs, 0, infs, MAX_N, MAX_N - 1);
         dist = new int[MAX_N + 1][MAX_N + 1];
         friends = new int[MAX_N];
         br = new BufferedReader(new InputStreamReader(System.in));
