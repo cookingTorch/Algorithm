@@ -70,40 +70,36 @@ public class Main {
         int i;
         int j;
         int max;
-        int row;
-        int col;
         int size;
         BufferedReader br;
         StringTokenizer st;
 
         br = new BufferedReader(new InputStreamReader(System.in));
         st = new StringTokenizer(br.readLine(), " ", false);
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        row = n + 1;
-        col = m + 1;
-        size = col + 3;
+        n = Integer.parseInt(st.nextToken()) + 1;
+        m = Integer.parseInt(st.nextToken()) + 1;
+        size = m + 3;
         start = 2 * size + 2;
-        dest = row * size + col;
-        end = (row + 3) * size;
+        dest = n * size + m;
+        end = (n + 3) * size;
         map = new int[end];
         d = new int[] {-size, 1, size, -1};
-        for (i = 2; i <= col; i++) {
+        for (i = 2; i <= m; i++) {
             map[i] = INF;
         }
-        System.arraycopy(map, 2, map, size + 2, m);
-        System.arraycopy(map, 2, map, (n + 2) * size + 2, (size << 1) - 4);
+        System.arraycopy(map, 2, map, size + 2, m - 1);
+        System.arraycopy(map, 2, map, (n + 1) * size + 2, (size << 1) - 4);
         max = 0;
         for (i = 2 * size; i <= dest; i += size) {
             map[i] = INF;
             map[i + 1] = INF;
             st = new StringTokenizer(br.readLine(), " ", false);
-            for (j = 2; j <= col; j++) {
+            for (j = 2; j <= m; j++) {
                 map[i + j] = Integer.parseInt(st.nextToken());
                 max = Math.max(max, map[i + j]);
             }
-            map[i + col + 1] = INF;
-            map[i + col + 2] = INF;
+            map[i + m + 1] = INF;
+            map[i + m + 2] = INF;
         }
         System.out.print(lowerBound(max));
     }
