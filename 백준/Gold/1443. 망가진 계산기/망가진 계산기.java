@@ -8,23 +8,22 @@ public class Main {
 
     private static int p;
     private static int thr;
-    private static int[][][][][] dp;
+    private static int max;
 
-    private static int dfs(int depth, int prev, int num) {
-        int max;
-
+    private static void dfs(int depth, int prev, int num) {
         if (num > thr) {
-            return FAIL;
+            return;
         }
         if (depth == p) {
-            return num;
+            if (num > max) {
+                max = num;
+            }
+            return;
         }
         depth++;
-        max = FAIL;
         for (; prev > 1; prev--) {
-            max = Math.max(max, dfs(depth, prev, num * prev));
+            dfs(depth, prev, num * prev);
         }
-        return max;
     }
 
     public static void main(String[] args) throws IOException {
@@ -37,6 +36,8 @@ public class Main {
         d = Integer.parseInt(st.nextToken());
         thr = (int) Math.pow(10.0, d) - 1;
         p = Integer.parseInt(st.nextToken());
-        System.out.print(dfs(0, 9, 1));
+        max = FAIL;
+        dfs(0, 9, 1);
+        System.out.print(max);
     }
 }
