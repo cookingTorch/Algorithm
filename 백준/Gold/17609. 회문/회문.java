@@ -6,7 +6,6 @@ public class Main {
 	private static final char[] PALINDROME = {'0', '\n'};
 	private static final char[] PSEUDO_PALINDROME = {'1', '\n'};
 	private static final char[] NON_PALINDROME = {'2', '\n'};
-	private static final char LINE_BREAK = '\n';
 
 	private static BufferedReader br;
 
