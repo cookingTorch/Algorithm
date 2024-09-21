@@ -1,54 +1,44 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-#define ROBOT_WALL      '1'
-#define ROBOT_EMPTY     '0'
-#define ROBOT_MAX_ROW   50
-#define ROBOT_MAX_COL   100
+#define ROBOT_WALL	'1'
+#define ROBOT_EMPTY	'0'
 
-const int _dr[4] = {-1, 0, 1, 0};
-const int _dc[4] = {0, 2, 0, -2};
+int
+robot_clean(int m, int pos, int d, char *map)
+{
+	const int delta[] = {-m, 2, m, -2};
 
-char _map[ROBOT_MAX_ROW][ROBOT_MAX_COL];
+	int i;
+	int rc;
+
+	map[pos]--;
+	for (rc = 1;;) {
+		for (i = 4; i && map[pos + delta[d = (d + 3) % 4]] != ROBOT_EMPTY; i--);
+		if (i) {
+			map[pos += delta[d]]--;
+			rc++;
+		}
+		else if (map[pos += delta[(d + 2) % 4]] == ROBOT_WALL)
+			break;
+	}
+	return rc;
+}
 
 int
 main()
 {
-    int n;
-    int r;
-    int c;
-    int d;
-    int i;
-    int cnt;
+	int n;
+	int m;
+	int r;
+	int c;
+	int d;
+	char *map;
 
-    scanf("%d", &n);
-    scanf("%*s");
-    scanf("%d", &r);
-    scanf("%d", &c);
-    scanf("%d", &d);
-    for (i = 0; i < n; i++) {
-        scanf(" %[^\n]", _map[i]);
-    }
-    c <<= 1;
-    cnt = 0;
-    for (;;) {
-        if (_map[r][c] == ROBOT_EMPTY) {
-            _map[r][c]--;
-            cnt++;
-        }
-        for (i = 0; i < 4; i++) {
-            d = (d + 3) % 4;
-            if (_map[r + _dr[d]][c + _dc[d]] == ROBOT_EMPTY)
-                break;
-        }
-        if (i == 4) {
-            r += _dr[(d + 2) % 4];
-            c += _dc[(d + 2) % 4];
-            if (_map[r][c] == ROBOT_WALL)
-                break;
-        } else {
-            r += _dr[d];
-            c += _dc[d];
-        }
-    }
-    printf("%d", cnt);
+	scanf("%d %d\n%d %d %d", &n, &m, &r, &c, &d);
+	map = (char *) malloc((n * (m <<= 1) + 1) * sizeof(char));
+	scanf(" %[^2]", map);
+	printf("%d", robot_clean(m, r * m + (c << 1), d, map));
+	free(map);
+	return 0;
 }
