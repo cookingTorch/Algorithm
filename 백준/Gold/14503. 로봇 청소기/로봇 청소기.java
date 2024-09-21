@@ -4,88 +4,47 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static int r, c, d;
-	private static int[][] room;
-	
-	private static boolean backward() {
-		switch (d) {
-		case 0:
-			r++;
-			break;
-		case 1:
-			c--;
-			break;
-		case 2:
-			r--;
-			break;
-		case 3:
-			c++;
-			break;
+	private static final char ROBOT_WALL = '1';
+	private static final char ROBOT_EMPTY = '0';
+
+	private static int robotClean(int pos, int d, int[] delta, char[] map) {
+		int i;
+		int cnt;
+
+		map[pos]--;
+		cnt = 1;
+		for (;;) {
+			for (i = 4; i != 0 && map[pos + delta[d = (d + 3) & 3]] != ROBOT_EMPTY; i--);
+			if (i != 0) {
+				map[pos += delta[d]]--;
+				cnt++;
+			} else if (map[pos += delta[(d + 2) & 3]] == ROBOT_WALL) {
+				break;
+			}
 		}
-		return room[r][c] < 1;
+		return cnt;
 	}
-	
-	private static void forward() {
-		int x, y;
-		
-		x = r;
-		y = c;
-		switch (d) {
-		case 0:
-			x = r - 1;
-			break;
-		case 1:
-			y = c + 1;
-			break;
-		case 2:
-			x = r + 1;
-			break;
-		case 3:
-			y = c - 1;
-			break;
-		}
-		if (room[x][y] == 0) {
-			r = x;
-			c = y;
-		}
-	}
-	
+
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n;
+		int m;
+		int r;
+		int c;
+		int d;
+		char[] map;
+		BufferedReader br;
 		StringTokenizer st;
-		
-		int n, m, cnt, i, j;
-		
-		st = new StringTokenizer(br.readLine());
+
+		br = new BufferedReader(new InputStreamReader(System.in));
+		st = new StringTokenizer(br.readLine(), " ", false);
 		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		st = new StringTokenizer(br.readLine());
+		m = Integer.parseInt(st.nextToken()) << 1;
+		st = new StringTokenizer(br.readLine(), " ", false);
 		r = Integer.parseInt(st.nextToken());
 		c = Integer.parseInt(st.nextToken());
 		d = Integer.parseInt(st.nextToken());
-		room = new int[n][m];
-		for (i = 0; i < n; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (j = 0; j < m; j++) {
-				room[i][j] = Integer.parseInt(st.nextToken());
-			}
-		}
-		cnt = 0;
-		while (true) {
-			if (room[r][c] == 0) {
-				room[r][c]--;
-				cnt++;
-			}
-			if (!(room[r][c - 1] == 0 || room[r - 1][c] == 0 || room[r][c + 1] == 0 || room[r + 1][c] == 0)) {
-				if (backward()) {
-					continue;
-				} else {
-					break;
-				}
-			}
-			d = (d + 3) % 4;
-			forward();
-		}
-		System.out.println(cnt);
+		map = new char[n * m];
+		br.read(map, 0, n * m - 1);
+		System.out.print(robotClean(r * m + (c << 1), d, new int[] {-m, 2, m, -2}, map));
 	}
 }
