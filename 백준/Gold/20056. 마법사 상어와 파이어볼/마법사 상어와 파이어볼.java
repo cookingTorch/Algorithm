@@ -24,8 +24,6 @@ public class Main {
 		int m;
 		int s;
 		int d;
-		int dx;
-		int dy;
 
 		FireBall(int x, int y, int m, int s, int d) {
 			this.x = x;
@@ -33,8 +31,6 @@ public class Main {
 			this.m = m;
 			this.s = s;
 			this.d = d;
-			dx = dir[d][0];
-			dy = dir[d][1];
 		}
 
 		static FireBall getFireBall(int x, int y, int m, int s, int d) {
@@ -50,21 +46,18 @@ public class Main {
 			this.m = m;
 			this.s = s;
 			this.d = d;
-			dx = dir[d][0];
-			dy = dir[d][1];
 			return this;
 		}
 
 		void move() {
 			map[x][y].remove(this);
-			x = ((x + (dx * s)) % n + n) % n;
-			y = ((y + (dy * s)) % n + n) % n;
+			x = ((x + (dir[d][0] * s)) % n + n) % n;
+			y = ((y + (dir[d][1] * s)) % n + n) % n;
 			map[x][y].add(this);
 			if (!mergeMap[x][y]) {
 				mergeMap[x][y] = true;
 				mergeQ.addLast(new int[] {x, y});
 			}
-			mergeMap[x][y] = true;
 		}
 
 		void delete() {
@@ -88,7 +81,6 @@ public class Main {
 		boolean flag;
 		FireBall newFireBall;
 
-		mergeMap[x][y] = false;
 		mSum = 0;
 		sSum = 0;
 		mod = map[x][y].getFirst().d & 1;
