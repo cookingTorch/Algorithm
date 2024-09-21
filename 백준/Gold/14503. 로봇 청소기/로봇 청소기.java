@@ -4,21 +4,21 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final char ROBOT_WALL = '1';
-	private static final char ROBOT_EMPTY = '0';
+	private static final char WALL = '1';
+	private static final char EMPTY = '0';
 
-	private static int robotClean(int pos, int d, int[] delta, char[] map) {
+	private static int clean(int pos, int d, int[] delta, char[] map) {
 		int i;
 		int cnt;
 
 		map[pos]--;
 		cnt = 1;
 		for (;;) {
-			for (i = 4; i != 0 && map[pos + delta[d = (d + 3) & 3]] != ROBOT_EMPTY; i--);
+			for (i = 4; i != 0 && map[pos + delta[d = (d + 3) & 3]] != EMPTY; i--);
 			if (i != 0) {
 				map[pos += delta[d]]--;
 				cnt++;
-			} else if (map[pos += delta[(d + 2) & 3]] == ROBOT_WALL) {
+			} else if (map[pos += delta[(d + 2) & 3]] == WALL) {
 				break;
 			}
 		}
@@ -45,6 +45,6 @@ public class Main {
 		d = Integer.parseInt(st.nextToken());
 		map = new char[n * m];
 		br.read(map, 0, n * m - 1);
-		System.out.print(robotClean(r * m + (c << 1), d, new int[] {-m, 2, m, -2}, map));
+		System.out.print(clean(r * m + (c << 1), d, new int[] {-m, 2, m, -2}, map));
 	}
 }
