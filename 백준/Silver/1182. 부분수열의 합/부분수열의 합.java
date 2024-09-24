@@ -4,15 +4,27 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
+    private static int n;
+    private static int s;
+    private static int cnt;
+    private static int[] arr;
+
+    private static void dfs(int idx, int sum) {
+        if (idx == n) {
+            if (sum + arr[idx] == s) {
+                cnt++;
+            }
+            return;
+        }
+        dfs(idx + 1, sum);
+        if ((sum += arr[idx]) == s) {
+            cnt++;
+        }
+        dfs(idx + 1, sum);
+    }
+
     public static void main(String[] args) throws IOException {
-        int n;
-        int s;
         int i;
-        int pos;
-        int bit;
-        int sum;
-        int cnt;
-        int[] arr;
         BufferedReader br;
         StringTokenizer st;
 
@@ -26,16 +38,8 @@ public class Main {
             arr[i] = Integer.parseInt(st.nextToken());
         }
         cnt = 0;
-        for (i = (1 << n) - 1; i != 0; i--) {
-            sum = 0;
-            for (bit = i; bit != 0; bit ^= 1 << pos) {
-                pos = Integer.numberOfTrailingZeros(bit);
-                sum += arr[pos];
-            }
-            if (sum == s) {
-                cnt++;
-            }
-        }
+        n--;
+        dfs(0, 0);
         System.out.print(cnt);
     }
 }
