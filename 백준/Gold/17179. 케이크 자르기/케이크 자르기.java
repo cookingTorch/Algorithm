@@ -8,7 +8,7 @@ public class Main {
 
     private static int m;
     private static int l;
-    private static int num;
+    private static int q;
     private static int[] arr;
 
     private static boolean validate(int mid) {
@@ -21,7 +21,7 @@ public class Main {
         for (i = 0; i <= m; i++) {
             curr += arr[i];
             if (curr >= mid) {
-                if (++cnt > num) {
+                if (++cnt > q) {
                     return true;
                 }
                 curr = 0;
@@ -30,13 +30,11 @@ public class Main {
         return false;
     }
 
-    private static int upperBound() {
+    private static int upperBound(int right) {
         int mid;
         int left;
-        int right;
 
         left = 0;
-        right = l;
         while (left < right) {
             mid = left + right >> 1;
             if (validate(mid)) {
@@ -51,6 +49,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         int n;
         int i;
+        int prev;
         int prefix;
         StringBuilder sb;
         BufferedReader br;
@@ -69,9 +68,11 @@ public class Main {
         }
         arr[m] = l - prefix;
         sb = new StringBuilder();
+        prev = l;
         while (n-- > 0) {
-            num = Integer.parseInt(br.readLine());
-            sb.append(upperBound() - 1).append(LINE_BREAK);
+            q = Integer.parseInt(br.readLine());
+            prev = upperBound(prev);
+            sb.append(prev - 1).append(LINE_BREAK);
         }
         System.out.print(sb);
     }
