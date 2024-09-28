@@ -1,32 +1,51 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
 	private static final int MAX_K = 1_000_000;
+	private static final long INF = Long.MAX_VALUE;
 	private static final char LINE_BREAK = '\n';
 
-	private static int k;
-	private static int idx;
 	private static int[] arr;
+	private static long val;
+	private static long[] tree;
 	private static BufferedReader br;
-	private static PriorityQueue<Long> pq;
 
-	private static long getMin() {
-		if (idx == k) {
-			return pq.poll();
+	private static void init(int node, int start, int end) {
+		int mid;
+
+		if (start == end) {
+			tree[node] = arr[start];
+			return;
 		}
-		if (pq.isEmpty() || arr[idx] < pq.peek()) {
-			return arr[idx++];
+		mid = start + end >> 1;
+		init(node << 1, start, mid);
+		init(node << 1 | 1, mid + 1, end);
+		tree[node] = Math.min(tree[node << 1], tree[node << 1 | 1]);
+	}
+
+	private static void alter(int node, int start, int end) {
+		int mid;
+
+		if (start == end) {
+			tree[node] = val;
+			return;
 		}
-		return pq.poll();
+		mid = start + end >> 1;
+		if (tree[node << 1] == tree[node]) {
+			alter(node << 1, start, mid);
+		} else {
+			alter(node << 1 | 1, mid + 1, end);
+		}
+		tree[node] = Math.min(tree[node << 1], tree[node << 1 | 1]);
 	}
 
 	private static long solution() throws IOException {
+		int k;
 		int i;
+		int end;
 		long sum;
 		long cost;
 		StringTokenizer st;
@@ -36,20 +55,17 @@ public class Main {
 		for (i = 0; i < k; i++) {
 			arr[i] = Integer.parseInt(st.nextToken());
 		}
-		Arrays.sort(arr, 0, k);
-		idx = 0;
-		sum = 0L;
-		while (idx < k) {
-			cost = getMin() + getMin();
-			sum += cost;
-			pq.offer(cost);
+		end = --k;
+		init(1, 0, end);
+		sum = 0;
+		while (k-- > 0) {
+			cost = tree[1];
+			val = INF;
+			alter(1, 0, end);
+			sum += cost += tree[1];
+			val = cost;
+			alter(1, 0, end);
 		}
-		while (pq.size() > 1) {
-			cost = pq.poll() + pq.poll();
-			sum += cost;
-			pq.offer(cost);
-		}
-		pq.poll();
 		return sum;
 	}
 
@@ -58,7 +74,7 @@ public class Main {
 		StringBuilder sb;
 
 		arr = new int[MAX_K];
-		pq = new PriorityQueue<>(MAX_K);
+		tree = new long[MAX_K << 2];
 		br = new BufferedReader(new InputStreamReader(System.in));
 		t = Integer.parseInt(br.readLine());
 		sb = new StringBuilder();
