@@ -1,30 +1,47 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final int MAX_N = 1_000_000;
+	private static final int MAX_K = 1_000_001;
 	private static final char LINE_BREAK = '\n';
 
+	private static int k;
+	private static int idx;
+	private static int[] arr;
 	private static BufferedReader br;
-	private static StringTokenizer st;
 	private static PriorityQueue<Long> pq;
 
+	private static long getMin() {
+		if (idx == k) {
+			return pq.poll();
+		}
+		if (pq.isEmpty() || arr[idx] < pq.peek()) {
+			return arr[idx++];
+		}
+		return pq.poll();
+	}
+
 	private static long solution() throws IOException {
-		int n;
+		int i;
 		long sum;
 		long cost;
+		StringTokenizer st;
 
-		n = Integer.parseInt(br.readLine());
+		k = Integer.parseInt(br.readLine());
 		st = new StringTokenizer(br.readLine(), " ", false);
-		while (n-- > 0) {
-			pq.offer(Long.parseLong(st.nextToken()));
+		for (i = 0; i < k; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
 		}
-		sum = 0;
-		while (pq.size() > 1) {
-			sum += (cost = pq.poll() + pq.poll());
+		Arrays.sort(arr, 0, k);
+		idx = 0;
+		sum = 0L;
+		for (i = 1; i < k; i++) {
+			cost = getMin() + getMin();
+			sum += cost;
 			pq.offer(cost);
 		}
 		pq.poll();
@@ -35,7 +52,8 @@ public class Main {
 		int t;
 		StringBuilder sb;
 
-		pq = new PriorityQueue<>(MAX_N);
+		arr = new int[MAX_K];
+		pq = new PriorityQueue<>();
 		br = new BufferedReader(new InputStreamReader(System.in));
 		t = Integer.parseInt(br.readLine());
 		sb = new StringBuilder();
