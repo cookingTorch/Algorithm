@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final int MAX_K = 1_000_001;
+	private static final int MAX_K = 1_000_000;
 	private static final char LINE_BREAK = '\n';
 
 	private static int k;
@@ -58,7 +58,7 @@ public class Main {
 		StringBuilder sb;
 
 		arr = new int[MAX_K];
-		pq = new PriorityQueue<>();
+		pq = new PriorityQueue<>(MAX_K);
 		br = new BufferedReader(new InputStreamReader(System.in));
 		t = Integer.parseInt(br.readLine());
 		sb = new StringBuilder();
