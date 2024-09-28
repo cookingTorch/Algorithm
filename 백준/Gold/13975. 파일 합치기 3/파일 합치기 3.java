@@ -39,8 +39,13 @@ public class Main {
 		Arrays.sort(arr, 0, k);
 		idx = 0;
 		sum = 0L;
-		for (i = 1; i < k; i++) {
+		while (idx < k) {
 			cost = getMin() + getMin();
+			sum += cost;
+			pq.offer(cost);
+		}
+		while (pq.size() > 1) {
+			cost = pq.poll() + pq.poll();
 			sum += cost;
 			pq.offer(cost);
 		}
