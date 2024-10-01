@@ -124,20 +124,20 @@ public class Main {
 					break;
 			}
 		}
-		maxLazy = new int[m << 2];
-		minLazy = new int[m << 2];
-		init(1, 1, m);
+		maxLazy = new int[time << 2];
+		minLazy = new int[time << 2];
+		init(1, 1, time);
 		for (Range range : ranges) {
 			if (range == null) {
 				continue;
 			}
-			update(1, 1, m, range.left, range.right, range.val);
+			update(1, 1, time, range.left, range.right, range.val);
 		}
 		for (Range range : rangeList) {
-			update(1, 1, m, range.left, range.right, range.val);
+			update(1, 1, time, range.left, range.right, range.val);
 		}
 		sb = new StringBuilder();
-		prop(1, 1, m);
+		prop(1, 1, time);
 		System.out.print(sb.toString());
 	}
 }
