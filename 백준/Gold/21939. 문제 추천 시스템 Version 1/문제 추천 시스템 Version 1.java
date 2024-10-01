@@ -33,18 +33,6 @@ public class Main {
 		}
 	}
 
-	private static final void init(int node, int start, int end) {
-		int mid;
-
-		minLazy[node] = INF;
-		if (start == end) {
-			return;
-		}
-		mid = start + end >> 1;
-		init(node << 1, start, mid);
-		init(node << 1 | 1, mid + 1, end);
-	}
-
 	private static final void update(int node, int start, int end, int left, int right, int val) {
 		int mid;
 
@@ -87,6 +75,7 @@ public class Main {
 		int p;
 		int i;
 		int time;
+		int size;
 		Range[] ranges;
 		ArrayList<Range> rangeList;
 		BufferedReader br;
@@ -124,9 +113,12 @@ public class Main {
 					break;
 			}
 		}
-		maxLazy = new int[time << 2];
-		minLazy = new int[time << 2];
-		init(1, 1, time);
+		size = time << 2;
+		maxLazy = new int[size];
+		minLazy = new int[size];
+		for (i = 0; i < size; i++) {
+			minLazy[i] = INF;
+		}
 		for (Range range : ranges) {
 			if (range == null) {
 				continue;
