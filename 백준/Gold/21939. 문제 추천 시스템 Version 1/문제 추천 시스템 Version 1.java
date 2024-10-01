@@ -13,7 +13,6 @@ public class Main {
 	private static final int ADD = 3;
 	private static final int SOLVED = 6;
 	private static final char MAX = '1';
-	private static final char MIN = '-';
 	private static final char LINE_BREAK = '\n';
 
 	private static int[] maxLazy;
@@ -53,11 +52,7 @@ public class Main {
 		int mid;
 
 		if (start == end) {
-			if (times[start] == MAX) {
-				sb.append(maxLazy[node] & MOD).append(LINE_BREAK);
-			} else if (times[start] == MIN) {
-				sb.append(minLazy[node] & MOD).append(LINE_BREAK);
-			}
+			sb.append((times[start] == MAX ? maxLazy[node] : minLazy[node]) & MOD).append(LINE_BREAK);
 			return;
 		}
 		maxLazy[node << 1] = Math.max(maxLazy[node], maxLazy[node << 1]);
@@ -119,6 +114,7 @@ public class Main {
 		for (i = 0; i < size; i++) {
 			minLazy[i] = INF;
 		}
+		time--;
 		for (Range range : ranges) {
 			if (range == null) {
 				continue;
