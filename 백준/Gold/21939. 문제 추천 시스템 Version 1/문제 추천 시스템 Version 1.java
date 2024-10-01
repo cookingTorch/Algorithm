@@ -85,7 +85,7 @@ public class Main {
 			ranges[p] = new Range(0, (Integer.parseInt(st.nextToken()) << SHIFT) | p);
 		}
 		m = Integer.parseInt(br.readLine());
-		rangeList = new ArrayList<>(m + 1);
+		rangeList = new ArrayList<>(m);
 		time = 1;
 		times = new char[m + 1];
 		for (i = 0; i < m; i++) {
@@ -96,15 +96,18 @@ public class Main {
 					break;
 				case ADD:
 					p = Integer.parseInt(st.nextToken());
+					if (ranges[p] != null) {
+						rangeList.add(ranges[p]);
+					}
 					ranges[p] = new Range(time, (Integer.parseInt(st.nextToken()) << SHIFT) | p);
 					break;
 				case SOLVED:
 					p = Integer.parseInt(st.nextToken());
 					if (ranges[p].left < time) {
 						ranges[p].right = time - 1;
-						rangeList.add(ranges[p]);
+					} else {
+						ranges[p] = null;
 					}
-					ranges[p] = null;
 					break;
 			}
 		}
