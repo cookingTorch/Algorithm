@@ -104,18 +104,18 @@ main()
 	range_t *range;
 	range_t *ranges[MAX_P];
 
-	scanf("%d", &n);
+	scanf("%d\n", &n);
 	for (i = 1; i < MAX_P; i++) {
 		ranges[i] = NULL;
 	}
 	while (n-- > 0) {
-		scanf("%d %d", &p, &l);
+		scanf("%d %d\n", &p, &l);
 		ranges[p] = new_range(0, l << SHIFT | p, NULL);
 	}
 	scanf("%d", &m);
 	time = 1;
 	for (i = 0; i < m; i++) {
-		scanf("%s", query);
+		scanf("\n%s ", query);
 		switch (query[0]) {
 			case RECOMMEND:
 				scanf("%s", query);
