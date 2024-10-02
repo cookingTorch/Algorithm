@@ -15,7 +15,7 @@ public class Main {
 	private static long[] tree;
 	private static BufferedReader br;
 
-	private static void init(int k) throws IOException {
+	private static final void init(int k) throws IOException {
 		int i;
 		int thr;
 		int size;
@@ -36,7 +36,7 @@ public class Main {
 		}
 	}
 
-	private static void alter(long val) {
+	private static final void alter(long val) {
 		int i;
 
 		i = (int) (tree[1] & MOD);
@@ -46,7 +46,7 @@ public class Main {
 		}
 	}
 
-	private static long solution() throws IOException {
+	private static final long solution() throws IOException {
 		int k;
 		long sum;
 		long cost;
