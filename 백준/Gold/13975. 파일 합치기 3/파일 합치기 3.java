@@ -29,7 +29,7 @@ public class Main {
 			tree[i] = Long.parseLong(st.nextToken()) << SHIFT | i;
 		}
 		for (; i < size; i++) {
-			tree[i] = INIT | i;
+			tree[i] = INIT;
 		}
 		for (i = leaf - 1; i > 0; i--) {
 			tree[i] = Math.min(tree[i << 1], tree[i << 1 | 1]);
