@@ -13,7 +13,7 @@ public class Main {
 		int n;
 		int i;
 		int num;
-		int[] ans;
+		int[] nge;
 		ArrayDeque<Integer> dq;
 		StringBuilder sb;
 		BufferedReader br;
@@ -26,22 +26,22 @@ public class Main {
 		for (i = 0; i < n; i++) {
 			dq.addLast(Integer.parseInt(st.nextToken()));
 		}
-		ans = new int[n];
+		nge = new int[n];
 		dq.addFirst(INF);
 		while (n-- > 0) {
 			num = dq.pollLast();
 			while (num >= dq.peekFirst()) {
 				dq.pollFirst();
 			}
-			ans[n] = dq.peekFirst();
+			nge[n] = dq.peekFirst();
 			dq.addFirst(num);
 		}
 		sb = new StringBuilder();
-		for (int nge : ans) {
-			if (nge == INF) {
+		for (int ans : nge) {
+			if (ans == INF) {
 				sb.append(FAIL);
 			} else {
-				sb.append(nge).append(SPACE);
+				sb.append(ans).append(SPACE);
 			}
 		}
 		System.out.print(sb.toString());
