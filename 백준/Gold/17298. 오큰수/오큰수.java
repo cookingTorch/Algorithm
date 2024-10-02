@@ -6,40 +6,43 @@ import java.util.StringTokenizer;
 
 public class Main {
 	private static final int INF = Integer.MAX_VALUE;
-	private static final int FAIL = -1;
 	private static final char SPACE = ' ';
+	private static final char[] FAIL = {'-', '1', ' '};
 
 	public static void main(String[] args) throws IOException {
 		int n;
 		int i;
-		int[] arr;
+		int num;
 		int[] ans;
-		ArrayDeque<Integer> stack;
+		ArrayDeque<Integer> dq;
 		StringBuilder sb;
 		BufferedReader br;
 		StringTokenizer st;
 
 		br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
-		stack = new ArrayDeque<>(n + 1);
-		arr = new int[n + 1];
+		dq = new ArrayDeque<>(n + 1);
 		st = new StringTokenizer(br.readLine(), " ", false);
 		for (i = 0; i < n; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
+			dq.addLast(Integer.parseInt(st.nextToken()));
 		}
-		arr[n] = INF;
 		ans = new int[n];
-		stack.addFirst(n);
+		dq.addFirst(INF);
 		while (n-- > 0) {
-			while (arr[n] >= arr[stack.peekFirst()]) {
-				stack.pollFirst();
+			num = dq.pollLast();
+			while (num >= dq.peekFirst()) {
+				dq.pollFirst();
 			}
-			ans[n] = arr[stack.peekFirst()];
-			stack.addFirst(n);
+			ans[n] = dq.peekFirst();
+			dq.addFirst(num);
 		}
 		sb = new StringBuilder();
-		for (int num : ans) {
-			sb.append(num == INF ? FAIL : num).append(SPACE);
+		for (int nge : ans) {
+			if (nge == INF) {
+				sb.append(FAIL);
+			} else {
+				sb.append(nge).append(SPACE);
+			}
 		}
 		System.out.print(sb.toString());
 	}
