@@ -4,27 +4,32 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final int MAX_K = 1_000_000;
 	private static final int MAX_SIZE = 2_097_152;
-	private static final long INF = Long.MAX_VALUE;
+	private static final int SHIFT = 21;
+	private static final long MOD = (1 << SHIFT) - 1;
+	private static final long INF = 10_000_000_001L;
+	private static final long INIT = INF << SHIFT;
 	private static final char LINE_BREAK = '\n';
 
 	private static int leaf;
-	private static int[] arr;
 	private static long[] tree;
 	private static BufferedReader br;
 
-	private static void init(int k) {
+	private static void init(int k) throws IOException {
 		int i;
+		int thr;
 		int size;
+		StringTokenizer st;
 
 		for (leaf = 1; leaf < k; leaf <<= 1);
 		size = leaf << 1;
-		for (i = 0; i < k; i++) {
-			tree[leaf + i] = arr[i];
+		st = new StringTokenizer(br.readLine());
+		thr = leaf + k;
+		for (i = leaf; i < thr; i++) {
+			tree[i] = Long.parseLong(st.nextToken()) << SHIFT | i;
 		}
-		for (i += leaf; i < size; i++) {
-			tree[i] = INF;
+		for (; i < size; i++) {
+			tree[i] = INIT | i;
 		}
 		for (i = leaf - 1; i > 0; i--) {
 			tree[i] = Math.min(tree[i << 1], tree[i << 1 | 1]);
@@ -34,14 +39,8 @@ public class Main {
 	private static void alter(long val) {
 		int i;
 
-		i = 1;
-		while (i < leaf) {
-			i <<= 1;
-			if (tree[i] != tree[i >> 1]) {
-				i |= 1;
-			}
-		}
-		tree[i] = val;
+		i = (int) (tree[1] & MOD);
+		tree[i] = val << SHIFT | i;
 		for (i >>= 1; i > 0; i >>= 1) {
 			tree[i] = Math.min(tree[i << 1], tree[i << 1 | 1]);
 		}
@@ -49,22 +48,16 @@ public class Main {
 
 	private static long solution() throws IOException {
 		int k;
-		int i;
 		long sum;
 		long cost;
-		StringTokenizer st;
 
 		k = Integer.parseInt(br.readLine());
-		st = new StringTokenizer(br.readLine(), " ", false);
-		for (i = 0; i < k; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
-		}
 		init(k);
 		sum = 0;
 		while (--k > 0) {
-			cost = tree[1];
+			cost = tree[1] >> SHIFT;
 			alter(INF);
-			sum += cost += tree[1];
+			sum += cost += tree[1] >> SHIFT;
 			alter(cost);
 		}
 		return sum;
@@ -74,7 +67,6 @@ public class Main {
 		int t;
 		StringBuilder sb;
 
-		arr = new int[MAX_K];
 		tree = new long[MAX_SIZE];
 		br = new BufferedReader(new InputStreamReader(System.in));
 		t = Integer.parseInt(br.readLine());
