@@ -30,7 +30,7 @@ public class Main {
 		for (k = 0; k < n; k++) {
 			for (u = 0; u < n; u++) {
 				for (v = 0; v < u; v++) {
-					if ((map[u][v] == IS_FRIEND || (map[u][k] == IS_FRIEND && map[k][v] == IS_FRIEND)) && !visited[u][v]) {
+					if (!visited[u][v] && (map[u][v] == IS_FRIEND || (map[u][k] == IS_FRIEND && map[k][v] == IS_FRIEND))) {
 						visited[u][v] = true;
 						cnt[u]++;
 						cnt[v]++;
