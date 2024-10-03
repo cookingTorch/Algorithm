@@ -21,7 +21,6 @@ public class Main {
 		int npos;
 		int ndist;
 
-		q.clear();
 		dists[start] = 0;
 		q.addLast(start);
 		max = 0;
