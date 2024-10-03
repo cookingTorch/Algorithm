@@ -25,18 +25,22 @@ public class Main {
 		for (i = 0; i < n; i++) {
 			br.read(map[i], 0, size);
 		}
-		max = 0;
 		cnt = new int[n];
 		visited = new boolean[n][n];
 		for (k = 0; k < n; k++) {
 			for (u = 0; u < n; u++) {
 				for (v = 0; v < u; v++) {
-					if ((map[u][v] == IS_FRIEND || (u != k && v != k && map[u][k] == IS_FRIEND && map[k][v] == IS_FRIEND)) && !visited[u][v]) {
+					if ((map[u][v] == IS_FRIEND || (map[u][k] == IS_FRIEND && map[k][v] == IS_FRIEND)) && !visited[u][v]) {
 						visited[u][v] = true;
-						max = Math.max(max, Math.max(++cnt[u], ++cnt[v]));
+						cnt[u]++;
+						cnt[v]++;
 					}
 				}
 			}
+		}
+		max = 0;
+		for (i = 0; i < n; i++) {
+			max = Math.max(max, cnt[i]);
 		}
 		System.out.print(max);
 	}
