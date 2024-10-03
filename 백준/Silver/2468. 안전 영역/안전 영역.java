@@ -4,63 +4,88 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static int n;
-	private static int[][] city;
-	private static boolean[][] visited;
-	
-	private static void dfs(int i, int j, int rain) {
-		if (i < 0 || j < 0 || i >= n || j >= n || visited[i][j] || city[i][j] <= rain) {
-			return;
-		}
-		visited[i][j] = true;
-		dfs(i, j - 1, rain);
-		dfs(i - 1, j, rain);
-		dfs(i, j + 1, rain);
-		dfs(i + 1, j, rain);
-	}
-	
-	private static int safe(int rain) {
-		int cnt, i, j;
-		
-		visited = new boolean[n][n];
-		cnt = 0;
-		for (i = 0; i < n; i++) {
-			for (j = 0; j < n; j++) {
-				if (city[i][j] > rain && !visited[i][j]) {
-					dfs(i, j, rain);
-					cnt++;
-				}
+	private static final int INF = Integer.MAX_VALUE;
+
+	private static int rain;
+	private static int[] d;
+	private static int[] map;
+	private static boolean[] initialVisited;
+	private static boolean[] visited;
+
+	private static final void dfs(int pos) {
+		int i;
+		int npos;
+
+		for (i = 0; i < 4; i++) {
+			npos = pos + d[i];
+			if (!visited[npos] && map[npos] > rain) {
+				visited[npos] = true;
+				dfs(npos);
 			}
 		}
-		return cnt;
 	}
-	
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+	public static void main(String[] args) throws IOException {
+		int n;
+		int i;
+		int j;
+		int num;
+		int max;
+		int col;
+		int low;
+		int high;
+		int size;
+		BufferedReader br;
 		StringTokenizer st;
-		
-		int max, second, ans, i, j;
-		
+
+		br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
-		city = new int[n][n];
-		max = 0;
-		second = -1;
-		for (i = 0; i < n; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (j = 0; j < n; j++) {
-				city[i][j] = Integer.parseInt(st.nextToken());
-				if (city[i][j] > max) {
-					second = max;
-					max = city[i][j];
-				} else if (second < city[i][j] && city[i][j] < max) {
-					second = city[i][j];
+		col = n + 2;
+		size = col * col;
+		low = INF;
+		high = 0;
+		map = new int[size];
+		for (i = 1; i <= n; i++) {
+			st = new StringTokenizer(br.readLine(), " ", false);
+			for (j = 1; j <= n; j++) {
+				map[i * col + j] = Integer.parseInt(st.nextToken());
+				low = Math.min(low, map[i * col + j]);
+				high = Math.max(high, map[i * col + j]);
+			}
+		}
+		initialVisited = new boolean[size];
+		visited = new boolean[size];
+		d = new int[] {-col, 1, col, -1};
+		max = 1;
+		high--;
+		for (rain = low; rain < high; rain++) {
+			num = 0;
+			for (i = 1; i <= n; i++) {
+				for (j = 1; j <= n; j++) {
+					if (!visited[i * col + j] && map[i * col + j] > rain) {
+						num++;
+						visited[i * col + j] = true;
+						dfs(i * col + j);
+					}
+				}
+			}
+			max = Math.max(max, num);
+			System.arraycopy(initialVisited, 0, visited, 0, size);
+		}
+		num = 0;
+		for (i = 1; i <= n; i++) {
+			for (j = 1; j <= n; j++) {
+				if (!visited[i * col + j] && map[i * col + j] > rain) {
+					num++;
+					visited[i * col + j] = true;
+					dfs(i * col + j);
 				}
 			}
 		}
-		ans = 1;
-		for (i = 1; i <= second; i++) {
-			ans = Math.max(ans, safe(i));
+		if (num == 25) {
+			num = num;
 		}
-		System.out.println(ans);
+		max = Math.max(max, num);
+		System.out.print(max);
 	}
 }
