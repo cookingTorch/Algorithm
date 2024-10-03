@@ -5,73 +5,81 @@ import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final int[] dx = new int[] {-1, 0, 1, 0};
-	private static final int[] dy = new int[] {0, 1, 0, -1};
-	private static final char L = 'L';
-	private static final char W = 'W';
-	
-	private static int n;
-	private static int m;
-	private static int[][] dist;
-	private static char[][] map;
-	private static boolean[][] visited;
-	private static ArrayDeque<int[]> q;
-	
-	private static final int bfs(int startX, int startY) {
+	private static final int INF = Integer.MAX_VALUE >> 1;
+	private static final char LAND = 'L';
+
+	private static char[] map;
+	private static int[] d;
+	private static int[] initialDists;
+	private static int[] dists;
+	private static ArrayDeque<Integer> q;
+
+	private static final int bfs(int start) {
 		int i;
-		int x;
-		int y;
-		int nx;
-		int ny;
 		int max;
-		int[] curr;
-		
+		int pos;
+		int npos;
+		int ndist;
+
+		q.clear();
+		dists[start] = 0;
+		q.addLast(start);
 		max = 0;
-		dist[startX][startY] = 0;
-		q.addLast(new int[] {startX, startY});
-		visited[startX][startY] = true;
 		while (!q.isEmpty()) {
-			curr = q.pollFirst();
-			x = curr[0];
-			y = curr[1];
+			pos = q.pollFirst();
+			ndist = dists[pos] + 1;
 			for (i = 0; i < 4; i++) {
-				nx = x + dx[i];
-				ny = y + dy[i];
-				if (nx < 0 || nx >= n || ny < 0 || ny >= m || map[nx][ny] == W || visited[nx][ny]) {
-					continue;
+				npos = pos + d[i];
+				if (map[npos] == LAND && ndist < dists[npos]) {
+					dists[npos] = ndist;
+					max = Math.max(max, ndist);
+					q.addLast(npos);
 				}
-				dist[nx][ny] = dist[x][y] + 1;
-				max = dist[nx][ny];
-				visited[nx][ny] = true;
-				q.addLast(new int[] {nx, ny});
 			}
 		}
 		return max;
 	}
-	
+
 	public static void main(String[] args) throws IOException {
+		int r;
+		int c;
 		int i;
 		int j;
+		int col;
+		int thr;
+		int pos;
 		int max;
+		int line;
+		int size;
 		BufferedReader br;
 		StringTokenizer st;
-		
+
 		br = new BufferedReader(new InputStreamReader(System.in));
 		st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		map = new char[n][];
-		for (i = 0; i < n; i++) {
-			map[i] = br.readLine().toCharArray();
+		r = Integer.parseInt(st.nextToken());
+		c = Integer.parseInt(st.nextToken());
+		line = c + 1;
+		col = line + 1;
+		thr = (r + 1) * col;
+		map = new char[(r + 2) * col];
+		for (i = col + 1; i < thr; i += col) {
+			br.read(map, i, line);
 		}
+		size = (r + 2) * col;
+		initialDists = new int[size];
+		dists = new int[size];
+		for (i = 0; i < size; i++) {
+			initialDists[i] = INF;
+		}
+		d = new int[] {-col, 1, col, -1};
 		max = 0;
 		q = new ArrayDeque<>();
-		dist = new int[n][m];
-		for (i = 0; i < n; i++) {
-			for (j = 0; j < m; j++) {
-				if (map[i][j] == L) {
-					visited = new boolean[n][m];
-					max = Math.max(max, bfs(i, j));
+		for (i = 1; i <= r; i++) {
+			for (j = 1; j <= c; j++) {
+				pos = i * col + j;
+				if (map[pos] == LAND) {
+					System.arraycopy(initialDists, col + 1, dists, col + 1, size - col - 1);
+					max = Math.max(max, bfs(pos));
 				}
 			}
 		}
