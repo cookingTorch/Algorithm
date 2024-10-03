@@ -3,18 +3,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-	private static final String SK = "SK";
-	private static final String CY = "CY";
-
+	private static final char ONE = 1;
+	private static final char[] SK = {'S', 'K'};
+	private static final char[] CY = {'C', 'Y'};
+	
 	public static void main(String[] args) throws IOException {
-		int n;
+		String str;
 		BufferedReader br;
-
+		
 		br = new BufferedReader(new InputStreamReader(System.in));
-		if ((Integer.parseInt(br.readLine()) & 1) == 0) {
-			System.out.print(CY);
-		} else {
+		str = br.readLine();
+		if ((str.charAt(str.length() - 1) & ONE) == ONE) {
 			System.out.print(SK);
+		} else {
+			System.out.print(CY);
 		}
 	}
 }
