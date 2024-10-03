@@ -33,6 +33,7 @@ public class Main {
 		int max;
 		int col;
 		int low;
+		int pos;
 		int high;
 		int size;
 		BufferedReader br;
@@ -62,10 +63,11 @@ public class Main {
 			num = 0;
 			for (i = 1; i <= n; i++) {
 				for (j = 1; j <= n; j++) {
-					if (!visited[i * col + j] && map[i * col + j] > rain) {
+					pos = i * col + j;
+					if (!visited[pos] && map[pos] > rain) {
 						num++;
-						visited[i * col + j] = true;
-						dfs(i * col + j);
+						visited[pos] = true;
+						dfs(pos);
 					}
 				}
 			}
@@ -75,15 +77,13 @@ public class Main {
 		num = 0;
 		for (i = 1; i <= n; i++) {
 			for (j = 1; j <= n; j++) {
-				if (!visited[i * col + j] && map[i * col + j] > rain) {
+				pos = i * col + j;
+				if (!visited[pos] && map[pos] > rain) {
 					num++;
-					visited[i * col + j] = true;
-					dfs(i * col + j);
+					visited[pos] = true;
+					dfs(pos);
 				}
 			}
-		}
-		if (num == 25) {
-			num = num;
 		}
 		max = Math.max(max, num);
 		System.out.print(max);
