@@ -18,6 +18,7 @@ public class Main {
 		int i;
 		int max;
 		int min;
+		int size;
 		int[] cities;
 		int[][] map;
 		ArrayList<Integer> ans;
@@ -60,8 +61,8 @@ public class Main {
 		min = INF;
 		for (w = 1; w <= n; w++) {
 			max = 0;
-			for (int city : cities) {
-				max = Math.max(max, map[city][w] + map[w][city]);
+			for (i = 0; i < k; i++) {
+				max = Math.max(max, map[cities[i]][w] + map[w][cities[i]]);
 			}
 			if (max < min) {
 				ans.clear();
@@ -72,8 +73,9 @@ public class Main {
 			}
 		}
 		sb = new StringBuilder();
-		for (int city : ans) {
-			sb.append(city).append(SPACE);
+		size = ans.size();
+		for (i = 0; i < size; i++) {
+			sb.append(ans.get(i)).append(SPACE);
 		}
 		System.out.print(sb.toString());
 	}
