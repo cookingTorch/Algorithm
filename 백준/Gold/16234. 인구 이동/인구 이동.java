@@ -28,8 +28,11 @@ public class Main {
 		cnt++;
 		for (i = 0; i < 4; i++) {
 			npos = pos + d[i];
+			if (visited[npos]) {
+				continue;
+			}
 			diff = Math.abs(map[pos] - map[npos]);
-			if (!visited[npos] && l <= diff && diff <= r) {
+			if (l <= diff && diff <= r) {
 				dfs(npos);
 			}
 		}
@@ -38,23 +41,23 @@ public class Main {
 	private static final boolean open() {
 		int i;
 		int j;
-		boolean ret;
 
-		ret = false;
 		idx = 0;
 		for (i = col; i < thr; i += col) {
 			for (j = 1; j <= n; j++) {
 				if (!visited[i + j]) {
 					cnt = 0;
 					dfs(i + j);
-					q.addLast(cnt);
-					if (cnt > 1) {
-						ret = true;
+					if (cnt == 1) {
+						visited[i + j] = false;
+						idx--;
+					} else {
+						q.addLast(cnt);
 					}
 				}
 			}
 		}
-		return ret;
+		return !q.isEmpty();
 	}
 
 	private static final void move() {
