@@ -34,15 +34,14 @@ public class Main {
 		for (v = 1; v <= n; v++) {
 			map[1][v] = INF;
 		}
-		for (u = 2; u <= n; u++) {
-			System.arraycopy(map[1], 1, map[u], 1, n);
+		for (v = 2; v <= n; v++) {
+			System.arraycopy(map[1], 1, map[v], 1, n);
+			map[v][v] = 0;
 		}
+		map[1][1] = 0;
 		while (m-- > 0) {
 			st = new StringTokenizer(br.readLine(), " ", false);
 			map[Integer.parseInt(st.nextToken())][Integer.parseInt(st.nextToken())] = Integer.parseInt(st.nextToken());
-		}
-		for (v = 1; v <= n; v++) {
-			map[v][v] = 0;
 		}
 		for (w = 1; w <= n; w++) {
 			for (u = 1; u <= n; u++) {
