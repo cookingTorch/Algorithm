@@ -10,46 +10,36 @@ public class Main {
 	private static final int PRINT = 5;
 	private static final char LINE_BREAK = '\n';
 
-	private static final class Node {
-		long sum;
-		Node next;
-
-		Node() {}
-
-		Node(long val, Node next) {
-			this.sum = next.sum + val;
-			this.next = next;
-		}
-	}
-
 	public static void main(String[] args) throws IOException {
 		int n;
 		int i;
-		Node[] nodes;
+		int[] idx;
+		int[] prev;
+		long[] sum;
 		StringBuilder sb;
 		BufferedReader br;
 		StringTokenizer st;
 
 		br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
-		nodes = new Node[n + 1];
-		nodes[0] = new Node();
+		idx = new int[n + 1];
+		prev = new int[n + 1];
+		sum = new long[n + 1];
 		sb = new StringBuilder();
 		for (i = 1; i <= n; i++) {
 			st = new StringTokenizer(br.readLine(), " ", false);
 			switch (st.nextToken().length()) {
 				case PUSH:
-					nodes[i] = new Node(Long.parseLong(st.nextToken()), nodes[i - 1]);
+					sum[idx[i] = i] = sum[prev[i] = idx[i - 1]] + Long.parseLong(st.nextToken());
 					break;
 				case POP:
-					nodes[i] = nodes[i - 1].next;
+					idx[i] = prev[idx[i - 1]];
 					break;
 				case RESTORE:
-					nodes[i] = nodes[Integer.parseInt(st.nextToken())];
+					idx[i] = idx[Integer.parseInt(st.nextToken())];
 					break;
 				case PRINT:
-					nodes[i] = nodes[i - 1];
-					sb.append(nodes[i].sum).append(LINE_BREAK);
+					sb.append(sum[idx[i] = idx[i - 1]]).append(LINE_BREAK);
 					break;
 			}
 		}
