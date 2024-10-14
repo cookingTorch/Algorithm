@@ -29,17 +29,6 @@ public class Main {
             this.next = next;
         }
 
-        boolean grow() {
-            if (nutrient[pos] < age) {
-                return false;
-            }
-            nutrient[pos] -= age;
-            if (++age % INITIAL_NUTRIENT == 0) {
-                q.addLast(pos);
-            }
-            return true;
-        }
-
         @Override
         public int compareTo(Tree o) {
             return age - o.age;
@@ -62,11 +51,15 @@ public class Main {
 
         prev = trees;
         for (curr = prev.next; curr != null; curr = prev.next) {
-            if (curr.grow()) {
-                prev = curr;
-            } else {
+            if (nutrient[curr.pos] < curr.age) {
                 prev.next = curr.next;
                 humus[curr.pos] += curr.age >> 1;
+            } else {
+                nutrient[curr.pos] -= curr.age;
+                if (++curr.age % INITIAL_NUTRIENT == 0) {
+                    q.addLast(curr.pos);
+                }
+                prev = curr;
             }
         }
     }
