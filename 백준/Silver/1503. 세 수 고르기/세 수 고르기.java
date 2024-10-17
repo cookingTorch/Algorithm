@@ -14,6 +14,7 @@ public class Main {
 		int j;
 		int k;
 		int min;
+		int temp;
 		boolean[] s;
 		BufferedReader br;
 		StringTokenizer st;
@@ -36,11 +37,12 @@ public class Main {
 				if (s[j]) {
 					continue;
 				}
+				temp = i * j;
 				for (k = j; k < MAX; k++) {
 					if (s[k]) {
 						continue;
 					}
-					min = Math.min(min, Math.abs(n - i * j * k));
+					min = Math.min(min, Math.abs(n - temp * k));
 				}
 			}
 		}
