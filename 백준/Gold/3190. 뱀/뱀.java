@@ -27,7 +27,6 @@ public class Main {
         int pos;
         int col;
         int end;
-        int next;
         int time;
         int head;
         int tail;
@@ -68,17 +67,17 @@ public class Main {
         tail = 0;
         pos = col + 1;
         snake[head] = pos;
-        for (time = 1;; time++, pos = next) {
-            next = pos + d[dir];
-            switch (map[next]) {
+        for (time = 1;; time++) {
+            pos += d[dir];
+            switch (map[pos]) {
                 case WALL:
                     System.out.print(time);
                     return;
                 case EMPTY:
                     map[snake[tail++]] = EMPTY;
                 case APPLE:
-                    map[next] = WALL;
-                    snake[++head] = next;
+                    map[pos] = WALL;
+                    snake[++head] = pos;
             }
             if (time == x) {
                 dir = dir + turn & 3;
