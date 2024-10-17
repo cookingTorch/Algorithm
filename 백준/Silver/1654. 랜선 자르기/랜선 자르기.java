@@ -4,43 +4,34 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static int k;
-    private static int n;
-    private static int[] cables;
-
-    private static final boolean valid(int len) {
+    private static final int upperBound(int k, int n, int[] cables, int right) {
         int i;
         int cnt;
-
-        cnt = 0;
-        for (i = 0; i < k; i++) {
-            if ((cnt += cables[i] / len) >= n) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static final int upperBound(int right) {
         int mid;
         int left;
 
         left = 1;
+        loop:
         while (left != right) {
             mid = left + right >>> 1;
-            if (valid(mid)) {
-                left = mid + 1;
-            } else {
-                right = mid;
+            cnt = 0;
+            for (i = 0; i < k; i++) {
+                if ((cnt += cables[i] / mid) >= n) {
+                    left = mid + 1;
+                    continue loop;
+                }
             }
+            right = mid;
         }
         return left;
     }
 
     public static void main(String[] args) throws IOException {
+        int k;
+        int n;
         int i;
         int max;
-        int ans;
+        int[] cables;
         BufferedReader br;
         StringTokenizer st;
 
@@ -54,6 +45,6 @@ public class Main {
             cables[i] = Integer.parseInt(br.readLine());
             max = Math.max(max, cables[i]);
         }
-        System.out.print(upperBound(max + 1) - 1);
+        System.out.print(upperBound(k, n, cables, max + 1) - 1);
     }
 }
