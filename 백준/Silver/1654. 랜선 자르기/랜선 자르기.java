@@ -4,8 +4,6 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static final int INF = Integer.MAX_VALUE;
-
     private static int k;
     private static int n;
     private static int[] cables;
@@ -23,14 +21,12 @@ public class Main {
         return false;
     }
 
-    private static final int upperBound() {
+    private static final int upperBound(int right) {
         int mid;
         int left;
-        int right;
 
-        left = 0;
-        right = INF;
-        while (left < right) {
+        left = 1;
+        while (left != right) {
             mid = left + right >>> 1;
             if (valid(mid)) {
                 left = mid + 1;
@@ -43,6 +39,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         int i;
+        int max;
         int ans;
         BufferedReader br;
         StringTokenizer st;
@@ -52,14 +49,11 @@ public class Main {
         k = Integer.parseInt(st.nextToken());
         n = Integer.parseInt(st.nextToken());
         cables = new int[k];
+        max = 0;
         for (i = 0; i < k; i++) {
             cables[i] = Integer.parseInt(br.readLine());
+            max = Math.max(max, cables[i]);
         }
-        ans = upperBound() - 1;
-        if (ans != INF - 1 || !valid(INF)) {
-            System.out.print(ans);
-        } else {
-            System.out.print(INF);
-        }
+        System.out.print(upperBound(max + 1) - 1);
     }
 }
