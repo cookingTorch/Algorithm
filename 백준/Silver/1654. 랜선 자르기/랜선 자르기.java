@@ -6,15 +6,17 @@ import java.util.StringTokenizer;
 public class Main {
     private static final int INF = Integer.MAX_VALUE;
 
+    private static int k;
     private static int n;
     private static int[] cables;
 
     private static final boolean valid(int len) {
+        int i;
         int cnt;
 
         cnt = 0;
-        for (int cable : cables) {
-            if ((cnt += cable / len) >= n) {
+        for (i = 0; i < k; i++) {
+            if ((cnt += cables[i] / len) >= n) {
                 return true;
             }
         }
@@ -40,7 +42,6 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        int k;
         int i;
         int ans;
         BufferedReader br;
