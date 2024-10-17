@@ -59,9 +59,9 @@ public class Main {
         st = new StringTokenizer(br.readLine());
         x = Integer.parseInt(st.nextToken());
         if (st.nextToken().charAt(0) == LEFT) {
-            turn = 3;
+            turn = LEFT_TURN;
         } else {
-            turn = 1;
+            turn = RIGHT_TURN;
         }
         snake = new int[MAX_TIME];
         head = 0;
