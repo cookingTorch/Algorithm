@@ -12,9 +12,9 @@ public class Main {
 		int i;
 		int min;
 		int half;
+		int suffix;
 		int[] arr;
 		int[] prefix;
-		int[] suffix;
 		BufferedReader br;
 		StringTokenizer st;
 
@@ -28,18 +28,15 @@ public class Main {
 		Arrays.sort(arr);
 		half = n >> 1;
 		prefix = new int[half];
-		suffix = new int[half];
 		prefix[0] = arr[1] - arr[0];
 		for (i = 1; i < half; i++) {
 			prefix[i] = prefix[i - 1] + arr[(i << 1) + 1] - arr[i << 1];
 		}
-		suffix[half - 1] = arr[n - 1] - arr[n - 2];
+		suffix = arr[n - 1] - arr[n - 2];
+		min = prefix[half - 1] + suffix;
 		for (i = half - 2; i >= 0; i--) {
-			suffix[i] = suffix[i + 1] + arr[(i << 1) + 2] - arr[(i << 1) + 1];
-		}
-		min = INF;
-		for (i = 0; i < half; i++) {
-			min = Math.min(min, prefix[i] + suffix[i]);
+			suffix += arr[(i << 1) + 2] - arr[(i << 1) + 1];
+			min = Math.min(min, prefix[i] + suffix);
 		}
 		System.out.print(min);
 	}
