@@ -13,9 +13,6 @@ public class Main {
     private static final char LEFT = 'L';
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-
         int n;
         int k;
         int x;
@@ -34,7 +31,10 @@ public class Main {
         int[] d;
         int[] map;
         int[] snake;
+        BufferedReader br;
+        StringTokenizer st;
 
+        br = new BufferedReader(new InputStreamReader(System.in));
         n = Integer.parseInt(br.readLine());
         k = Integer.parseInt(br.readLine());
         col = n + 2;
