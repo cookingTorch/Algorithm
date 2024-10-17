@@ -1,16 +1,14 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class Main {
     private static final int QUERY0 = '0';
     private static final int QUERY1 = '1';
     private static final int QUERY2 = '2';
-    private static final int NIL = -1;
-    private static final int SORT = -2;
-    private static final int REVERSE = -3;
+    private static final int REVERSE = -1;
 
     public static void main(String[] args) throws IOException {
         int n;
@@ -21,7 +19,7 @@ public class Main {
         int[] queries;
         boolean forward;
         boolean[] exists;
-        LinkedList<Integer> list;
+        ArrayDeque<Integer> dq;
         BufferedReader br;
         StringTokenizer st;
 
@@ -30,7 +28,7 @@ public class Main {
         n = Integer.parseInt(st.nextToken());
         q = Integer.parseInt(st.nextToken());
         k = Integer.parseInt(st.nextToken());
-        lastSort = NIL;
+        lastSort = -1;
         queries = new int[q];
         for (i = 0; i < q; i++) {
             switch (br.read()) {
@@ -39,7 +37,6 @@ public class Main {
                     queries[i] = Integer.parseInt(br.readLine());
                     break;
                 case QUERY1:
-                    queries[i] = SORT;
                     lastSort = i;
                     br.read();
                     break;
@@ -49,46 +46,36 @@ public class Main {
                     break;
             }
         }
-        forward = true;
         exists = new boolean[n + 1];
         for (i = 0; i < lastSort; i++) {
-            if (queries[i] == REVERSE) {
-                forward ^= true;
-            } else if (queries[i] != SORT) {
+            if (queries[i] > 0) {
                 exists[queries[i]] = true;
             }
         }
-        list = new LinkedList<>();
-        if (lastSort != NIL) {
-            if (forward) {
-                for (i = 1; i <= n; i++) {
-                    if (exists[i]) {
-                        list.addLast(i);
-                    }
-                }
-            } else {
-                for (i = n; i > 0; i--) {
-                    if (exists[i]) {
-                        list.addLast(i);
-                    }
+        dq = new ArrayDeque<>(q);
+        if (lastSort > 0) {
+            for (i = 1; i <= n; i++) {
+                if (exists[i]) {
+                    dq.addLast(i);
                 }
             }
         }
+        forward = true;
         for (i = lastSort + 1; i < q; i++) {
             if (queries[i] == REVERSE) {
                 forward ^= true;
-            } else if (queries[i] != SORT) {
-                if (forward) {
-                    list.addFirst(queries[i]);
-                } else {
-                    list.addLast(queries[i]);
-                }
+            } else if (forward) {
+                dq.addFirst(queries[i]);
+            } else {
+                dq.addLast(queries[i]);
             }
         }
         if (forward) {
-            System.out.print(list.get(k - 1));
+            for (; --k > 0; dq.pollFirst());
+            System.out.print(dq.peekFirst());
         } else {
-            System.out.print(list.get(list.size() - k));
+            for (; --k > 0; dq.pollLast());
+            System.out.print(dq.peekLast());
         }
     }
 }
