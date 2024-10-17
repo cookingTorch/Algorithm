@@ -18,7 +18,7 @@ public class Main {
         int k;
         int i;
         int lastSort;
-        int[] query;
+        int[] queries;
         boolean forward;
         boolean[] exists;
         LinkedList<Integer> list;
@@ -31,20 +31,20 @@ public class Main {
         q = Integer.parseInt(st.nextToken());
         k = Integer.parseInt(st.nextToken());
         lastSort = NIL;
-        query = new int[q];
+        queries = new int[q];
         for (i = 0; i < q; i++) {
             switch (br.read()) {
                 case QUERY0:
                     br.read();
-                    query[i] = Integer.parseInt(br.readLine());
+                    queries[i] = Integer.parseInt(br.readLine());
                     break;
                 case QUERY1:
-                    query[i] = SORT;
+                    queries[i] = SORT;
                     lastSort = i;
                     br.read();
                     break;
                 case QUERY2:
-                    query[i] = REVERSE;
+                    queries[i] = REVERSE;
                     br.read();
                     break;
             }
@@ -52,10 +52,10 @@ public class Main {
         forward = true;
         exists = new boolean[n + 1];
         for (i = 0; i < lastSort; i++) {
-            if (query[i] == REVERSE) {
+            if (queries[i] == REVERSE) {
                 forward ^= true;
-            } else if (query[i] != SORT) {
-                exists[query[i]] = true;
+            } else if (queries[i] != SORT) {
+                exists[queries[i]] = true;
             }
         }
         list = new LinkedList<>();
@@ -75,13 +75,13 @@ public class Main {
             }
         }
         for (i = lastSort + 1; i < q; i++) {
-            if (query[i] == REVERSE) {
+            if (queries[i] == REVERSE) {
                 forward ^= true;
-            } else if (query[i] != SORT) {
+            } else if (queries[i] != SORT) {
                 if (forward) {
-                    list.addFirst(query[i]);
+                    list.addFirst(queries[i]);
                 } else {
-                    list.addLast(query[i]);
+                    list.addLast(queries[i]);
                 }
             }
         }
