@@ -8,7 +8,7 @@ public class Main {
         int i;
         int j;
         int sum;
-        int dp[];
+        long dp[];
         BufferedReader br;
 
         br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,8 +19,8 @@ public class Main {
             return;
         }
         sum >>= 1;
-        dp = new int[sum + 1];
-        dp[0] = 1;
+        dp = new long[sum + 1];
+        dp[0] = 1L;
         for (i = 1; i <= n; i++) {
             for (j = sum; j >= i; j--) {
                 dp[j] += dp[j - i];
