@@ -1,47 +1,45 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static boolean[] visited;
-	private static ArrayList<ArrayList<Integer>> adj;
-	
-	private static int virus(int com) {
-		int val;
-		
-		if (visited[com]) {
-			return 0;
-		}
-		visited[com] = true;
-		val = 1;
-		for (int next : adj.get(com)) {
-			val += virus(next);
-		}
-		return val;
-	}
-	
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		
-		int comCnt, adjCnt, com1, com2, i;
-		
-		comCnt = Integer.parseInt(br.readLine());
-		adjCnt = Integer.parseInt(br.readLine());
-		adj = new ArrayList<>();
-		for (i = 0; i < comCnt; i++) {
-			adj.add(new ArrayList<>());
-		}
-		for (i = 0; i < adjCnt; i++) {
-			st = new StringTokenizer(br.readLine());
-			com1 = Integer.parseInt(st.nextToken()) - 1;
-			com2 = Integer.parseInt(st.nextToken()) - 1;
-			adj.get(com1).add(com2);
-			adj.get(com2).add(com1);
-		}
-		visited = new boolean[comCnt];
-		System.out.print(virus(0) - 1);
-	}
+    private static int[] roots;
+
+    private static final int find(int v) {
+        if (roots[v] <= 0) {
+            return v;
+        }
+        return roots[v] = find(roots[v]);
+    }
+
+    private static final void union(int u, int v) {
+        u = find(u);
+        v = find(v);
+        if (u == v) {
+            return;
+        }
+        roots[u] += roots[v];
+        roots[v] = u;
+    }
+
+    public static void main(String[] args) throws IOException {
+        int networks;
+        int computers;
+        BufferedReader br;
+        StringTokenizer st;
+
+        br = new BufferedReader(new InputStreamReader(System.in));
+        computers = Integer.parseInt(br.readLine()) + 1;
+        networks = Integer.parseInt(br.readLine());
+        roots = new int[computers];
+        while (--computers > 0) {
+            roots[computers] = -1;
+        }
+        while (networks-- > 0) {
+            st = new StringTokenizer(br.readLine(), " ", false);
+            union(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+        }
+        System.out.print(-roots[find(1)] - 1);
+    }
 }
