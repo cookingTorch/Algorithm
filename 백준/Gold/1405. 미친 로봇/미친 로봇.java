@@ -4,55 +4,48 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static final double ZERO = 0.0;
-    private static final double FULL = 1.0;
     private static final double TOTAL = 100.0;
 
     private static int n;
-    private static int[] d;
-    private static double[] probability;
+    private static int col;
+    private static double ans;
+    private static double east;
+    private static double west;
+    private static double south;
+    private static double north;
     private static boolean[] visited;
 
-    private static double dfs(int pos, int depth) {
-        int i;
-        int npos;
-        double val;
-
+    private static void dfs(int pos, double probability, int depth) {
+        if (visited[pos]) {
+            return;
+        }
         if (depth == n) {
-            return FULL;
+            ans += probability;
+            return;
         }
         depth++;
-        val = ZERO;
-        for (i = 0; i < 4; i++) {
-            npos = pos + d[i];
-            if (visited[npos]) {
-                continue;
-            }
-            visited[npos] = true;
-            val += probability[i] * dfs(npos, depth);
-            visited[npos] = false;
-        }
-        return val;
+        visited[pos] = true;
+        dfs(pos + 1, probability * east, depth);
+        dfs(pos - 1, probability * west, depth);
+        dfs(pos + col, probability * south, depth);
+        dfs(pos - col, probability * north, depth);
+        visited[pos] = false;
     }
 
     public static void main(String[] args) throws IOException {
-        int col;
         BufferedReader br;
         StringTokenizer st;
 
         br = new BufferedReader(new InputStreamReader(System.in));
         st = new StringTokenizer(br.readLine(), " ", false);
         n = Integer.parseInt(st.nextToken());
-        probability = new double[] {
-                Integer.parseInt(st.nextToken()) / TOTAL,
-                Integer.parseInt(st.nextToken()) / TOTAL,
-                Integer.parseInt(st.nextToken()) / TOTAL,
-                Integer.parseInt(st.nextToken()) / TOTAL
-        };
+        east = Integer.parseInt(st.nextToken()) / TOTAL;
+        west = Integer.parseInt(st.nextToken()) / TOTAL;
+        south = Integer.parseInt(st.nextToken()) / TOTAL;
+        north = Integer.parseInt(st.nextToken()) / TOTAL;
         col = (n << 1) + 1;
-        d = new int[] {1, -1, col, -col};
         visited = new boolean[col * col];
-        visited[n * col + n] = true;
-        System.out.print(dfs(n * col + n, 0));
+        dfs(n * col + n, 1.0, 0);
+        System.out.print(ans);
     }
 }
