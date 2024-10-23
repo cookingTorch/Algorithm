@@ -23,10 +23,12 @@ public class Main {
             if (map[npos] < map[pos]) {
                 visited[npos] = FAIL;
                 continue;
-            } else if (map[npos] == map[pos]
-                    && (visited[npos] == TRUE
-                    || (visited[npos] == FALSE && dfs(npos)))) {
-                continue;
+            } else if (map[npos] == map[pos]) {
+                if (visited[npos] == FALSE && dfs(npos)) {
+                    continue;
+                } else if (visited[npos] == TRUE) {
+                    continue;
+                }
             }
             visited[pos] = FAIL;
             return false;
