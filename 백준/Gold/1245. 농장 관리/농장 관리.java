@@ -5,35 +5,25 @@ import java.util.StringTokenizer;
 
 public class Main {
     private static final int WALL = -1;
-    private static final byte TRUE = 1;
-    private static final byte FALSE = 0;
-    private static final byte FAIL = -1;
 
     private static int[] d;
     private static int[] map;
-    private static byte[] visited;
+    private static boolean isPeak;
+    private static boolean[] visited;
 
-    private static final boolean dfs(int pos) {
+    private static final void dfs(int pos) {
         int i;
         int npos;
 
-        visited[pos] = TRUE;
+        visited[pos] = true;
         for (i = 0; i < 8; i++) {
             npos = pos + d[i];
-            if (map[npos] < map[pos]) {
-                visited[npos] = FAIL;
-                continue;
-            } else if (map[npos] == map[pos]) {
-                if (visited[npos] == FALSE && dfs(npos)) {
-                    continue;
-                } else if (visited[npos] == TRUE) {
-                    continue;
-                }
+            if (isPeak && map[npos] > map[pos]) {
+                isPeak = false;
+            } else if (map[npos] == map[pos] && !visited[npos]) {
+                dfs(npos);
             }
-            visited[pos] = FAIL;
-            return false;
         }
-        return true;
     }
 
     public static void main(String[] args) throws IOException {
@@ -44,6 +34,7 @@ public class Main {
         int col;
         int thr;
         int cnt;
+        int size;
         BufferedReader br;
         StringTokenizer st;
 
@@ -53,7 +44,8 @@ public class Main {
         m = Integer.parseInt(st.nextToken());
         col = m + 2;
         thr = (n + 1) * col;
-        map = new int[(n + 2) * col];
+        size = thr + col;
+        map = new int[size];
         for (i = 0; i < col; i++) {
             map[i] = WALL;
         }
@@ -66,13 +58,17 @@ public class Main {
             map[i + m + 1] = WALL;
         }
         System.arraycopy(map, 0, map, thr, col);
-        visited = new byte[(n + 2) * col];
+        visited = new boolean[size];
         d = new int[] {-col, -col + 1, 1, col + 1, col, col - 1, -1, -col - 1};
         cnt = 0;
         for (i = col; i < thr; i += col) {
             for (j = 1; j <= m; j++) {
-                if (visited[i + j] == FALSE && dfs(i + j)) {
-                    cnt++;
+                if (!visited[i + j]) {
+                    isPeak = true;
+                    dfs(i + j);
+                    if (isPeak) {
+                        cnt++;
+                    }
                 }
             }
         }
