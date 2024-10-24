@@ -5,10 +5,7 @@ import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static final int A = Integer.MIN_VALUE;
-    private static final int BC = A >>> 1;
-    private static final int GET_FLAG = A | BC;
-    private static final int FALSE = 0;
+    private static final int IS_A = Integer.MIN_VALUE;
     private static final char[] YES = {'Y', 'E', 'S'};
     private static final char[] NO = {'N', 'O'};
 
@@ -28,34 +25,27 @@ public class Main {
     private static final boolean bfs(int a, int b, int c) {
         int curr;
         int flag;
-        int[] visited;
+        boolean[] visited;
         Edge edge;
         ArrayDeque<Integer> q;
 
-        visited = new int[n + 1];
+        visited = new boolean[n + 1];
         q = new ArrayDeque<>(n);
-        visited[a] = A;
-        visited[b] = BC;
-        visited[c] = BC;
-        q.addLast(b | BC);
-        q.addLast(c | BC);
-        q.addLast(a | A);
+        visited[a] = visited[b] = visited[c] = true;
+        q.addLast(b);
+        q.addLast(c);
+        q.addLast(a | IS_A);
         while (!q.isEmpty()) {
             curr = q.pollFirst();
-            flag = curr & GET_FLAG;
+            flag = curr & IS_A;
             curr ^= flag;
-            if (flag == A) {
-                if (adj[curr].next == null) {
-                    return true;
-                }
-                if (visited[curr] == BC) {
-                    continue;
-                }
+            if (adj[curr].next == null && flag == IS_A) {
+                return true;
             }
             for (edge = adj[curr]; edge != null; edge = edge.next) {
-                if (visited[edge.to] == FALSE) {
-                    visited[edge.to] = flag;
-                    q.addLast(edge.to | flag);
+                if (!visited[edge.to]) {
+                    visited[edge.to] = true;
+                    q.addLast(flag | edge.to);
                 }
             }
         }
