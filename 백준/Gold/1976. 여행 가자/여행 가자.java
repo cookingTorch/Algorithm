@@ -4,61 +4,60 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final char CONNECTED = '1';
-	private static final String YES = "YES";
-	private static final String NO = "NO";
-	
+	private static final int CONNECTED = '1';
+	private static final char[] YES = {'Y', 'E', 'S'};
+	private static final char[] NO = {'N', 'O'};
+
 	private static int[] roots;
-	
+
 	private static final int find(int v) {
 		if (roots[v] <= 0) {
 			return v;
 		}
 		return roots[v] = find(roots[v]);
 	}
-	
+
 	private static final void union(int u, int v) {
-		int ru, rv;
-		
-		if ((ru = find(u)) == (rv = find(v))) {
+		u = find(u);
+		v = find(v);
+		if (u == v) {
 			return;
 		}
-		if (roots[ru] < roots[rv]) {
-			roots[rv] = ru;
+		if (roots[u] < roots[v]) {
+			roots[u] = v;
 		} else {
-			if (roots[ru] == roots[rv]) {
-				roots[rv]--;
+			if (roots[u] == roots[v]) {
+				roots[u]--;
 			}
-			roots[ru] = rv;
+			roots[v] = u;
 		}
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		int n;
 		int m;
 		int i;
 		int j;
-		int start;
-		String str;
+		int curr;
 		BufferedReader br;
 		StringTokenizer st;
-		
+
 		br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
 		m = Integer.parseInt(br.readLine());
 		roots = new int[n + 1];
 		for (i = 1; i <= n; i++) {
-			str = br.readLine();
-			for (j = i; j < n;) {
-				if (str.charAt(j++ << 1) == CONNECTED) {
+			for (j = 1; j <= n; j++) {
+				if (br.read() == CONNECTED) {
 					union(i, j);
 				}
+				br.read();
 			}
 		}
-		st = new StringTokenizer(br.readLine());
-		start = find(Integer.parseInt(st.nextToken()));
+		st = new StringTokenizer(br.readLine(), " ", false);
+		curr = Integer.parseInt(st.nextToken());
 		while (--m > 0) {
-			if (start != find(Integer.parseInt(st.nextToken()))) {
+			if (find(curr) != find(curr = Integer.parseInt(st.nextToken()))) {
 				System.out.print(NO);
 				return;
 			}
