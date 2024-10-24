@@ -55,8 +55,6 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		int n;
-		int a;
-		int b;
 		int i;
 		int[] arr;
 		BufferedReader br;
