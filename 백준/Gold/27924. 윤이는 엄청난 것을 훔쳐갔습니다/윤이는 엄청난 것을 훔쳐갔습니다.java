@@ -1,9 +1,14 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class Main {
+    private static final int A = Integer.MIN_VALUE;
+    private static final int BC = A >>> 1;
+    private static final int ABC = A | BC;
+    private static final int FALSE = 0;
     private static final char[] YES = {'Y', 'E', 'S'};
     private static final char[] NO = {'N', 'O'};
 
@@ -17,64 +22,49 @@ public class Main {
         }
     }
 
-    private static int[] dists;
+    private static int n;
     private static Edge[] adj;
 
-    private static final void bDfs(int parent, int node, int dist) {
+    private static final boolean bfs(int a, int b, int c) {
+        int curr;
+        int flag;
+        int[] visited;
         Edge edge;
+        ArrayDeque<Integer> q;
 
-        if ((edge = adj[node]).next == null) {
-            dists[node] = dist;
-        }
-        dist++;
-        for (; edge != null; edge = edge.next) {
-            if (edge.to == parent) {
-                continue;
+        visited = new int[n + 1];
+        q = new ArrayDeque<>(n);
+        visited[a] = A;
+        visited[b] = BC;
+        visited[c] = BC;
+        q.addLast(b | BC);
+        q.addLast(c | BC);
+        q.addLast(a | A);
+        while (!q.isEmpty()) {
+            curr = q.pollFirst();
+            flag = curr & ABC;
+            curr ^= flag;
+            if (flag == A) {
+                if (adj[curr].next == null) {
+                    return true;
+                }
+                if (visited[curr] == BC) {
+                    continue;
+                }
             }
-            bDfs(node, edge.to, dist);
-        }
-    }
-
-    private static final void cDfs(int parent, int node, int dist) {
-        Edge edge;
-
-        if ((edge = adj[node]).next == null) {
-            dists[node] = Math.min(dists[node], dist);
-        }
-        dist++;
-        for (; edge != null; edge = edge.next) {
-            if (edge.to == parent) {
-                continue;
-            }
-            cDfs(node, edge.to, dist);
-        }
-    }
-
-    private static final boolean aDfs(int parent, int node, int dist) {
-        Edge edge;
-
-        if ((edge = adj[node]).next == null) {
-            if (dist < dists[node]) {
-                return true;
-            }
-        }
-        dist++;
-        for (; edge != null; edge = edge.next) {
-            if (edge.to == parent) {
-                continue;
-            }
-            if (aDfs(node, edge.to, dist)) {
-                return true;
+            for (edge = adj[curr]; edge != null; edge = edge.next) {
+                if (visited[edge.to] == FALSE) {
+                    visited[edge.to] = flag;
+                    q.addLast(edge.to | flag);
+                }
             }
         }
         return false;
     }
 
     public static void main(String[] args) throws IOException {
-        int n;
         int u;
         int v;
-        int a;
         int i;
         BufferedReader br;
         StringTokenizer st;
@@ -82,8 +72,7 @@ public class Main {
         br = new BufferedReader(new InputStreamReader(System.in));
         n = Integer.parseInt(br.readLine());
         adj = new Edge[n + 1];
-        dists = new int[n + 1];
-        while (--n > 0) {
+        for (i = 1; i < n; i++) {
             st = new StringTokenizer(br.readLine(), " ", false);
             u = Integer.parseInt(st.nextToken());
             v = Integer.parseInt(st.nextToken());
@@ -91,10 +80,7 @@ public class Main {
             adj[v] = new Edge(u, adj[v]);
         }
         st = new StringTokenizer(br.readLine(), " ", false);
-        a = Integer.parseInt(st.nextToken());
-        bDfs(0, Integer.parseInt(st.nextToken()), 0);
-        cDfs(0, Integer.parseInt(st.nextToken()), 0);
-        if (aDfs(0, a, 0)) {
+        if (bfs(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()))) {
             System.out.print(YES);
         } else {
             System.out.print(NO);
