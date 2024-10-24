@@ -21,20 +21,23 @@ public class Main {
 		br = new BufferedReader(new InputStreamReader(System.in));
 		st = new StringTokenizer(br.readLine(), " ", false);
 		n = Integer.parseInt(st.nextToken());
-		half = Long.parseLong(st.nextToken());
-		x = half << 1;
+		x = Long.parseLong(st.nextToken());
 		arr = new long[n + 1];
 		st = new StringTokenizer(br.readLine(), " ", false);
 		for (i = 1; i <= n; i++) {
-			arr[i] = Long.parseLong(st.nextToken()) << 1;
+			arr[i] = Long.parseLong(st.nextToken());
 		}
 		Arrays.sort(arr);
 		for (right = n; arr[right] == x; right--);
 		full = n - right;
 		cnt = 0;
+		half = x >> 1;
+		if ((x & 1L) == 0L) {
+			half--;
+		}
 		left = 1;
 		while (left < right) {
-			if (arr[left] + arr[right] >= half) {
+			if (arr[left] + arr[right] > half) {
 				cnt++;
 				right--;
 			}
