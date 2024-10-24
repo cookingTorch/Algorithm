@@ -6,21 +6,24 @@ import java.util.StringTokenizer;
 public class Main {
 	private static final int PLACE = 2;
 	private static final int WORK = 3;
+	private static final int TOTAL = PLACE * WORK;
 	private static final int NONE = -1;
-	
+
 	private static int n;
 	private static int m;
 	private static int cnt;
+	private static int[] power;
 	private static int[][] arr;
 
 	private static final void dfs(int prev, int sum, int depth) {
 		int i;
 		int j;
 
+		if (sum >= m) {
+			cnt += power[n - depth];
+			return;
+		}
 		if (depth == n) {
-			if (sum >= m) {
-				cnt++;
-			}
 			return;
 		}
 		depth++;
@@ -52,6 +55,11 @@ public class Main {
 			for (j = 0; j < WORK; j++) {
 				arr[i][j] = Integer.parseInt(st.nextToken());
 			}
+		}
+		power = new int[n];
+		power[0] = 1;
+		for (i = 1; i < n; i++) {
+			power[i] = power[i - 1] * TOTAL;
 		}
 		dfs(NONE, 0, 0);
 		System.out.print(cnt);
