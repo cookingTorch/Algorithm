@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 public class Main {
     private static final int A = Integer.MIN_VALUE;
     private static final int BC = A >>> 1;
-    private static final int ABC = A | BC;
+    private static final int GET_FLAG = A | BC;
     private static final int FALSE = 0;
     private static final char[] YES = {'Y', 'E', 'S'};
     private static final char[] NO = {'N', 'O'};
@@ -42,7 +42,7 @@ public class Main {
         q.addLast(a | A);
         while (!q.isEmpty()) {
             curr = q.pollFirst();
-            flag = curr & ABC;
+            flag = curr & GET_FLAG;
             curr ^= flag;
             if (flag == A) {
                 if (adj[curr].next == null) {
