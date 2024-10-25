@@ -15,12 +15,12 @@ public class Main {
         int k;
         int val;
         int profit;
-        int[] idxs;
         int[] prev;
         int[] curr;
+        int[] invest;
         int[] profits;
-        int[][] map;
         int[][] ans;
+        int[][] companies;
         StringBuilder sb;
         BufferedReader br;
         StringTokenizer st;
@@ -29,27 +29,30 @@ public class Main {
         st = new StringTokenizer(br.readLine(), " ", false);
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
-        map = new int[m + 1][n + 1];
+        companies = new int[m][n + 1];
+        curr = new int[n + 1];
+        ans = new int[m][n + 1];
+        invest = ans[0];
         for (i = 1; i <= n; i++) {
             st = new StringTokenizer(br.readLine(), " ", false);
             st.nextToken();
-            for (j = m; j > 0; j--) {
-                map[j][i] = Integer.parseInt(st.nextToken());
+            for (j = m - 1; j > 0; j--) {
+                companies[j][i] = Integer.parseInt(st.nextToken());
             }
+            curr[i] = Integer.parseInt(st.nextToken());
+            invest[i] = i;
         }
         prev = new int[n + 1];
-        curr = new int[n + 1];
-        ans = new int[m + 1][n + 1];
-        for (i = 1; i <= m; i++) {
+        for (i = 1; i < m; i++) {
             System.arraycopy(curr, 1, prev, 1, n);
-            profits = map[i];
-            idxs = ans[i];
+            profits = companies[i];
+            invest = ans[i];
             for (j = 1; j <= n; j++) {
                 profit = profits[j];
                 for (k = j; k <= n; k++) {
                     val = prev[k - j] + profit;
                     if (val > curr[k]) {
-                        idxs[k] = j;
+                        invest[k] = j;
                         curr[k] = val;
                     }
                 }
@@ -58,7 +61,7 @@ public class Main {
         sb = new StringBuilder();
         sb.append(curr[n]).append(LINE_BREAK);
         j = n;
-        for (i = m; i >= 1; i--) {
+        for (i = m - 1; i >= 0; i--) {
             sb.append(ans[i][j]).append(SPACE);
             j -= ans[i][j];
         }
