@@ -4,39 +4,31 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
+	private static final int NIL = 0;
 	private static final char[] YES = {'Y', 'e', 's'};
 	private static final char[] NO = {'y', 'e', 's'};
 
-	static class Edge {
-		int to;
-		Edge next;
-
-		Edge(int to, Edge next) {
-			this.to = to;
-			this.next = next;
-		}
-	}
-
+	private static int[] to;
+	private static int[] adj;
+	private static int[] next;
 	private static boolean[] fan;
 	private static boolean[] visited;
-	private static Edge[] adj;
-	private static int N,M;
 
 	private static final boolean dfs(int curr) {
-		Edge edge;
+		int edge;
 
 		if (fan[curr]) {
 			return true;
 		}
-		if (adj[curr] == null) {
+		if (adj[curr] == NIL) {
 			return false;
 		}
-		for (edge = adj[curr]; edge != null; edge = edge.next) {
-			if (visited[edge.to]) {
+		for (edge = adj[curr]; edge != NIL; edge = next[edge]) {
+			if (visited[to[edge]]) {
 				continue;
 			}
-			visited[edge.to] = true;
-			if (!dfs(edge.to)) {
+			visited[to[edge]] = true;
+			if (!dfs(to[edge])) {
 				return false;
 			}
 		}
@@ -44,28 +36,38 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
+		int n;
+		int m;
+		int s;
+		int u;
+		int v;
+		int edge;
+		BufferedReader br;
+		StringTokenizer st;
 
-		adj = new Edge[N+1];
-
-		for (int i = 0; i < M; i++) {
+		br = new BufferedReader(new InputStreamReader(System.in));
+		st = new StringTokenizer(br.readLine(), " ", false);
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		edge = NIL;
+		to = new int[m + 1];
+		next = new int[m + 1];
+		adj = new int[n + 1];
+		for (int i = 0; i < m; i++) {
 			st = new StringTokenizer(br.readLine());
-			int from = Integer.parseInt(st.nextToken());
-			int to = Integer.parseInt(st.nextToken());
-
-			adj[from] = new Edge(to, adj[from]);
+			u = Integer.parseInt(st.nextToken());
+			v = Integer.parseInt(st.nextToken());
+			to[++edge] = v;
+			next[edge] = adj[u];
+			adj[u] = edge;
 		}
-
-		fan = new boolean[N+1];
-		int s = Integer.parseInt(br.readLine());
-		st = new StringTokenizer(br.readLine());
+		fan = new boolean[n + 1];
+		s = Integer.parseInt(br.readLine());
+		st = new StringTokenizer(br.readLine(), " ", false);
 		while (s-- > 0) {
 			fan[Integer.parseInt(st.nextToken())] = true;
 		}
-		visited = new boolean[N+1];
+		visited = new boolean[n + 1];
 		if (dfs(1)) {
 			System.out.print(YES);
 		} else {
