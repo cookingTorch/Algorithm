@@ -14,7 +14,7 @@ public class Main {
 	private static int[] map;
 
 	private static void add(int pos, int val) {
-		temp += val;
+		temp -= val;
 		if (map[pos] == OUT_OF_BOUNDS) {
 			cnt += val;
 		} else {
@@ -26,28 +26,17 @@ public class Main {
 		int val;
 
 		pos--;
-		val = map[pos];
-		temp = 0;
-		add(pos - col2,
-				val * 2 / 100);
-		add(pos - col - 1,
-				val * 10 / 100);
-		add(pos - col,
-				val * 7 / 100);
-		add(pos - col + 1,
-				val / 100);
-		add(pos - 2,
-				val * 5 / 100);
-		add(pos + col - 1,
-				val * 10 / 100);
-		add(pos + col,
-				val * 7 / 100);
-		add(pos + col + 1,
-				val / 100);
-		add(pos + col2,
-				val * 2 / 100);
-		add(pos - 1,
-				val - temp);
+		val = temp = map[pos];
+		add(pos - col2, val * 2 / 100);
+		add(pos - col - 1, val * 10 / 100);
+		add(pos - col, val * 7 / 100);
+		add(pos - col + 1, val / 100);
+		add(pos - 2, val * 5 / 100);
+		add(pos + col - 1, val * 10 / 100);
+		add(pos + col, val * 7 / 100);
+		add(pos + col + 1, val / 100);
+		add(pos + col2, val * 2 / 100);
+		add(pos - 1, temp);
 		map[pos] = 0;
 	}
 
@@ -55,28 +44,17 @@ public class Main {
 		int val;
 
 		pos += col;
-		val = map[pos];
-		temp = 0;
-		add(pos - 2,
-				val * 2 / 100);
-		add(pos + col - 1,
-				val * 10 / 100);
-		add(pos - 1,
-				val * 7 / 100);
-		add(pos - col - 1,
-				val / 100);
-		add(pos + col2,
-				val * 5 / 100);
-		add(pos + col + 1,
-				val * 10 / 100);
-		add(pos + 1,
-				val * 7 / 100);
-		add(pos - col + 1,
-				val / 100);
-		add(pos + 2,
-				val * 2 / 100);
-		add(pos + col,
-				val - temp);
+		val = temp = map[pos];
+		add(pos - 2, val * 2 / 100);
+		add(pos + col - 1, val * 10 / 100);
+		add(pos - 1, val * 7 / 100);
+		add(pos - col - 1, val / 100);
+		add(pos + col2, val * 5 / 100);
+		add(pos + col + 1, val * 10 / 100);
+		add(pos + 1, val * 7 / 100);
+		add(pos - col + 1, val / 100);
+		add(pos + 2, val * 2 / 100);
+		add(pos + col, temp);
 		map[pos] = 0;
 	}
 
@@ -84,28 +62,17 @@ public class Main {
 		int val;
 
 		pos++;
-		val = map[pos];
-		temp = 0;
-		add(pos - col2,
-				val * 2 / 100);
-		add(pos - col - 1,
-				val / 100);
-		add(pos - col,
-				val * 7 / 100);
-		add(pos - col + 1,
-				val * 10 / 100);
-		add(pos + 2,
-				val * 5 / 100);
-		add(pos + col - 1,
-				val / 100);
-		add(pos + col,
-				val * 7 / 100);
-		add(pos + col + 1,
-				val * 10 / 100);
-		add(pos + col2,
-				val * 2 / 100);
-		add(pos + 1,
-				val - temp);
+		val = temp = map[pos];
+		add(pos - col2, val * 2 / 100);
+		add(pos - col - 1, val / 100);
+		add(pos - col, val * 7 / 100);
+		add(pos - col + 1, val * 10 / 100);
+		add(pos + 2, val * 5 / 100);
+		add(pos + col - 1, val / 100);
+		add(pos + col, val * 7 / 100);
+		add(pos + col + 1, val * 10 / 100);
+		add(pos + col2, val * 2 / 100);
+		add(pos + 1, temp);
 		map[pos] = 0;
 	}
 
@@ -113,28 +80,17 @@ public class Main {
 		int val;
 
 		pos -= col;
-		val = map[pos];
-		temp = 0;
-		add(pos - 2,
-				val * 2 / 100);
-		add(pos + col - 1,
-				val / 100);
-		add(pos - 1,
-				val * 7 / 100);
-		add(pos - col - 1,
-				val * 10 / 100);
-		add(pos - col2,
-				val * 5 / 100);
-		add(pos + col + 1,
-				val / 100);
-		add(pos + 1,
-				val * 7 / 100);
-		add(pos - col + 1,
-				val * 10 / 100);
-		add(pos + 2,
-				val * 2 / 100);
-		add(pos - col,
-				val - temp);
+		val = temp = map[pos];
+		add(pos - 2, val * 2 / 100);
+		add(pos + col - 1, val / 100);
+		add(pos - 1, val * 7 / 100);
+		add(pos - col - 1, val * 10 / 100);
+		add(pos - col2, val * 5 / 100);
+		add(pos + col + 1, val / 100);
+		add(pos + 1, val * 7 / 100);
+		add(pos - col + 1, val * 10 / 100);
+		add(pos + 2, val * 2 / 100);
+		add(pos - col, temp);
 		map[pos] = 0;
 	}
 
@@ -169,6 +125,7 @@ public class Main {
 		int i;
 		int j;
 		int end;
+		int thr;
 		BufferedReader br;
 		StringTokenizer st;
 
@@ -179,19 +136,20 @@ public class Main {
 		col2 = col << 1;
 		map = new int[col * col];
 		end = n + 1;
+		thr = (end + 1) * col;
 		for (i = 0; i < col; i++) {
 			map[i] = OUT_OF_BOUNDS;
 		}
 		System.arraycopy(map, 0, map, col, col);
-		for (i = 2; i <= end; i++) {
-			map[i * col] = OUT_OF_BOUNDS;
-			map[i * col + 1] = OUT_OF_BOUNDS;
+		for (i = col << 1; i < thr; i += col) {
+			map[i] = OUT_OF_BOUNDS;
+			map[i + 1] = OUT_OF_BOUNDS;
 			st = new StringTokenizer(br.readLine(), " ", false);
 			for (j = 2; j <= end; j++) {
-				map[i * col + j] = Integer.parseInt(st.nextToken());
+				map[i + j] = Integer.parseInt(st.nextToken());
 			}
-			map[i * col + end + 1] = OUT_OF_BOUNDS;
-			map[i * col + end + 2] = OUT_OF_BOUNDS;
+			map[i + end + 1] = OUT_OF_BOUNDS;
+			map[i + end + 2] = OUT_OF_BOUNDS;
 		}
 		System.arraycopy(map, 0, map, (end + 1) * col, col);
 		System.arraycopy(map, 0, map, (end + 2) * col, col);
