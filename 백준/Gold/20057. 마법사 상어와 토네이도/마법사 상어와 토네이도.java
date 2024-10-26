@@ -4,7 +4,8 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static int n;
+	private static final int OUT_OF_BOUNDS = -1;
+
 	private static int x;
 	private static int y;
 	private static int cnt;
@@ -13,7 +14,7 @@ public class Main {
 
 	private static void add(int x, int y, int val) {
 		temp += val;
-		if (x < 0 || x >= n || y < 0 || y >= n) {
+		if (map[x][y] == OUT_OF_BOUNDS) {
 			cnt += val;
 		} else {
 			map[x][y] += val;
@@ -136,12 +137,12 @@ public class Main {
 		map[x][y] = 0;
 	}
 
-	private static final void tornado() {
+	private static final void tornado(int n) {
 		int i;
 		int j;
 
 		cnt = 0;
-		x = y = n >> 1;
+		x = y = (n >> 1) + 2;
 		for (i = 1; i < n; i++) {
 			for (j = 0; j < i; j++) {
 				left();
@@ -163,22 +164,37 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws IOException {
+		int n;
 		int i;
 		int j;
+		int end;
+		int size;
 		BufferedReader br;
 		StringTokenizer st;
 
 		br = new BufferedReader(new InputStreamReader(System.in));
 		st = new StringTokenizer(br.readLine(), " ", false);
 		n = Integer.parseInt(st.nextToken());
-		map = new int[n][n];
-		for (i = 0; i < n; i++) {
+		size = n + 4;
+		map = new int[size][size];
+		end = n + 1;
+		for (i = 0; i < size; i++) {
+			map[0][i] = OUT_OF_BOUNDS;
+		}
+		System.arraycopy(map[0], 0, map[1], 0, size);
+		for (i = 2; i <= end; i++) {
+			map[i][0] = OUT_OF_BOUNDS;
+			map[i][1] = OUT_OF_BOUNDS;
 			st = new StringTokenizer(br.readLine(), " ", false);
-			for (j = 0; j < n; j++) {
+			for (j = 2; j <= end; j++) {
 				map[i][j] = Integer.parseInt(st.nextToken());
 			}
+			map[i][end + 1] = OUT_OF_BOUNDS;
+			map[i][end + 2] = OUT_OF_BOUNDS;
 		}
-		tornado();
+		System.arraycopy(map[0], 0, map[end + 1], 0, size);
+		System.arraycopy(map[0], 0, map[end + 2], 0, size);
+		tornado(n);
 		System.out.print(cnt);
 	}
 }
