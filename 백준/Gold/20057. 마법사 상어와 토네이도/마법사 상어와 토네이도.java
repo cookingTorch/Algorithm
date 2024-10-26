@@ -27,17 +27,16 @@ public class Main {
 
 		pos--;
 		val = temp = map[pos];
-		add(pos - col2, val * 2 / 100);
-		add(pos - col - 1, val * 10 / 100);
+		add(pos - col2, val / 50);
+		add(pos - col - 1, val / 10);
 		add(pos - col, val * 7 / 100);
 		add(pos - col + 1, val / 100);
-		add(pos - 2, val * 5 / 100);
-		add(pos + col - 1, val * 10 / 100);
+		add(pos - 2, val / 20);
+		add(pos + col - 1, val / 10);
 		add(pos + col, val * 7 / 100);
 		add(pos + col + 1, val / 100);
-		add(pos + col2, val * 2 / 100);
+		add(pos + col2, val / 50);
 		add(pos - 1, temp);
-		map[pos] = 0;
 	}
 
 	private static final void down() {
@@ -45,17 +44,16 @@ public class Main {
 
 		pos += col;
 		val = temp = map[pos];
-		add(pos - 2, val * 2 / 100);
-		add(pos + col - 1, val * 10 / 100);
+		add(pos - 2, val / 50);
+		add(pos + col - 1, val / 10);
 		add(pos - 1, val * 7 / 100);
 		add(pos - col - 1, val / 100);
-		add(pos + col2, val * 5 / 100);
-		add(pos + col + 1, val * 10 / 100);
+		add(pos + col2, val / 20);
+		add(pos + col + 1, val / 10);
 		add(pos + 1, val * 7 / 100);
 		add(pos - col + 1, val / 100);
-		add(pos + 2, val * 2 / 100);
+		add(pos + 2, val / 50);
 		add(pos + col, temp);
-		map[pos] = 0;
 	}
 
 	private static final void right() {
@@ -63,17 +61,16 @@ public class Main {
 
 		pos++;
 		val = temp = map[pos];
-		add(pos - col2, val * 2 / 100);
+		add(pos - col2, val / 50);
 		add(pos - col - 1, val / 100);
 		add(pos - col, val * 7 / 100);
-		add(pos - col + 1, val * 10 / 100);
-		add(pos + 2, val * 5 / 100);
+		add(pos - col + 1, val / 10);
+		add(pos + 2, val / 20);
 		add(pos + col - 1, val / 100);
 		add(pos + col, val * 7 / 100);
-		add(pos + col + 1, val * 10 / 100);
-		add(pos + col2, val * 2 / 100);
+		add(pos + col + 1, val / 10);
+		add(pos + col2, val / 50);
 		add(pos + 1, temp);
-		map[pos] = 0;
 	}
 
 	private static final void up() {
@@ -81,17 +78,16 @@ public class Main {
 
 		pos -= col;
 		val = temp = map[pos];
-		add(pos - 2, val * 2 / 100);
+		add(pos - 2, val / 50);
 		add(pos + col - 1, val / 100);
 		add(pos - 1, val * 7 / 100);
-		add(pos - col - 1, val * 10 / 100);
-		add(pos - col2, val * 5 / 100);
+		add(pos - col - 1, val / 10);
+		add(pos - col2, val / 20);
 		add(pos + col + 1, val / 100);
 		add(pos + 1, val * 7 / 100);
-		add(pos - col + 1, val * 10 / 100);
-		add(pos + 2, val * 2 / 100);
+		add(pos - col + 1, val / 10);
+		add(pos + 2, val / 50);
 		add(pos - col, temp);
-		map[pos] = 0;
 	}
 
 	private static final void tornado(int n) {
