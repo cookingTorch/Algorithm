@@ -7,7 +7,7 @@ public class Main {
     private static final int ONE = '1';
     private static final char SPACE = ' ';
 
-    private static final StringBuilder getPermutation(int n, long rank) {
+    private static final String getPermutation(int n, long rank) {
         int i;
         int idx;
         int leaf;
@@ -51,7 +51,7 @@ public class Main {
             }
         }
         sb.append(i - leaf + 1).append(SPACE);
-        return sb;
+        return sb.toString();
     }
 
     private static final long getRank(int n, StringTokenizer st) {
@@ -85,7 +85,7 @@ public class Main {
         n = Integer.parseInt(br.readLine());
         if (br.read() == ONE) {
             br.read();
-            System.out.print(getPermutation(n, Long.parseLong(br.readLine())).toString());
+            System.out.print(getPermutation(n, Long.parseLong(br.readLine())));
         } else {
             br.read();
             System.out.print(getRank(n, new StringTokenizer(br.readLine())));
