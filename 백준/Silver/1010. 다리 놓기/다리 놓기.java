@@ -23,7 +23,6 @@ public class Main {
         int t;
         int n;
         int m;
-        int i;
         StringBuilder sb;
         BufferedReader br;
         StringTokenizer st;
