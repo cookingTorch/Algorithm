@@ -13,6 +13,9 @@ public class Main {
         if (dp[m][n] != 0) {
             return dp[m][n];
         }
+        if (m == n || n == 0) {
+            return dp[m][n] = 1;
+        }
         return dp[m][n] = getDp(m - 1, n - 1) + getDp(m - 1, n);
     }
 
@@ -26,11 +29,6 @@ public class Main {
         StringTokenizer st;
 
         dp = new int[MAX_M + 1][MAX_M + 1];
-        for (i = 1; i <= MAX_M; i++) {
-            dp[i][0] = 1;
-            dp[i][1] = i;
-            dp[i][i] = 1;
-        }
         br = new BufferedReader(new InputStreamReader(System.in));
         t = Integer.parseInt(br.readLine());
         sb = new StringBuilder();
