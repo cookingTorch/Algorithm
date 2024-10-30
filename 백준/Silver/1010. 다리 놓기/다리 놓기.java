@@ -7,41 +7,41 @@ public class Main {
     private static final int MAX_M = 30;
     private static final char LINE_BREAK = '\n';
 
-    private static final int combi(int n, int m, int[] dp) {
-        int i;
-        int j;
+    private static int[][] dp;
 
-        if (n > m >> 1) {
-            n = m - n;
+    private static final int getDp(int m, int n) {
+        if (dp[m][n] != 0) {
+            return dp[m][n];
         }
-        dp[0] = 1;
-        dp[1] = 1;
-        for (i = 2; i <= m; i++) {
-            if (i <= n) {
-                dp[i] = 1;
-            }
-            for (j = Math.min(n, i - 1); j > 1; j--) {
-                dp[j] = dp[j - 1] + dp[j];
-            }
-            dp[1] = i;
-        }
-        return dp[n];
+        return dp[m][n] = getDp(m - 1, n - 1) + getDp(m - 1, n);
     }
 
     public static void main(String[] args) throws IOException {
         int t;
-        int[] dp;
+        int n;
+        int m;
+        int i;
         StringBuilder sb;
         BufferedReader br;
         StringTokenizer st;
 
-        dp = new int[MAX_M + 1];
+        dp = new int[MAX_M + 1][MAX_M + 1];
+        for (i = 1; i <= MAX_M; i++) {
+            dp[i][0] = 1;
+            dp[i][1] = i;
+            dp[i][i] = 1;
+        }
         br = new BufferedReader(new InputStreamReader(System.in));
         t = Integer.parseInt(br.readLine());
         sb = new StringBuilder();
         while (t-- > 0) {
             st = new StringTokenizer(br.readLine(), " ", false);
-            sb.append(combi(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), dp)).append(LINE_BREAK);
+            n = Integer.parseInt(st.nextToken());
+            m = Integer.parseInt(st.nextToken());
+            if (n > m >> 1) {
+                n = m - n;
+            }
+            sb.append(getDp(m, n)).append(LINE_BREAK);
         }
         System.out.println(sb.toString());
     }
