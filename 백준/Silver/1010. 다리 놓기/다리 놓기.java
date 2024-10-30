@@ -1,41 +1,48 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static int MAX = 31;
-	
-	private static BigInteger[] facto;
-	
-	private static BigInteger solution(BufferedReader br, StringTokenizer st) throws IOException {
-		int n, m, r;
-		
-		st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
-		r = Math.min(n, m);
-		n = Math.max(n, m);
-		return facto[n].divide(facto[n - r]).divide(facto[r]);
-	}
-	
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		StringTokenizer st = null;
-		
-		int t, testCase, i;
-		
-		facto = new BigInteger[MAX];
-		facto[0] = new BigInteger("1");
-		for (i = 1; i < MAX; i++) {
-			facto[i] = facto[i - 1].multiply(new BigInteger(Integer.toString(i)));
-		}
-		t = Integer.parseInt(br.readLine());
-		for (testCase = 0; testCase < t; testCase++) {
-			sb.append(solution(br, st)).append('\n');
-		}
-		System.out.print(sb);
-	}
+    private static final int MAX_M = 30;
+    private static final char LINE_BREAK = '\n';
+
+    private static final int combi(int n, int m, int[] dp) {
+        int i;
+        int j;
+
+        if (n > m >> 1) {
+            n = m - n;
+        }
+        dp[0] = 1;
+        dp[1] = 1;
+        for (i = 2; i <= m; i++) {
+            if (i <= n) {
+                dp[i] = 1;
+            }
+            for (j = Math.min(n, i - 1); j > 1; j--) {
+                dp[j] = dp[j - 1] + dp[j];
+            }
+            dp[1] = i;
+        }
+        return dp[n];
+    }
+
+    public static void main(String[] args) throws IOException {
+        int t;
+        int[] dp;
+        StringBuilder sb;
+        BufferedReader br;
+        StringTokenizer st;
+
+        dp = new int[MAX_M + 1];
+        br = new BufferedReader(new InputStreamReader(System.in));
+        t = Integer.parseInt(br.readLine());
+        sb = new StringBuilder();
+        while (t-- > 0) {
+            st = new StringTokenizer(br.readLine(), " ", false);
+            sb.append(combi(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), dp)).append(LINE_BREAK);
+        }
+        System.out.println(sb.toString());
+    }
 }
