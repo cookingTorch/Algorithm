@@ -9,29 +9,30 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		int n;
 		int max;
-		int left;
-		int right;
-		int grade;
 		int lenLeft;
 		int lenRight;
-		int prevLeft;
-		int prevRight;
 		int prevLenLeft;
 		int prevLenRight;
+		char grade;
+		char left;
+		char right;
+		char prevLeft;
+		char prevRight;
 		StringBuilder sb;
 		BufferedReader br;
 		StringTokenizer st;
 
 		br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
-		st = new StringTokenizer(br.readLine(), " ", false);
-		prevLeft = Integer.parseInt(st.nextToken());
-		prevRight = Integer.parseInt(st.nextToken());
-		grade = Math.min(prevLeft, prevRight);
+		prevLeft = (char) br.read();
+		br.read();
+		prevRight = (char) br.read();
+		grade = prevLeft < prevRight ? prevLeft : prevRight;
 		for (prevLenLeft = prevLenRight = max = 1; --n > 0; prevLenLeft = lenLeft, prevLenRight = lenRight) {
-			st = new StringTokenizer(br.readLine(), " ", false);
-			left = Integer.parseInt(st.nextToken());
-			right = Integer.parseInt(st.nextToken());
+			br.read();
+			left = (char) br.read();
+			br.read();
+			right = (char) br.read();
 			if (left == prevLeft) {
 				lenLeft = prevLenLeft + 1;
 			} else if (left == prevRight) {
@@ -50,13 +51,17 @@ public class Main {
 				grade = left;
 				max = lenLeft;
 			} else if (lenLeft == max) {
-				grade = Math.min(grade, left);
+				if (left < grade) {
+					grade = left;
+				}
 			}
 			if (lenRight > max) {
 				grade = right;
 				max = lenRight;
 			} else if (lenRight == max) {
-				grade = Math.min(grade, right);
+				if (right < grade) {
+					grade = right;
+				}
 			}
 			prevLeft = left;
 			prevRight = right;
