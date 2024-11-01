@@ -5,27 +5,24 @@ import java.util.StringTokenizer;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n;
+		int red;
+		int green;
+		int blue;
+		int prevRed;
+		int prevGreen;
+		int prevBlue;
+		BufferedReader br;
 		StringTokenizer st;
-		
-		int n, i, j;
-		int[][] dp, cost;
-		
+
+		br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
-		cost = new int[n][3];
-		for (i = 0; i < n; i++) {
-			st = new StringTokenizer(br.readLine());
-			cost[i][0] = Integer.parseInt(st.nextToken());
-			cost[i][1] = Integer.parseInt(st.nextToken());
-			cost[i][2] = Integer.parseInt(st.nextToken());
+		for (prevRed = 0, prevGreen = 0, prevBlue = 0; n-- > 0; prevRed = red, prevGreen = green, prevBlue = blue) {
+			st = new StringTokenizer(br.readLine(), " ", false);
+			red = Math.min(prevGreen, prevBlue) + Integer.parseInt(st.nextToken());
+			green = Math.min(prevBlue, prevRed) + Integer.parseInt(st.nextToken());
+			blue = Math.min(prevRed, prevGreen) + Integer.parseInt(st.nextToken());
 		}
-		dp = new int[n][3];
-		dp[0] = cost[0];
-		for (i = 1; i < n; i++) {
-			for (j = 0; j < 3; j++) {
-				dp[i][j] = Math.min(dp[i - 1][(j + 1) % 3], dp[i - 1][(j + 2) % 3]) + cost[i][j];
-			}
-		}
-		System.out.print(Math.min(dp[n - 1][0], Math.min(dp[n - 1][1], dp[n - 1][2])));
+		System.out.print(Math.min(Math.min(prevRed, prevGreen), prevBlue));
 	}
 }
