@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
 
 public class Main {
 	private static final char SPACE = ' ';
@@ -18,9 +17,7 @@ public class Main {
 		char right;
 		char prevLeft;
 		char prevRight;
-		StringBuilder sb;
 		BufferedReader br;
-		StringTokenizer st;
 
 		br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
@@ -66,7 +63,6 @@ public class Main {
 			prevLeft = left;
 			prevRight = right;
 		}
-		sb = new StringBuilder();
-		System.out.print(sb.append(max).append(SPACE).append(grade).toString());
+		System.out.print(new StringBuilder().append(max).append(SPACE).append(grade).toString());
 	}
 }
