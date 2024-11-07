@@ -6,15 +6,14 @@ public class Main {
 	private static final long MOD = 7L;
 	private static final char[] SK = new char[] {'S', 'K'};
 	private static final char[] CY = new char[] {'C', 'Y'};
-	
+
 	public static void main(String[] args) throws IOException {
-		long n;
+		int n;
 		BufferedReader br;
-		
+
 		br = new BufferedReader(new InputStreamReader(System.in));
-		n = Long.parseLong(br.readLine());
-		n %= MOD;
-		if (n == 0L || n == 2L) {
+		n = (int) (Long.parseLong(br.readLine()) % MOD);
+		if (n == 0 || n == 2) {
 			System.out.print(CY);
 		} else {
 			System.out.print(SK);
