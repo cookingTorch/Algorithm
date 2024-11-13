@@ -36,7 +36,7 @@ public class Main {
 		cnt = 0;
 		idxA = n;
 		idxB = m;
-		while (idxB > 0) {
+		while (idxB != 0) {
 			if (a[idxA] > b[idxB]) {
 				idxA--;
 			} else {
