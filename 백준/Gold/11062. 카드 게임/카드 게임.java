@@ -5,6 +5,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 	private static final int MAX_N = 1_000;
+	private static final char LINE_BREAK = '\n';
 
 	private static int[] cards;
 	private static int[][] dp;
@@ -24,7 +25,6 @@ public class Main {
 	private static final int solution() throws IOException {
 		int n;
 		int i;
-		int j;
 		int sum;
 		StringTokenizer st;
 
@@ -55,7 +55,7 @@ public class Main {
 		t = Integer.parseInt(br.readLine());
 		sb = new StringBuilder();
 		while (t-- > 0) {
-			sb.append(solution()).append('\n');
+			sb.append(solution()).append(LINE_BREAK);
 		}
 		System.out.print(sb.toString());
 	}
