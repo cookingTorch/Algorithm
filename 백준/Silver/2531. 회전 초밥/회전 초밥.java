@@ -1,10 +1,35 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class Main {
+	private static final class ArrayDeque {
+		private int head;
+		private int tail;
+		private int size;
+		private int[] dq;
+
+		ArrayDeque(int size) {
+			head = 0;
+			tail = -1;
+			this.size = size;
+			dq = new int[size];
+		}
+
+		void addLast(int val) {
+			dq[tail = (tail + 1) % size] = val;
+		}
+
+		int pollFirst() {
+			int val;
+
+			val = dq[head];
+			head = (head + 1) % size;
+			return val;
+		}
+	}
+
 	public static void main(String[] args) throws IOException {
 		int n;
 		int d;
@@ -15,7 +40,7 @@ public class Main {
 		int sushi;
 		int[] cnt;
 		int[] prefix;
-		ArrayDeque<Integer> dq;
+		ArrayDeque dq;
 		BufferedReader br;
 		StringTokenizer st;
 
@@ -27,7 +52,7 @@ public class Main {
 		cnt = new int[d + 1];
 		cnt[Integer.parseInt(st.nextToken())]++;
 		num = 1;
-		dq = new ArrayDeque<>(k);
+		dq = new ArrayDeque(k);
 		prefix = new int[--k];
 		for (i = 0; i < k; i++) {
 			prefix[i] = Integer.parseInt(br.readLine());
