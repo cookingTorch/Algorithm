@@ -28,9 +28,7 @@ public class Main {
 		}
 		for (i = 2; i <= v; i++) {
 			System.arraycopy(dist[1], 1, dist[i], 1, v);
-			dist[i][i] = 0;
 		}
-		dist[1][1] = 0;
 		while (e-- > 0) {
 			st = new StringTokenizer(br.readLine(), " ", false);
 			dist[Integer.parseInt(st.nextToken())][Integer.parseInt(st.nextToken())] = Integer.parseInt(st.nextToken());
