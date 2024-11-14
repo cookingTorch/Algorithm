@@ -1,50 +1,58 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n;
+		int d;
+		int k;
+		int i;
+		int max;
+		int num;
+		int sushi;
+		int[] cnt;
+		int[] prefix;
+		ArrayDeque<Integer> dq;
+		BufferedReader br;
 		StringTokenizer st;
-		
-		int n, d, k, c, num, max, i;
-		int[] susi, cnt;
-		
-		st = new StringTokenizer(br.readLine());
+
+		br = new BufferedReader(new InputStreamReader(System.in));
+		st = new StringTokenizer(br.readLine(), " ", false);
 		n = Integer.parseInt(st.nextToken());
 		d = Integer.parseInt(st.nextToken());
 		k = Integer.parseInt(st.nextToken());
-		c = Integer.parseInt(st.nextToken()) - 1;
-		susi = new int[n];
-		cnt = new int[d];
-		cnt[c]++;
+		cnt = new int[d + 1];
+		cnt[Integer.parseInt(st.nextToken())]++;
 		num = 1;
+		dq = new ArrayDeque<>(k);
+		prefix = new int[--k];
 		for (i = 0; i < k; i++) {
-			susi[i] = Integer.parseInt(br.readLine()) - 1;
-			if (cnt[susi[i]]++ == 0) {
+			prefix[i] = Integer.parseInt(br.readLine());
+			dq.addLast(prefix[i]);
+			if (cnt[prefix[i]]++ == 0) {
 				num++;
 			}
 		}
 		max = num;
-		for (i = k; i < n; i++) {
-			susi[i] = Integer.parseInt(br.readLine()) - 1;
-			if (--cnt[susi[i - k]] == 0) {
+		for (; i < n; i++) {
+			dq.addLast(sushi = Integer.parseInt(br.readLine()));
+			if (cnt[sushi]++ == 0) {
+				max = Math.max(max, ++num);
+			}
+			if (--cnt[dq.pollFirst()] == 0) {
 				num--;
 			}
-			if (cnt[susi[i]]++ == 0) {
-				num++;
-			}
-			max = Math.max(max, num);
 		}
-		for (i = 0; i < k - 1; i++) {
-			if (--cnt[susi[i - k + n]] == 0) {
+		for (i = 0; i < k; i++) {
+			if (cnt[prefix[i]]++ == 0) {
+				max = Math.max(max, ++num);
+			}
+			if (--cnt[dq.pollFirst()] == 0) {
 				num--;
 			}
-			if (cnt[susi[i]]++ == 0) {
-				num++;
-			}
-			max = Math.max(max, num);
 		}
 		System.out.print(max);
 	}
