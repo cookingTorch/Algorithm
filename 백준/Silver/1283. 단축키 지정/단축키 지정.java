@@ -33,9 +33,7 @@ public class Main {
     }
 
     private static final void prefix(int idx) {
-        if (idx > 0) {
-            System.arraycopy(str, 0, result, 0, idx);
-        }
+        System.arraycopy(str, 0, result, 0, idx);
         result[idx] = OPEN;
         result[idx + 1] = str[idx];
         result[idx + 2] = CLOSE;
