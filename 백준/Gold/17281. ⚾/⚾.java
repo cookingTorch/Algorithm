@@ -4,8 +4,8 @@ import java.io.InputStreamReader;
 
 public class Main {
     private static final int OUT = 0;
-    private static final int MOD = 15;
     private static final int SIZE = 9;
+    private static final int LINE = SIZE << 1;
     private static final int DIFF = '0';
     private static final int CLEAN_UP = 3;
     private static final int MAX_OUT_CNT = 3;
@@ -15,7 +15,7 @@ public class Main {
     private static int n;
     private static int max;
     private static int[] batters;
-    private static int[][] results;
+    private static int[][] innings;
     private static boolean[] visited;
 
     private static final int play(int[] batters) {
@@ -23,29 +23,30 @@ public class Main {
         int inning;
         int batter;
         int outCnt;
+        int result;
         int runners;
         int batterIdx;
-        int[] result;
+        int[] results;
 
         score = 0;
         inning = 0;
         outCnt = 0;
         runners = 1;
         batterIdx = 0;
-        result = results[0];
+        results = innings[0];
         for(batter = batters[0];; batter = batters[batterIdx = (batterIdx + 1) % SIZE]) {
-            if (result[batter] == OUT) {
+            if ((result = results[batter]) == OUT) {
                 if (++outCnt == MAX_OUT_CNT) {
                     if (++inning == n) {
                         break;
                     }
                     outCnt = 0;
                     runners = 1;
-                    result = results[inning];
+                    results = innings[inning];
                 }
             } else {
-                score += SCORES[runners & AND[result[batter]]];
-                runners = (runners << result[batter]) & MOD | 1;
+                score += SCORES[runners & AND[result]];
+                runners = runners << result | 1;
             }
         }
         return score;
@@ -76,17 +77,19 @@ public class Main {
     public static void main(String[] args) throws IOException {
         int i;
         int j;
-        int[] result;
+        int[] results;
+        char[] input;
         BufferedReader br;
 
         br = new BufferedReader(new InputStreamReader(System.in));
         n = Integer.parseInt(br.readLine());
-        results = new int[n][SIZE];
+        input = new char[LINE];
+        innings = new int[n][SIZE];
         for (i = 0; i < n; i++) {
-            result = results[i];
+            br.read(input, 0, LINE);
+            results = innings[i];
             for (j = 0; j < SIZE; j++) {
-                result[j] = br.read() - DIFF;
-                br.read();
+                results[j] = input[j << 1] - DIFF;
             }
         }
         max = 0;
