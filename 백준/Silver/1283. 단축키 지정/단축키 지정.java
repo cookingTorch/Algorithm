@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-    private static final int SIZE = 100;
+    private static final int SIZE = 57;
     private static final int ALPHA = 26;
     private static final char LOWER = 'a';
     private static final char UPPER = 'A';
