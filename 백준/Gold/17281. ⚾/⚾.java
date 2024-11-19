@@ -36,11 +36,11 @@ public class Main {
         for(batter = batters[0];; batter = batters[batterIdx = (batterIdx + 1) % SIZE]) {
             if (result[batter] == OUT) {
                 if (++outCnt == MAX_OUT_CNT) {
-                    outCnt = 0;
-                    runners = 1;
                     if (++inning == n) {
                         break;
                     }
+                    outCnt = 0;
+                    runners = 1;
                     result = results[inning];
                 }
             } else {
