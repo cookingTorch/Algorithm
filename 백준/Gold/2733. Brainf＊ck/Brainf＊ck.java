@@ -6,7 +6,6 @@ import java.util.ArrayDeque;
 public class Main {
 	private static final int MAX = 255;
 	private static final int ZERO = 0;
-	private static final int NONE = -1;
 	private static final int DIFF = 1 << 17;
 	private static final int BUFF_SIZE = 32_768;
 	private static final int INPUT_SIZE = 128_001;
