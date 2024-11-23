@@ -13,7 +13,7 @@ public class Solution {
 			next = new Trie[ALPHABET_SIZE];
 		}
 
-		void insertForward(char[] word, int len) {
+		final void insertForward(char[] word, int len) {
 			int i;
 			int idx;
 			Trie curr;
@@ -30,7 +30,7 @@ public class Solution {
 			curr.cnt++;
 		}
 
-		void insertBackward(char[] word, int len) {
+		final void insertBackward(char[] word, int len) {
 			int i;
 			int idx;
 			Trie curr;
@@ -47,7 +47,7 @@ public class Solution {
 			curr.cnt++;
 		}
 
-		int searchForward(char[] word, int len) {
+		final int searchForward(char[] word, int len) {
 			int i;
 			int idx;
 			Trie curr;
@@ -66,7 +66,7 @@ public class Solution {
 			return curr.cnt;
 		}
 
-		int searchBackward(char[] word, int len) {
+		final int searchBackward(char[] word, int len) {
 			int i;
 			int idx;
 			Trie curr;
