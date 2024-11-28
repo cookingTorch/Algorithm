@@ -2,70 +2,79 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map.Entry;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
+import java.util.StringTokenizer;
 
 public class Main {
-	private static final String LINE = "--";
-	
-	private static final class Node {
-		int floor;
-		TreeMap<String, Node> childs;
-		
-		Node(int floor) {
-			this.floor = floor;
-			this.childs = new TreeMap<>();
-		}
-	}
-	
-	private static Node child;
-	private static String str;
-	private static StringBuilder sb;
-	
-	private static void push(Node node, StringTokenizer st) {
-		str = st.nextToken();
-		child = node.childs.get(str);
-		if (child == null) {
-			child = new Node(node.floor + 1);
-			node.childs.put(str, child);
-		}
-		if (st.hasMoreTokens()) {
-			push(child, st);
-		}
-	}
-	
-	private static void dfs(Node node) {
-		int i;
-		StringBuilder line;
-		
-		line = new StringBuilder();
-		for (i = 0; i < node.floor; i++) {
-			line.append(LINE);
-		}
-		for (Entry<String, Node> entry : node.childs.entrySet()) {
-			sb.append(line).append(entry.getKey()).append('\n');
-			if (!entry.getValue().childs.isEmpty()) {
-				dfs(entry.getValue());
-			}
-		}
-	}
-	
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		
-		int n, i;
-		Node root;
-		
-		n = Integer.parseInt(br.readLine());
-		root = new Node(0);
-		for (i = 0; i < n; i++) {
-			st = new StringTokenizer(br.readLine());
-			st.nextToken();
-			push(root, st);
-		}
-		sb = new StringBuilder();
-		dfs(root);
-		System.out.print(sb);
-	}
+    private static final int MAX_K = 15;
+    private static final char HYPHEN = '-';
+    private static final char LINE_BREAK = '\n';
+    private static final char[][] INDENTS = initIndent();
+
+    private static final class Trie {
+        private TreeMap<String, Trie> map;
+
+        Trie() {
+            map = new TreeMap<>();
+        }
+
+        final void insert(StringTokenizer st) {
+            Trie curr;
+            Trie next;
+            String str;
+
+            curr = this;
+            while (st.hasMoreTokens()) {
+                if ((next = curr.map.get(str = st.nextToken())) == null) {
+                    curr.map.put(str, next = new Trie());
+                }
+                curr = next;
+            }
+        }
+
+        final void print(int level) {
+            for (Entry<String, Trie> entry : map.entrySet()) {
+                sb.append(INDENTS[level]).append(entry.getKey()).append(LINE_BREAK);
+                entry.getValue().print(level + 1);
+            }
+        }
+    }
+
+    private static StringBuilder sb;
+
+    private static final char[][] initIndent() {
+        int i;
+        char[][] indents;
+
+        indents = new char[MAX_K + 1][];
+        indents[MAX_K] = new char[MAX_K << 1];
+        for (i = 0; i < MAX_K; i++) {
+            indents[MAX_K][i << 1] = HYPHEN;
+            indents[MAX_K][i << 1 | 1] = HYPHEN;
+        }
+        for (i = 0; i < MAX_K; i++) {
+            indents[i] = new char[i << 1];
+            System.arraycopy(indents[MAX_K], 0, indents[i], 0, i << 1);
+        }
+        return indents;
+    }
+
+    public static void main(String[] args) throws IOException {
+        int n;
+        Trie trie;
+        BufferedReader br;
+        StringTokenizer st;
+
+        br = new BufferedReader(new InputStreamReader(System.in));
+        n = Integer.parseInt(br.readLine());
+        trie = new Trie();
+        while (n-- > 0) {
+            st = new StringTokenizer(br.readLine());
+            st.nextToken();
+            trie.insert(st);
+        }
+        sb = new StringBuilder();
+        trie.print(0);
+        System.out.print(sb.toString());
+    }
 }
