@@ -1,71 +1,49 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.PriorityQueue;
-import java.util.Stack;
+import java.util.ArrayDeque;
 
 public class Main {
+	private static final char[] PUSH = {'+', '\n'};
+	private static final char[] POP = {'-', '\n'};
+	private static final char[] PUSH_POP = {'+', '\n', '-', '\n'};
+	private static final char[] NO = {'N', 'O'};
 
 	public static void main(String[] args) throws IOException {
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		String str;
-		
-		int n, i, tempNum, tempStack, flag;
-		ArrayList<String> ans = new ArrayList<>();
-		ArrayList<Integer> nums = new ArrayList<>();
-		PriorityQueue<Integer> orderedNums = new PriorityQueue<>();
-		Stack<Integer> box = new Stack<>();
-		
-		str = br.readLine();
-		n = Integer.parseInt(str);
-		
-		for (i = 0; i < n; i++) {
-			str = br.readLine();
-			nums.add(Integer.parseInt(str));
-		}
-		
-		for (i = 0; i < n; i++) {
-			orderedNums.add(nums.get(i));
-		}
-		
-		flag = 1;
-		for (i = 0; i < n; i++) {
-			tempNum = nums.remove(0);
-			if (orderedNums.size() > 0 && orderedNums.peek() <= tempNum) {
-				do {
-					tempStack = orderedNums.poll();
-					box.add(tempStack);
-					ans.add("+");
-				} while (tempStack < tempNum);
-				box.pop();
-				ans.add("-");
-			}
-			else if (tempNum == box.peek()) {
-				box.pop();
-				ans.add("-");
-			}
-			else {
-				bw.write("NO");
-				flag = 0;
-				break;
-			}
-		}
-		
-		if (flag == 1) {
-			for (i = 0; i < ans.size(); i++) {
-				bw.write(ans.get(i));
-				bw.newLine();
-			}
-		}
-		
-		bw.flush();
-		bw.close();
+		int n;
+		int num;
+		int next;
+		StringBuilder sb;
+		ArrayDeque<Integer> stack;
+		BufferedReader br;
 
+		br = new BufferedReader(new InputStreamReader(System.in));
+		n = Integer.parseInt(br.readLine());
+		next = 1;
+		stack = new ArrayDeque<>();
+		sb = new StringBuilder();
+		while (n-- > 0) {
+			num = Integer.parseInt(br.readLine());
+			if (next > num) {
+				for (;;) {
+					if (stack.isEmpty()) {
+						System.out.print(NO);
+						return;
+					}
+					sb.append(POP);
+					if (stack.pollFirst() == num) {
+						break;
+					}
+				}
+			} else {
+				while (next < num) {
+					sb.append(PUSH);
+					stack.addFirst(next++);
+				}
+				sb.append(PUSH_POP);
+				next++;
+			}
+		}
+		System.out.print(sb.toString());
 	}
-
 }
