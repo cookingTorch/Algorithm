@@ -20,7 +20,7 @@ public class Main {
     }
 
     private static final void union(int u, int v) {
-        if ((u = find(u)) == (v = find(v))) {
+        if (u == v) {
             return;
         }
         if (roots[v] < roots[u]) {
@@ -39,6 +39,8 @@ public class Main {
         int i;
         int ra;
         int rb;
+        int r1;
+        int rn;
         int[] a;
         int[] b;
         int[] thr;
@@ -68,14 +70,18 @@ public class Main {
             b[i] = Integer.parseInt(st.nextToken()) + 1;
             thr[i] = (int) ((thr[i - 1] * MULTIPLIER) % MOD_L);
         }
+        r1 = 1;
+        rn = n;
         ans = 0;
         for (i = m - 1; i >= 0; i--) {
             ra = find(a[i]);
             rb = find(b[i]);
-            if ((find(1) == ra && find(n) == rb) || (find(1) == rb && find(n) == ra)) {
+            if ((r1 == ra && rn == rb) || (r1 == rb && rn == ra)) {
                 ans = (ans + thr[i]) % MOD;
             } else {
                 union(ra, rb);
+                r1 = find(1);
+                rn = find(n);
             }
         }
         System.out.print(ans);
