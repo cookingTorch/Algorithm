@@ -1,8 +1,10 @@
+import java.util.ArrayDeque;
+
 class Solution {
     private static final int FAIL = 0;
     private static final int INF = Integer.MAX_VALUE >>> 1;
 
-    private final class Edge {
+    private final static class Edge {
         int to;
         Edge next;
 
@@ -13,29 +15,28 @@ class Solution {
     }
 
     private int len;
-    private int targetIdx;
-    private boolean[] visited;
     private Edge[] adj;
 
-    private int dfs(int node) {
-        int min;
-        int next;
+    private int bfs(int start, int end, int size) {
+        int node;
+        int[] dist;
         Edge edge;
+        ArrayDeque<Integer> q;
 
-        min = INF;
-        for (edge = adj[node]; edge != null; edge = edge.next) {
-            next = edge.to;
-            if (visited[next]) {
-                continue;
+        dist = new int[size];
+        dist[start] = 1;
+        q = new ArrayDeque<>(size);
+        q.addLast(start);
+        while (!q.isEmpty()) {
+            node = q.pollFirst();
+            for (edge = adj[node]; edge != null; edge = edge.next) {
+                if (dist[edge.to] == 0) {
+                    q.addLast(edge.to);
+                    dist[edge.to] = dist[node] + 1;
+                }
             }
-            if (next == targetIdx) {
-                return 1;
-            }
-            visited[next] = true;
-            min = Math.min(min, dfs(next));
-            visited[next] = false;
         }
-        return min + 1;
+        return dist[end] - 1;
     }
 
     private boolean isConnected(char[] s1, char[] s2) {
@@ -57,6 +58,7 @@ class Solution {
     public int solution(String begin, String target, String[] words) {
         int i;
         int j;
+        int idx;
         int ans;
         int size;
         char[][] arr;
@@ -68,9 +70,10 @@ class Solution {
         arr = new char[size + 1][];
         arr[size] = begin.toCharArray();
         flag = true;
+        idx = 0;
         for (i = 0; i < size; i++) {
             if (flag && words[i].equals(target)) {
-                targetIdx = i;
+                idx = i;
                 flag = false;
             }
             arr[i] = words[i].toCharArray();
@@ -90,9 +93,7 @@ class Solution {
                 adj[i] = new Edge(size, adj[i]);
             }
         }
-        visited = new boolean[size + 1];
-        visited[size] = true;
-        ans = dfs(size);
+        ans = bfs(size, idx, size + 1);
         if (ans >= INF) {
             return FAIL;
         }
