@@ -63,16 +63,19 @@ class Solution {
         int end;
         int size;
         char[][] arr;
+        boolean flag;
 
         len = begin.length();
         size = words.length;
         adj = new Edge[size + 1];
         arr = new char[size + 1][];
         arr[size] = begin.toCharArray();
-        end = size;
+        flag = true;
+        end = 0;
         for (i = 0; i < size; i++) {
-            if (end == size && words[i].equals(target)) {
+            if (flag && words[i].equals(target)) {
                 end = i;
+                flag = false;
             }
             arr[i] = words[i].toCharArray();
             for (j = 0; j < i; j++) {
@@ -82,7 +85,7 @@ class Solution {
                 }
             }
         }
-        if (end == size) {
+        if (flag) {
             return FAIL;
         }
         for (i = 0; i < size; i++) {
