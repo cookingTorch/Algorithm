@@ -1,6 +1,4 @@
 class Solution {
-    private static final int MAX = 50_000;
-
     public long solution(int n, int[] works) {
         int i;
         int l;
@@ -12,16 +10,18 @@ class Solution {
         long ans;
 
         len = works.length;
+        r = 0;
         sum = 0;
         for (i = 0; i < len; i++) {
             sum += works[i];
+            r = Math.max(r, works[i]);
         }
         if (n >= sum) {
             return 0L;
         }
         work = 0;
         l = 0;
-        r = MAX + 1;
+        r++;
         while (l < r) {
             mid = l + r >>> 1;
             sum = 0;
@@ -30,7 +30,7 @@ class Solution {
                     sum += works[i] - mid;
                 }
             }
-            if (sum >= n) {
+            if (sum > n) {
                 l = mid + 1;
             } else {
                 r = mid;
