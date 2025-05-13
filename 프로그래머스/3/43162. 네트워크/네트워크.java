@@ -1,16 +1,16 @@
 class Solution {
     private static final int CONNECTED = 1;
 
-    private static int[] roots;
+    private int[] roots;
 
-    private static int find(int v) {
+    private int find(int v) {
         if (roots[v] <= 0) {
             return v;
         }
         return roots[v] = find(roots[v]);
     }
 
-    private static boolean union(int u, int v) {
+    private boolean union(int u, int v) {
         u = find(u);
         v = find(v);
         if (u == v) {
