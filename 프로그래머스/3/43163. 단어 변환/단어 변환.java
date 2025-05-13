@@ -2,7 +2,6 @@ import java.util.ArrayDeque;
 
 class Solution {
     private static final int FAIL = 0;
-    private static final int INF = Integer.MAX_VALUE >>> 1;
 
     private final static class Edge {
         int to;
@@ -31,12 +30,15 @@ class Solution {
             node = q.pollFirst();
             for (edge = adj[node]; edge != null; edge = edge.next) {
                 if (dist[edge.to] == 0) {
+                    if (edge.to == end) {
+                        return dist[node];
+                    }
                     q.addLast(edge.to);
                     dist[edge.to] = dist[node] + 1;
                 }
             }
         }
-        return dist[end] - 1;
+        return FAIL;
     }
 
     private boolean isConnected(char[] s1, char[] s2) {
@@ -58,23 +60,19 @@ class Solution {
     public int solution(String begin, String target, String[] words) {
         int i;
         int j;
-        int idx;
-        int ans;
+        int end;
         int size;
         char[][] arr;
-        boolean flag;
 
         len = begin.length();
         size = words.length;
         adj = new Edge[size + 1];
         arr = new char[size + 1][];
         arr[size] = begin.toCharArray();
-        flag = true;
-        idx = 0;
+        end = size;
         for (i = 0; i < size; i++) {
-            if (flag && words[i].equals(target)) {
-                idx = i;
-                flag = false;
+            if (end == size && words[i].equals(target)) {
+                end = i;
             }
             arr[i] = words[i].toCharArray();
             for (j = 0; j < i; j++) {
@@ -84,7 +82,7 @@ class Solution {
                 }
             }
         }
-        if (flag) {
+        if (end == size) {
             return FAIL;
         }
         for (i = 0; i < size; i++) {
@@ -93,10 +91,6 @@ class Solution {
                 adj[i] = new Edge(size, adj[i]);
             }
         }
-        ans = bfs(size, idx, size + 1);
-        if (ans >= INF) {
-            return FAIL;
-        }
-        return ans;
+        return bfs(size, end, size + 1);
     }
 }
