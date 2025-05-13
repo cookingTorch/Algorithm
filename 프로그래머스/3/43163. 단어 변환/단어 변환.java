@@ -2,6 +2,7 @@ import java.util.ArrayDeque;
 
 class Solution {
     private static final int FAIL = 0;
+    private static final int INF = Integer.MAX_VALUE >>> 1;
 
     private final static class Edge {
         int to;
@@ -61,6 +62,7 @@ class Solution {
         int i;
         int j;
         int end;
+        int ans;
         int size;
         char[][] arr;
         boolean flag;
@@ -94,6 +96,10 @@ class Solution {
                 adj[i] = new Edge(size, adj[i]);
             }
         }
-        return bfs(size, end, size + 1);
+        ans = bfs(size, end, size + 1);
+        if (ans >= INF) {
+            return FAIL;
+        }
+        return ans;
     }
 }
