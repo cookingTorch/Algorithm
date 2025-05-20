@@ -6,7 +6,6 @@ class Solution {
         int l;
         int r;
         int len;
-        int idx;
         int sum;
         int total;
         int[] cnt;
@@ -18,18 +17,16 @@ class Solution {
         len = gems.length;
         map = new HashMap<>();
         display = new int[len];
-        idx = 0;
         total = 0;
         for (i = 0; i < len; i++) {
             val = map.get(gems[i]);
             if (val == null) {
-                map.put(gems[i], val = idx++);
-                total++;
+                map.put(gems[i], val = total++);
             }
             display[i] = val;
         }
         sum = 0;
-        cnt = new int[idx];
+        cnt = new int[total];
         ans = new int[2];
         ans[1] = len;
         loop:
