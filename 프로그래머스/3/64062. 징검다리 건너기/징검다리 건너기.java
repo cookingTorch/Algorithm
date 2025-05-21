@@ -8,7 +8,6 @@ class Solution {
 		int len;
 		int min;
 		int[] rock;
-		int[] left;
 		ArrayDeque<int[]> stack;
 		
 		len = stones.length;
