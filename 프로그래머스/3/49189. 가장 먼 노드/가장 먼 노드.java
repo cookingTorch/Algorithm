@@ -13,11 +13,8 @@ class Solution {
 
 	private int bfs(int n, Edge[] adj) {
 		int i;
-		int cnt;
-		int thr;
 		int size;
 		int node;
-		int visits;
 		boolean[] visited;
 		Edge edge;
 		ArrayDeque<Integer> q;
@@ -25,26 +22,21 @@ class Solution {
 		q = new ArrayDeque<>();
 		visited = new boolean[n + 1];
 		q.add(1);
-		cnt = 1;
 		visited[1] = true;
-		visits = 1;
-		for (;;) {
-			size = cnt;
-			cnt = 0;
+		size = 1;
+		while (!q.isEmpty()) {
+			size = q.size();
 			for (i = 0; i < size; i++) {
 				node = q.pollFirst();
 				for (edge = adj[node]; edge != null; edge = edge.next) {
 					if (!visited[edge.to]) {
 						q.addLast(edge.to);
-						cnt++;
 						visited[edge.to] = true;
-						if (++visits == n) {
-							return cnt;
-						}
 					}
 				}
 			}
 		}
+		return size;
 	}
 
 	public int solution(int n, int[][] edge) {
