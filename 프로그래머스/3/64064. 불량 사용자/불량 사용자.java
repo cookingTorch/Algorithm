@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
-public class Solution {
+class Solution {
 	private static final char WILDCARD = '*';
 	
-	private static int ans, bannedNum;
+	private static int cnt, bannedNum;
 	private static boolean[] visited;
 	private static ArrayList<ArrayList<Integer>> adj;
 	
@@ -24,7 +24,7 @@ public class Solution {
 	private void dfs(int bit, int depth) {
 		if (depth == bannedNum) {
 			if (!visited[bit]) {
-				ans++;
+				cnt++;
 				visited[bit] = true;
 			}
 			return;
@@ -53,9 +53,9 @@ public class Solution {
 				}
 			}
 		}
-		ans = 0;
+		cnt = 0;
 		visited = new boolean[1 << userNum];
 		dfs(0, 0);
-		return ans;
+		return cnt;
     }
-} 
+}
