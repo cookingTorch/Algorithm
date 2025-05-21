@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -21,16 +22,11 @@ class Solution {
             to = new ArrayList<>();
         }
 
-        @Override
-        public int compareTo(Airport o) {
-            return code - o.code;
+        private int getCode(String name) {
+            return (name.charAt(0) << 8 | name.charAt(1)) << 8 | name.charAt(2);
         }
 
-        private static final int getCode(String name) {
-            return name.charAt(0) << 16 | name.charAt(1) << 8 | name.charAt(2);
-        }
-
-        private final boolean dfs(int depth) {
+        private boolean dfs(int depth) {
             int i;
 
             ret[depth++] = name;
@@ -50,17 +46,22 @@ class Solution {
             return false;
         }
 
-        final void init() {
+        void init() {
             degree = to.size();
             visited = new boolean[degree];
             Collections.sort(to);
         }
 
-        final String[] toStringArray(int len) {
+        String[] toStringArray(int len) {
             Airport.len = len;
             ret = new String[len];
             dfs(0);
             return ret;
+        }
+        
+        @Override
+        public int compareTo(Airport o) {
+            return code - o.code;
         }
     }
 
