@@ -1,37 +1,35 @@
+import java.util.ArrayDeque;
+
 class Solution {
+	private static final int INF = Integer.MAX_VALUE >>> 1;
+	
 	public int solution(int[] stones, int k) {
 		int i;
-		int l;
-		int r;
-		int cnt;
-		int max;
-		int mid;
 		int len;
-
+		int min;
+		int[] rock;
+		int[] left;
+		ArrayDeque<int[]> stack;
+		
 		len = stones.length;
-		l = 1;
-		r = 1;
+		stack = new ArrayDeque<>(len);
+		stack.addFirst(new int[] {-1, INF});
+		min = INF;
 		for (i = 0; i < len; i++) {
-			r = Math.max(r, stones[i]);
-		}
-		r++;
-		while (l < r) {
-			mid = l + r >>> 1;
-			cnt = 0;
-			max = 0;
-			for (i = 0; i < len; i++) {
-				if (stones[i] < mid) {
-					max = Math.max(max, ++cnt);
-				} else {
-					cnt = 0;
+			while ((rock = stack.pollFirst())[1] <= stones[i]) {
+				if (i - stack.peekFirst()[0] - 1 >= k) {
+					min = Math.min(min, rock[1]);
 				}
 			}
-			if (max < k) {
-				l = mid + 1;
-			} else {
-				r = mid;
+			stack.addFirst(rock);
+			stack.addFirst(new int[] {i, stones[i]});
+		}
+		while (stack.size() > 1) {
+			rock = stack.pollFirst();
+			if (len - stack.peekFirst()[0] - 1 >= k) {
+				min = Math.min(min, rock[1]);
 			}
 		}
-		return r - 1;
+		return min;
 	}
 }
