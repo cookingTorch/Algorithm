@@ -1,10 +1,9 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
 class Solution {
-    private static final int START = getCode("ICN");
+    private static final Airport START = new Airport("ICN");
 
     private static final class Airport implements Comparable<Airport> {
         private static int len;
@@ -16,15 +15,19 @@ class Solution {
         String name;
         ArrayList<Airport> to;
 
-        Airport(int code, String name) {
-            this.code = code;
+        Airport(String name) {
             this.name = name;
+            this.code = getCode(name);
             to = new ArrayList<>();
         }
 
         @Override
         public int compareTo(Airport o) {
             return code - o.code;
+        }
+
+        private static final int getCode(String name) {
+            return name.charAt(0) << 16 | name.charAt(1) << 8 | name.charAt(2);
         }
 
         private final boolean dfs(int depth) {
@@ -61,29 +64,25 @@ class Solution {
         }
     }
 
-    private static final int getCode(String name) {
-        return name.charAt(0) << 16 | name.charAt(1) << 8 | name.charAt(2);
-    }
-
     public String[] solution(String[][] tickets) {
-        int code;
         Airport u;
         Airport v;
-        HashMap<Integer, Airport> airports;
+        HashMap<String, Airport> airports;
 
         airports = new HashMap<>();
+        airports.put(START.name, START);
         for (String[] ticket : tickets) {
-            if ((u = airports.get(code = getCode(ticket[0]))) == null) {
-                airports.put(code, u = new Airport(code, ticket[0]));
+            if ((u = airports.get(ticket[0])) == null) {
+                airports.put(ticket[0], u = new Airport(ticket[0]));
             }
-            if ((v = airports.get(code = getCode(ticket[1]))) == null) {
-                airports.put(code, v = new Airport(code, ticket[1]));
+            if ((v = airports.get(ticket[1])) == null) {
+                airports.put(ticket[1], v = new Airport(ticket[1]));
             }
             u.to.add(v);
         }
         for (Airport airport : airports.values()) {
             airport.init();
         }
-        return airports.get(START).toStringArray(tickets.length + 1);
+        return START.toStringArray(tickets.length + 1);
     }
 }
