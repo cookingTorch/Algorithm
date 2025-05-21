@@ -1,61 +1,83 @@
-import java.util.ArrayList;
-
 class Solution {
-	private static final char WILDCARD = '*';
-	
-	private static int cnt, bannedNum;
-	private static boolean[] visited;
-	private static ArrayList<ArrayList<Integer>> adj;
-	
-	private boolean isConnected(String userId, String bannedId) {
-		int len, i;
-		
-		if ((len = userId.length()) != bannedId.length()) {
-			return false;
-		}
-		for (i = 0; i < len; i++) {
-			if (userId.charAt(i) != bannedId.charAt(i) && bannedId.charAt(i) != WILDCARD) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	private void dfs(int bit, int depth) {
-		if (depth == bannedNum) {
-			if (!visited[bit]) {
-				cnt++;
-				visited[bit] = true;
-			}
-			return;
-		}
-		for (int idx : adj.get(depth)) {
-			if ((bit & idx) != 0) {
-				continue;
-			}
-			dfs(bit | idx, depth + 1);
-		}
-	}
+    private static final int NIL = -1;
+    private static final char WILD = '*';
 
-	public int solution(String[] user_id, String[] banned_id) {
-		int userNum, bit, i, j;
-		
-		userNum = user_id.length;
-		bannedNum = banned_id.length;
-		adj = new ArrayList<>(bannedNum);
-		for (i = 0; i < bannedNum; i++) {
-			adj.add(new ArrayList<>());
-		}
-		for (i = 0, bit = 1; i < userNum; i++, bit <<= 1) {
-			for (j = 0; j < bannedNum; j++) {
-				if (isConnected(user_id[i], banned_id[j])) {
-					adj.get(j).add(bit);
-				}
-			}
-		}
-		cnt = 0;
-		visited = new boolean[1 << userNum];
-		dfs(0, 0);
-		return cnt;
+    private int banCnt;
+    private int[] dp;
+    private int[] cnts;
+    private int[][] usrs;
+
+    private boolean isConnected(char[] banId, char[] usrId) {
+        int i;
+        int len;
+
+        if ((len = banId.length) != usrId.length) {
+            return false;
+        }
+        for (i = 0; i < len; i++) {
+            if (banId[i] != WILD && usrId[i] != banId[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int getDp(int bit, int depth) {
+        int i;
+        int cnt;
+        int ret;
+        int[] usr;
+
+        if (dp[bit] != NIL) {
+            return dp[bit];
+        }
+        if (depth == banCnt) {
+            return dp[bit] = 1;
+        }
+        cnt = cnts[depth];
+        usr = usrs[depth];
+        ret = 0;
+        depth++;
+        for (i = 0; i < cnt; i++) {
+            if ((bit & usr[i]) == 0) {
+                ret += getDp(bit | usr[i], depth);
+            }
+        }
+        return dp[bit] = ret;
+    }
+
+    public int solution(String[] user_id, String[] banned_id) {
+        int i;
+        int j;
+        int usrCnt;
+        int bitField;
+        char[][] usrId;
+        char[][] banId;
+
+        banCnt = banned_id.length;
+        usrCnt = user_id.length;
+        banId = new char[banCnt][];
+        usrId = new char[usrCnt][];
+        for (i = 0; i < banCnt; i++) {
+            banId[i] = banned_id[i].toCharArray();
+        }
+        for (j = 0; j < usrCnt; j++) {
+            usrId[j] = user_id[j].toCharArray();
+        }
+        cnts = new int[banCnt];
+        usrs = new int[banCnt][usrCnt];
+        for (i = 0; i < banCnt; i++) {
+            for (j = 0; j < usrCnt; j++) {
+                if (isConnected(banId[i], usrId[j])) {
+                    usrs[i][cnts[i]++] = 1 << j;
+                }
+            }
+        }
+        bitField = 1 << usrCnt;
+        dp = new int[bitField];
+        for (i = 0; i < bitField; i++) {
+            dp[i] = NIL;
+        }
+        return getDp(0, 0);
     }
 }
