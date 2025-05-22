@@ -26,7 +26,7 @@ class Solution {
         for (i = 1; i <= n; i++) {
             dists[i] = NIL;
         }
-        q = new ArrayDeque<>(n);
+        q = new ArrayDeque<>();
         dists[dest] = 0;
         q.addLast(dest);
         for (dist = 1; !q.isEmpty(); dist++) {
