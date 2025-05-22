@@ -11,7 +11,7 @@ class Solution {
 		ArrayDeque<int[]> stack;
 
 		len = stones.length;
-		stack = new ArrayDeque<>(len);
+		stack = new ArrayDeque<>(len << 1);
 		stack.addFirst(new int[] {-1, INF});
 		min = INF;
 		for (i = 0; i < len; i++) {
