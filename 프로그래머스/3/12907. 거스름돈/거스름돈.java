@@ -1,4 +1,6 @@
 class Solution {
+    private static final int MOD = 1_000_000_007;
+
     public int solution(int n, int[] money) {
         int i;
         int j;
@@ -14,7 +16,7 @@ class Solution {
             cost = money[i];
             thr = n - cost;
             for (j = 0; j <= thr; j++) {
-                dp[j + cost] += dp[j];
+                dp[j + cost] = (dp[j + cost] + dp[j]) % MOD;
             }
         }
         return dp[n];
