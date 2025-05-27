@@ -6,6 +6,7 @@ class Solution {
         int thr;
         int len;
         int max;
+        int tmp;
         int[] manacher;
         char[] str;
 
@@ -25,13 +26,14 @@ class Solution {
                 for (r = p; r <= thr && str[r] == str[(p << 1) - r]; r++);
                 max = Math.max(max, manacher[i] = --r - p);
             } else {
-                if (manacher[(p << 1) - i] == r - i) {
+                tmp = manacher[(p << 1) - i];
+                if (tmp == r - i) {
                     p = i;
                     thr = Math.min(len - 1, p << 1);
                     for (; r <= thr && str[r] == str[(p << 1) - r]; r++);
                     max = Math.max(max, manacher[i] = --r - p);
                 } else {
-                    manacher[i] = Math.min(manacher[(p << 1) - i], r - i);
+                    manacher[i] = Math.min(tmp, r - i);
                 }
             }
         }
