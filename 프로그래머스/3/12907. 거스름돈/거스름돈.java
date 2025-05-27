@@ -5,7 +5,6 @@ class Solution {
         int i;
         int j;
         int len;
-        int thr;
         int cost;
         int[] dp;
 
@@ -14,9 +13,10 @@ class Solution {
         dp[0] = 1;
         for (i = 0; i < len; i++) {
             cost = money[i];
-            thr = n - cost;
-            for (j = 0; j <= thr; j++) {
-                dp[j + cost] = (dp[j + cost] + dp[j]) % MOD;
+            for (j = cost; j <= n; j++) {
+                if ((dp[j] += dp[j - cost]) >= MOD) {
+                    dp[j] %= MOD;
+                }
             }
         }
         return dp[n];
