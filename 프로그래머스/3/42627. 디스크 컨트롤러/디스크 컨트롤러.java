@@ -36,7 +36,7 @@ class Solution {
         for (i = 0; i < len; i++) {
             arr[i] = new Job(i, jobs[i][0], jobs[i][1]);
         }
-        arr[len] = new Job(len, INF, INF);
+        arr[len] = new Job(len, INF, 0);
         Arrays.sort(arr, 0, len + 1, (o1, o2) -> o1.s - o2.s);
         ans = 0;
         end = 0;
@@ -57,7 +57,6 @@ class Solution {
             job = pq.poll();
             end += job.l;
             ans += end - job.s;
-
         }
         return ans / len;
     }
