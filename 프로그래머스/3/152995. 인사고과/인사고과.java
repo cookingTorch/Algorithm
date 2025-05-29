@@ -30,8 +30,8 @@ class Solution {
         len = scores.length;
         Arrays.sort(scores, 0, len, (o1, o2) -> o2[0] - o1[0]);
         prev = 0;
-        peer = scores[0][0];
-        work = scores[0][1];
+        peer = 0;
+        work = 0;
         for (int[] score : scores) {
             if (score[0] != peer) {
                 peer = score[0];
