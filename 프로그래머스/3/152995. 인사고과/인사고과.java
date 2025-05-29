@@ -27,10 +27,10 @@ class Solution {
             }
             if (score[1] < prev) {
                 if (score == wanho) {
-                    return FAIL;
+                    ans = FAIL;
+                    break;
                 }
-                score[0] = 0;
-                score[1] = FAIL;
+                continue;
             } else {
                 work = Math.max(work, score[1]);
             }
