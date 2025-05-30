@@ -1,7 +1,5 @@
 class Solution {
 	private int n;
-	private int len;
-	private int sum;
 	private int xor;
 	private int[] lps;
 
@@ -9,7 +7,7 @@ class Solution {
 		int i;
 		int j;
 
-		for (i = 1, j = 0; i < patLen;) {
+		for (i = 1, j = 0; i < patLen; ) {
 			if (pat[i] == pat[j]) {
 				lps[i++] = ++j;
 			} else if (j != 0) {
@@ -18,7 +16,7 @@ class Solution {
 				lps[i++] = 0;
 			}
 		}
-		for (i = 0, j = 0; i < txtLen;) {
+		for (i = 0, j = 0; i < txtLen; ) {
 			if (txt[i] == pat[j]) {
 				if (++j == patLen) {
 					return true;
@@ -33,40 +31,48 @@ class Solution {
 		return false;
 	}
 
-	private boolean find(long[] keys, int[][] lock, int[] k, int[] l) {
+	private void buildPat(int[][] lock, int[] pat, int idx) {
 		int i;
 		int j;
 		int row;
 
-		for (i = 0; i < n; i++) {
-			row = 0;
-			for (j = 0; j < n; j++) {
-				row = row << 1 | lock[i][j];
-			}
-			l[i] = row ^ xor;
-		}
-		for (i = 0; i < sum; i++) {
-			for (j = n; j < sum; j++) {
-				k[j] = (int) (keys[j] >>> i) & xor;
-			}
-			if (kmp(l, n, k, len)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private void rotate(int[][] lock, int[][] temp) {
-		int i;
-		int j;
-
-		for (i = 0; i < n; i++) {
-			System.arraycopy(lock[i], 0, temp[i], 0, n);
-		}
-		for (i = 0; i < n; i++) {
-			for (j = 0; j < n; j++) {
-				lock[i][j] = temp[j][n - 1 - i];
-			}
+		switch (idx) {
+			case 0:
+				for (i = 0; i < n; i++) {
+					row = 0;
+					for (j = 0; j < n; j++) {
+						row = row << 1 | lock[i][j];
+					}
+					pat[i] = row ^ xor;
+				}
+				break;
+			case 1:
+				for (i = 0; i < n; i++) {
+					row = 0;
+					for (j = 0; j < n; j++) {
+						row = row << 1 | lock[j][n - 1 - i];
+					}
+					pat[i] = row ^ xor;
+				}
+				break;
+			case 2:
+				for (i = 0; i < n; i++) {
+					row = 0;
+					for (j = 0; j < n; j++) {
+						row = row << 1 | lock[n - 1 - i][n - 1 - j];
+					}
+					pat[i] = row ^ xor;
+				}
+				break;
+			case 3:
+				for (i = 0; i < n; i++) {
+					row = 0;
+					for (j = 0; j < n; j++) {
+						row = row << 1 | lock[n - 1 - j][i];
+					}
+					pat[i] = row ^ xor;
+				}
+				break;
 		}
 	}
 
@@ -74,9 +80,11 @@ class Solution {
 		int m;
 		int i;
 		int j;
-		int[] k;
-		int[] l;
-		int[][] temp;
+		int idx;
+		int len;
+		int sum;
+		int[] pat;
+		int[] txt;
 		long row;
 		long[] keys;
 
@@ -91,19 +99,20 @@ class Solution {
 			}
 			keys[i + n] = row << n;
 		}
-		xor = (1 << n) - 1;
-		l = new int[n];
-		k = new int[len];
+		pat = new int[n];
+		txt = new int[len];
 		lps = new int[len];
 		sum = m + n;
-		temp = new int[n][n];
-		if (find(keys, lock, k, l)) {
-			return true;
-		}
-		for (i = 0; i < 3; i++) {
-			rotate(lock, temp);
-			if (find(keys, lock, k, l)) {
-				return true;
+		xor = (1 << n) - 1;
+		for (idx = 0; idx < 4; idx++) {
+			buildPat(lock, pat, idx);
+			for (i = 0; i < sum; i++) {
+				for (j = n; j < sum; j++) {
+					txt[j] = (int) (keys[j] >>> i) & xor;
+				}
+				if (kmp(pat, n, txt, len)) {
+					return true;
+				}
 			}
 		}
 		return false;
