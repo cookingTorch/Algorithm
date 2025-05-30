@@ -1,10 +1,21 @@
 class Solution {
-	private boolean kmp(int[] pat, int patLen, int[] src, int srcLen, int[] lps) {
+	private int n;
+	private int len;
+	private int xor;
+	private int thr;
+	private int[] lps;
+	private int[] curKey;
+	private int[] lockMap;
+	private int[][] lock;
+	private int[][] temp;
+	private long[] keyMap;
+
+	private boolean kmp() {
 		int i;
 		int j;
 
-		for (i = 1, j = 0; i < patLen; ) {
-			if (pat[i] == pat[j]) {
+		for (i = 1, j = 0; i < n; ) {
+			if (lockMap[i] == lockMap[j]) {
 				lps[i++] = ++j;
 			} else if (j != 0) {
 				j = lps[j - 1];
@@ -12,9 +23,9 @@ class Solution {
 				lps[i++] = 0;
 			}
 		}
-		for (i = 0, j = 0; i < srcLen; ) {
-			if (src[i] == pat[j]) {
-				if (++j == patLen) {
+		for (i = 0, j = 0; i < len; ) {
+			if (curKey[i] == lockMap[j]) {
+				if (++j == n) {
 					return true;
 				}
 				i++;
@@ -27,7 +38,7 @@ class Solution {
 		return false;
 	}
 
-	private boolean find(int[][] lock, int xor, int thr, int[] curKey, long[] keyMap, int[] lps, int len, int[] lockMap, int n) {
+	private boolean find() {
 		int i;
 		int j;
 		int lockRow;
@@ -43,14 +54,14 @@ class Solution {
 			for (j = n; j < thr; j++) {
 				curKey[j] = (int) (keyMap[j] >>> i) & xor;
 			}
-			if (kmp(lockMap, n, curKey, len, lps)) {
+			if (kmp()) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private void rotate(int[][] lock, int[][] temp, int n) {
+	private void rotate() {
 		int i;
 		int j;
 
@@ -66,19 +77,11 @@ class Solution {
 
 	public boolean solution(int[][] key, int[][] lock) {
 		int m;
-		int n;
 		int i;
 		int j;
-		int len;
-		int thr;
-		int xor;
-		int[] lps;
-		int[] curKey;
-		int[] lockMap;
-		int[][] temp;
 		long keyRow;
-		long[] keyMap;
 
+		this.lock = lock;
 		m = key.length;
 		n = lock.length;
 		len = m + (n << 1) - 1;
@@ -96,12 +99,12 @@ class Solution {
 		lps = new int[len];
 		thr = m + n;
 		temp = new int[n][n];
-		if (find(lock, xor, thr, curKey, keyMap, lps, len, lockMap, n)) {
+		if (find()) {
 			return true;
 		}
 		for (i = 0; i < 3; i++) {
-			rotate(lock, temp, n);
-			if (find(lock, xor, thr, curKey, keyMap, lps, len, lockMap, n)) {
+			rotate();
+			if (find()) {
 				return true;
 			}
 		}
