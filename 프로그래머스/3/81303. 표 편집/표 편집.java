@@ -3,60 +3,25 @@ import java.util.Stack;
 
 class Solution {
 	private static final class 현우 {
-		private static int thr;
-		private static int[] tree;
-		
-		static final int init(int node, int start, int end) {
-			int mid;
-			
-			if (start == end) {
-				return tree[node] = 1;
-			}
-			mid = start + end >> 1;
-			return tree[node] = init(node << 1, start, mid) + init(node << 1 | 1, mid + 1, end);
-		}
-		
-		static final void init(int size) {
-			thr = size - 1;
-			tree = new int[size << 2];
-			init(1, 0, thr);
-		}
-		
-		static final int delete(int node, int start, int end, int prefix) {
-			int mid;
-			
-			tree[node]--;
-			if (start == end) {
-				return start;
-			}
-			mid = start + end >> 1;
-			if (prefix <= tree[node << 1]) {
-				return delete(node << 1, start, mid, prefix);
-			}
-			return delete(node << 1 | 1, mid + 1, end, prefix - tree[node << 1]);
-		}
-		
-		static final int delete(int prefix) {
-			return delete(1, 0, thr, prefix);
-		}
-		
-		static final int undo(int node, int start, int end, int idx) {
-			int mid;
-			
-			tree[node]++;
-			if (start == end) {
-				return 1;
-			}
-			mid = start + end >> 1;
-			if (idx <= mid) {
-				return undo(node << 1, start, mid, idx);
-			}
-			return tree[node << 1] + undo(node << 1 | 1, mid + 1, end, idx);
-		}
-		
-		static final int undo(int idx) {
-			return undo(1, 0, thr, idx);
-		}
+		private static int thr;private static int[] tree;
+		static final int init(int node,int start,int end){
+		int mid;if(start==end){return tree[node]=1;}mid
+		=start+end>>1;return tree[node]=init(node<<1,start,
+		mid)+init(node<<1|1,mid+1,end);}static final void
+		init(int size){thr=size-1;tree=new int[size<<2];init
+		(1, 0, thr);}static final int delete(int node,int
+		start,int end,int prefix){int mid;tree[node]--;if
+		(start==end){return start;}mid=start+end>>1;if(prefix
+		<=tree[node<<1]){return delete(node<<1,start,mid,
+		prefix);}return delete(node<<1|1,mid+1,end,prefix
+		-tree[node<<1]);}static final int delete(int prefix)
+		{return delete(1,0,thr,prefix);}static final int
+		undo(int node,int start,int end,int idx){int mid;
+		tree[node]++;if(start==end){return 1;}mid=start+
+		end>>1;if(idx<=mid){return undo(node<<1,start,mid,
+		idx);}return tree[node<<1]+undo(node<<1|1,mid+1,end,
+		idx);}static final int undo(int idx){return undo(1,
+		0, thr, idx);}
 	}
 	
 	public String solution(int n, int k, String[] cmd) {
