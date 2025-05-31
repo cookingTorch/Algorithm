@@ -1,4 +1,4 @@
-import java.util.PriorityQueue;
+import java.util.ArrayDeque;
 
 class Solution {
     private static final int INF = Integer.MAX_VALUE / 3;
@@ -15,40 +15,28 @@ class Solution {
         }
     }
 
-    private static final class Node implements Comparable<Node> {
-        int idx;
-        int dist;
-
-        Node(int idx, int dist) {
-            this.idx = idx;
-            this.dist = dist;
-        }
-
-        @Override
-        public int compareTo(Node o) {
-            return dist - o.dist;
-        }
-    }
-
-    private int[] dijkstra(int n, int start, Edge[] adj, PriorityQueue<Node> pq) {
+    private int[] spfa(int n, int start, Edge[] adj, ArrayDeque<Integer> q, boolean[] inQueue) {
         int i;
         int cur;
         int[] dist;
-        Node node;
         Edge edge;
 
         dist = new int[n + 1];
         for (i = 1; i <= n; i++) {
             dist[i] = INF;
         }
-        pq.offer(new Node(start, dist[start] = 0));
-        while (pq.size() != 0) {
-            node = pq.poll();
-            cur = node.idx;
+        dist[start] = 0;
+        q.offer(start);
+        while (!q.isEmpty()) {
+            cur = q.pollFirst();
+            inQueue[cur] = false;
             for (edge = adj[cur]; edge != null; edge = edge.next) {
                 if (dist[cur] + edge.weight < dist[edge.to]) {
                     dist[edge.to] = dist[cur] + edge.weight;
-                    pq.offer(new Node(edge.to, dist[edge.to]));
+                    if (!inQueue[edge.to]) {
+                        q.addLast(edge.to);
+                        inQueue[edge.to] = true;
+                    }
                 }
             }
         }
@@ -60,12 +48,13 @@ class Solution {
         int v;
         int w;
         int i;
-        int ans;
+        int min;
         int[] distS;
         int[] distA;
         int[] distB;
+        boolean[] inQueue;
         Edge[] adj;
-        PriorityQueue<Node> pq;
+        ArrayDeque<Integer> q;
 
         adj = new Edge[n + 1];
         for (int[] fare : fares) {
@@ -75,14 +64,15 @@ class Solution {
             adj[u] = new Edge(v, w, adj[u]);
             adj[v] = new Edge(u, w, adj[v]);
         }
-        pq = new PriorityQueue<>();
-        distS = dijkstra(n, s, adj, pq);
-        distA = dijkstra(n, a, adj, pq);
-        distB = dijkstra(n, b, adj, pq);
-        ans = INF;
+        q = new ArrayDeque<>();
+        inQueue = new boolean[n + 1];
+        distS = spfa(n, s, adj, q, inQueue);
+        distA = spfa(n, a, adj, q, inQueue);
+        distB = spfa(n, b, adj, q, inQueue);
+        min = INF;
         for (i = 1; i <= n; i++) {
-            ans = Math.min(ans, distS[i] + distA[i] + distB[i]);
+            min = Math.min(min, distS[i] + distA[i] + distB[i]);
         }
-        return ans;
+        return min;
     }
 }
