@@ -30,19 +30,17 @@ class Solution {
         }
     }
 
-    private int[] dijkstra(int n, int start, Edge[] adj) {
+    private int[] dijkstra(int n, int start, Edge[] adj, PriorityQueue<Node> pq) {
         int i;
         int cur;
         int[] dist;
         Node node;
         Edge edge;
-        PriorityQueue<Node> pq;
 
         dist = new int[n + 1];
         for (i = 1; i <= n; i++) {
             dist[i] = INF;
         }
-        pq = new PriorityQueue<>();
         pq.offer(new Node(start, dist[start] = 0));
         while (pq.size() != 0) {
             node = pq.poll();
@@ -62,11 +60,12 @@ class Solution {
         int v;
         int w;
         int i;
-        int min;
+        int ans;
         int[] distS;
         int[] distA;
         int[] distB;
         Edge[] adj;
+        PriorityQueue<Node> pq;
 
         adj = new Edge[n + 1];
         for (int[] fare : fares) {
@@ -76,13 +75,14 @@ class Solution {
             adj[u] = new Edge(v, w, adj[u]);
             adj[v] = new Edge(u, w, adj[v]);
         }
-        distS = dijkstra(n, s, adj);
-        distA = dijkstra(n, a, adj);
-        distB = dijkstra(n, b, adj);
-        min = INF;
+        pq = new PriorityQueue<>();
+        distS = dijkstra(n, s, adj, pq);
+        distA = dijkstra(n, a, adj, pq);
+        distB = dijkstra(n, b, adj, pq);
+        ans = INF;
         for (i = 1; i <= n; i++) {
-            min = Math.min(min, distS[i] + distA[i] + distB[i]);
+            ans = Math.min(ans, distS[i] + distA[i] + distB[i]);
         }
-        return min;
+        return ans;
     }
 }
