@@ -1,6 +1,5 @@
 class Solution {
-	private static final int BEGIN = 2;
-    private static final int RADIX = 10;
+	private static final int RADIX = 10;
     private static final char U = 'U';
     private static final char D = 'D';
     private static final char C = 'C';
@@ -36,10 +35,10 @@ class Solution {
         for (String query : cmd) {
             switch (query.charAt(0)) {
             case U:
-                move -= Integer.parseInt(query, BEGIN, query.length(), RADIX);
+                move -= Integer.parseInt(query, 2, query.length(), RADIX);
                 break;
             case D:
-                move += Integer.parseInt(query, BEGIN, query.length(), RADIX);
+                move += Integer.parseInt(query, 2, query.length(), RADIX);
                 break;
             case C:
                 for (; move < 0; move++, k = prev[k]);
