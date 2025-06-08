@@ -1,4 +1,6 @@
 class Solution {
+    private static final int MAX_N = 1_000_000;
+    private static final int MAX_LEN = 200_000;
 	private static final int RADIX = 10;
     private static final char U = 'U';
     private static final char D = 'D';
@@ -7,22 +9,20 @@ class Solution {
     private static final char O = 'O';
     private static final char X = 'X';
     
+    private static int[] prev = new int[MAX_N + 1];
+    private static int[] next = new int[MAX_N + 1];
+    private static int[][] stack = new int[MAX_LEN][];
+    private static char[] ans = new char[MAX_N];
+    
     public String solution(int n, int k, String[] cmd) {
         int i;
         int head;
         int move;
         int[] node;
-        int[] prev;
-        int[] next;
-        int[][] stack;
-        char[] ans;
         
-        ans = new char[n];
         for (i = 0; i != n; i++) {
             ans[i] = O;
         }
-        prev = new int[n + 1];
-        next = new int[n + 1];
         for (i = 0; i <= n; i++) {
             prev[i] = i - 1;
             next[i] = i + 1;
@@ -31,7 +31,6 @@ class Solution {
         next[n] = 0;
         move = 0;
         head = 0;
-        stack = new int[cmd.length][];
         for (String query : cmd) {
             switch (query.charAt(0)) {
             case U:
