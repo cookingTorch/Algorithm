@@ -1,29 +1,47 @@
 class Solution {
-    private int len;
-    private int maxCnt;
-    private int maxSum;
-    private int[] discount;
-    private int[] emoticons;
-    private int[][] users;
+    private static final int PLUS = -1;
 
-    private void calc() {
-        int i;
-        int res;
-        int sum;
-        int cnt;
+    private static final class User {
         int ratio;
+        int cost;
 
-        sum = 0;
-        cnt = 0;
-        for (int[] user : users) {
-            ratio = user[0];
+        User(int ratio, int cost) {
+            this.ratio = ratio;
+            this.cost = cost;
+        }
+
+        int pay() {
+            int i;
+            int res;
+
             res = 0;
             for (i = 0; i < len; i++) {
                 if (discount[i] >= ratio) {
                     res += emoticons[i] / 100 * (100 - discount[i]);
                 }
             }
-            if (res >= user[1]) {
+            return res >= cost ? PLUS : res;
+        }
+    }
+
+    private static int len;
+    private static int[] discount;
+    private static int[] emoticons;
+
+    private int maxCnt;
+    private int maxSum;
+    private User[] users;
+    
+    private void calc() {
+        int res;
+        int sum;
+        int cnt;
+
+        sum = 0;
+        cnt = 0;
+        for (User user : users) {
+            res = user.pay();
+            if (res == PLUS) {
                 cnt++;
             } else {
                 sum += res;
@@ -51,10 +69,17 @@ class Solution {
     }
 
     public int[] solution(int[][] users, int[] emoticons) {
-        this.users = users;
+        int i;
+        int size;
+
         this.emoticons = emoticons;
         len = emoticons.length;
         discount = new int[len];
+        size = users.length;
+        this.users = new User[size];
+        for (i = 0; i < size; i++) {
+            this.users[i] = new User(users[i][0], users[i][1]);
+        }
         maxCnt = 0;
         maxSum = 0;
         dfs(0);
