@@ -8,7 +8,7 @@ class Solution {
     private int[] emoticons;
     private int[][] users;
 
-    private int pay(int[] user) {
+    private int getRes(int[] user) {
         int i;
         int res;
         int thr;
@@ -31,7 +31,7 @@ class Solution {
         sum = 0;
         cnt = 0;
         for (int[] user : users) {
-            res = pay(user);
+            res = getRes(user);
             if (res == PLUS) {
                 cnt++;
             } else {
