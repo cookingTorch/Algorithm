@@ -9,7 +9,7 @@ class Solution {
     private HashSet<Integer> visited;
     private ArrayList<Integer> list;
 
-    private boolean addNumber(int res) {
+    private boolean addNum(int res) {
         if (!visited.contains(res)) {
             if (res == number) {
                 return true;
@@ -35,17 +35,17 @@ class Solution {
         loop:
         for (i = 1; i <= THR; i++) {
             lists[i] = list = new ArrayList<>();
-            if (addNumber(num = num * 10 + N)) {
+            if (addNum(num = num * 10 + N)) {
                 break loop;
             }
             thr = i >>> 1;
             for (j = 1; j <= thr; j++) {
                 for (int num1 : lists[j]) {
                     for (int num2 : lists[i - j]) {
-                        if (addNumber(num1 + num2)
-                                || addNumber(Math.abs(num1 - num2))
-                                || addNumber(num1 * num2)
-                                || addNumber(num1 > num2 ? num1 / num2 : num2 / num1)) {
+                        if (addNum(num1 + num2)
+                                || addNum(Math.abs(num1 - num2))
+                                || addNum(num1 * num2)
+                                || addNum(num1 > num2 ? num1 / num2 : num2 / num1)) {
                             break loop;
                         }
                     }
