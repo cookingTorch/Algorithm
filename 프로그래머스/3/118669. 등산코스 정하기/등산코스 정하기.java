@@ -17,6 +17,11 @@ class Solution {
 			this.intensity = intensity;
 			this.next = next;
 		}
+		
+		void set(int summit, int intensity) {
+			this.summit = summit;
+			this.intensity = Math.max(this.intensity, intensity);
+		}
 
 		@Override
 		public int compareTo(Edge o) {
@@ -58,8 +63,7 @@ class Solution {
 				if (visited[edge.to]) {
 					continue;
 				}
-				edge.intensity = Math.max(edge.intensity, intensity);
-				edge.summit = summit;
+				edge.set(summit, intensity);
 				pq.offer(edge);
 			}
 		}
