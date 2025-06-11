@@ -1,7 +1,7 @@
 import java.util.PriorityQueue;
 
 class Solution {
-	private static final int INF = Integer.MAX_VALUE >>> 1;
+	private static final int NIL = 0;
 
 	private static final class Edge implements Comparable<Edge> {
 		int to;
@@ -16,12 +16,12 @@ class Solution {
 
 		@Override
 		public int compareTo(Edge o) {
-			return weight - o.weight;
+			return this.weight - o.weight;
 		}
 	}
 
 	private int[] prim(int n, int[] gates, boolean[] isSummit, Edge[] adj) {
-		int min;
+		int ans;
 		int node;
 		int summit;
 		int intensity;
@@ -31,8 +31,9 @@ class Solution {
 
 		pq = new PriorityQueue<>();
 		visited = new boolean[n + 1];
-		summit = 0;
-		min = INF;
+		intensity = 0;
+		summit = n + 1;
+		ans = NIL;
 		for (int gate : gates) {
 			pq.offer(new Edge(gate, 0, null));
 		}
@@ -43,12 +44,17 @@ class Solution {
 				continue;
 			}
 			visited[node] = true;
-			intensity = edge.weight;
+			if (edge.weight != intensity) {
+				if (ans != NIL) {
+					break;
+				}
+				intensity = edge.weight;
+			}
 			if (isSummit[node]) {
-				if (intensity < min) {
-					summit = node;
-					min = intensity;
-				} else if (intensity == min && node < summit) {
+				if (ans == NIL) {
+					ans = intensity;
+				}
+				if (node < summit) {
 					summit = node;
 				}
 				continue;
@@ -61,15 +67,15 @@ class Solution {
 				pq.offer(edge);
 			}
 		}
-		return new int[] {summit, min};
+		return new int[] {summit, ans};
 	}
 
 	public int[] solution(int n, int[][] paths, int[] gates, int[] summits) {
 		int u;
 		int v;
 		int w;
-		boolean[] isSummit;
 		Edge[] adj;
+		boolean[] isSummit;
 
 		adj = new Edge[n + 1];
 		for (int[] path : paths) {
