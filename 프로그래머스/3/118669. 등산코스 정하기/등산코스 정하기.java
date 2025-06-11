@@ -1,27 +1,33 @@
 import java.util.PriorityQueue;
 
 class Solution {
-	private static final int NIL = 0;
-
 	private static final class Edge implements Comparable<Edge> {
 		int to;
-		int weight;
+		int summit;
+		int intensity;
 		Edge next;
 
-		Edge(int to, int weight, Edge next) {
+		Edge(int to) {
 			this.to = to;
-			this.weight = weight;
+			this.summit = to;
+		}
+
+		Edge(int to, int intensity, Edge next) {
+			this.to = to;
+			this.intensity = intensity;
 			this.next = next;
 		}
 
 		@Override
 		public int compareTo(Edge o) {
-			return this.weight - o.weight;
+			if (this.intensity == o.intensity) {
+				return this.summit - o.summit;
+			}
+			return this.intensity - o.intensity;
 		}
 	}
 
-	private int[] prim(int n, int[] gates, boolean[] isSummit, Edge[] adj) {
-		int ans;
+	private int[] prim(int n, int[] summits, boolean[] isGate, Edge[] adj) {
 		int node;
 		int summit;
 		int intensity;
@@ -31,12 +37,11 @@ class Solution {
 
 		pq = new PriorityQueue<>();
 		visited = new boolean[n + 1];
-		intensity = 0;
-		summit = n + 1;
-		ans = NIL;
-		for (int gate : gates) {
-			pq.offer(new Edge(gate, 0, null));
+		for (int start : summits) {
+			pq.offer(new Edge(start));
 		}
+		summit = 0;
+		intensity = 0;
 		while (pq.size() != 0) {
 			edge = pq.poll();
 			node = edge.to;
@@ -44,38 +49,29 @@ class Solution {
 				continue;
 			}
 			visited[node] = true;
-			if (edge.weight != intensity) {
-				if (ans != NIL) {
-					break;
-				}
-				intensity = edge.weight;
-			}
-			if (isSummit[node]) {
-				if (ans == NIL) {
-					ans = intensity;
-				}
-				if (node < summit) {
-					summit = node;
-				}
-				continue;
+			summit = edge.summit;
+			intensity = edge.intensity;
+			if (isGate[node]) {
+				break;
 			}
 			for (edge = adj[node]; edge != null; edge = edge.next) {
 				if (visited[edge.to]) {
 					continue;
 				}
-				edge.weight = Math.max(edge.weight, intensity);
+				edge.intensity = Math.max(edge.intensity, intensity);
+				edge.summit = summit;
 				pq.offer(edge);
 			}
 		}
-		return new int[] {summit, ans};
+		return new int[] {summit, intensity};
 	}
 
 	public int[] solution(int n, int[][] paths, int[] gates, int[] summits) {
 		int u;
 		int v;
 		int w;
+		boolean[] isGate;
 		Edge[] adj;
-		boolean[] isSummit;
 
 		adj = new Edge[n + 1];
 		for (int[] path : paths) {
@@ -85,10 +81,10 @@ class Solution {
 			adj[u] = new Edge(v, w, adj[u]);
 			adj[v] = new Edge(u, w, adj[v]);
 		}
-		isSummit = new boolean[n + 1];
-		for (int summit : summits) {
-			isSummit[summit] = true;
+		isGate = new boolean[n + 1];
+		for (int gate : gates) {
+			isGate[gate] = true;
 		}
-		return prim(n, gates, isSummit, adj);
+		return prim(n, summits, isGate, adj);
 	}
 }
