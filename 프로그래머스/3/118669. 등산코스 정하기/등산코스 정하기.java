@@ -51,9 +51,7 @@ class Solution {
 				intensity = edge.weight;
 			}
 			if (isSummit[node]) {
-				if (ans == NIL) {
-					ans = intensity;
-				}
+				ans = intensity;
 				if (node < summit) {
 					summit = node;
 				}
@@ -73,7 +71,6 @@ class Solution {
 	public int[] solution(int n, int[][] paths, int[] gates, int[] summits) {
 		int u;
 		int v;
-		int w;
 		Edge[] adj;
 		boolean[] isSummit;
 
@@ -81,9 +78,8 @@ class Solution {
 		for (int[] path : paths) {
 			u = path[0];
 			v = path[1];
-			w = path[2];
-			adj[u] = new Edge(v, w, adj[u]);
-			adj[v] = new Edge(u, w, adj[v]);
+			adj[u] = new Edge(v, path[2], adj[u]);
+			adj[v] = new Edge(u, path[2], adj[v]);
 		}
 		isSummit = new boolean[n + 1];
 		for (int summit : summits) {
