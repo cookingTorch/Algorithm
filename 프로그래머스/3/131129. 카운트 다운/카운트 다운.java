@@ -1,5 +1,5 @@
 class Solution {
-    private static final int THR = 310;
+    private static final int THR = 309;
     private static final int INF = Integer.MAX_VALUE >>> 1;
     private static final int SHIFT = 11;
     private static final int SINGLE = 1 << SHIFT;
