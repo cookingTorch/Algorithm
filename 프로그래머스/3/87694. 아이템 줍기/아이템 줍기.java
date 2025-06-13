@@ -1,5 +1,5 @@
 class Solution {
-	private static final int MAX = 100;
+	private static final int MAX = 50;
 	private static final int[] dx = {0, 1, 0, -1, 0, 1, 0};
 	private static final int[] dy = {-1, 0, 1, 0, -1, 0, 1};
 
@@ -39,7 +39,7 @@ class Solution {
 				break;
 			}
 		}
-		dir = (dir + i + 3) % 4;
+		dir = dir + i + 3 & 3;
 	}
 
 	public int solution(int[][] rectangle, int characterX, int characterY, int itemX, int itemY) {
@@ -52,7 +52,7 @@ class Solution {
 		if (characterX == itemX && characterY == itemY) {
 			return 0;
 		}
-		map = new boolean[MAX + 2][MAX + 2];
+		map = new boolean[MAX + 1 << 1][MAX + 1 << 1];
 		startX = MAX;
 		startY = MAX;
 		for (int[] rec : rectangle) {
