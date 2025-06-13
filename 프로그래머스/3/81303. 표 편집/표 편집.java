@@ -1,63 +1,100 @@
+import java.util.ArrayDeque;
+
 class Solution {
-	private static final int RADIX = 10;
-    private static final char U = 'U';
-    private static final char D = 'D';
-    private static final char C = 'C';
-    private static final char Z = 'Z';
-    private static final char O = 'O';
-    private static final char X = 'X';
-    
-    public String solution(int n, int k, String[] cmd) {
-        int i;
-        int head;
-        int move;
-        int[] node;
-        int[] prev;
-        int[] next;
-        int[][] stack;
-        char[] ans;
-        
-        ans = new char[n];
-        for (i = 0; i != n; i++) {
-            ans[i] = O;
-        }
-        prev = new int[n + 1];
-        next = new int[n + 1];
-        for (i = 0; i <= n; i++) {
-            prev[i] = i - 1;
-            next[i] = i + 1;
-        }
-        prev[0] = n;
-        next[n] = 0;
-        move = 0;
-        head = 0;
-        stack = new int[cmd.length][];
-        for (String query : cmd) {
-            switch (query.charAt(0)) {
-            case U:
-                move -= Integer.parseInt(query, 2, query.length(), RADIX);
-                break;
-            case D:
-                move += Integer.parseInt(query, 2, query.length(), RADIX);
-                break;
-            case C:
-                for (; move < 0; move++, k = prev[k]);
-                for (; move > 0; move--, k = next[k]);
-                ans[k] = X;
-                stack[head++] = new int[] {prev[k], k, next[k]};
-                prev[next[k]] = prev[k];
-                next[prev[k]] = next[k];
-                k = next[k] == n ? prev[k] : next[k];
-                break;
-            case Z:
-                for (; move < 0; move++, k = prev[k]);
-                for (; move > 0; move--, k = next[k]);
-                node = stack[--head];
-                prev[node[2]] = node[1];
-                next[node[0]] = node[1];
-                ans[node[1]] = O;
-            }
-        }
-        return new String(ans, 0, n);
-    }
+	private static final char U = 'U';
+	private static final char D = 'D';
+	private static final char C = 'C';
+	private static final char Z = 'Z';
+	private static final char O = 'O';
+	private static final char X = 'X';
+	private static final Node NIL = new Node(-1);
+
+	private static final class Node {
+		int idx;
+		Node prev;
+		Node next;
+
+		Node(int idx) {
+			this.idx = idx;
+		}
+	}
+
+	private char[] ans;
+	private Node node;
+	private ArrayDeque<Node> stack;
+
+	private void init(int n, int k) {
+		int i;
+
+		node = NIL;
+		for (i = 0; i < n; i++) {
+			node.next = new Node(i);
+			node.next.prev = node;
+			node = node.next;
+		}
+		node.next = NIL;
+		NIL.prev = node;
+		node = NIL.next;
+		for (i = 0; i < k; i++) {
+			node = node.next;
+		}
+		stack = new ArrayDeque<>();
+		ans = new char[n];
+		for (i = 0; i < n; i++) {
+			ans[i] = O;
+		}
+	}
+
+	private void up(int x) {
+		while (x-- > 0) {
+			node = node.prev;
+		}
+	}
+
+	private void down(int x) {
+		while (x-- > 0) {
+			node = node.next;
+		}
+	}
+
+	private void delete() {
+		node.prev.next = node.next;
+		node.next.prev = node.prev;
+		stack.push(node);
+		ans[node.idx] = X;
+		if (node.next == NIL) {
+			node = node.prev;
+		} else {
+			node = node.next;
+		}
+	}
+
+	private void undo() {
+		Node del;
+
+		del = stack.pop();
+		del.prev.next = del;
+		del.next.prev = del;
+		ans[del.idx] = O;
+	}
+
+	public String solution(int n, int k, String[] cmd) {
+		init(n, k);
+		for (String command : cmd) {
+			switch (command.charAt(0)) {
+				case U:
+					up(Integer.parseInt(command, 2, command.length(), 10));
+					break;
+				case D:
+					down(Integer.parseInt(command, 2, command.length(), 10));
+					break;
+				case C:
+					delete();
+					break;
+				case Z:
+					undo();
+			}
+		}
+		return new String(ans, 0, n);
+	}
 }
