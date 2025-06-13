@@ -43,12 +43,8 @@ class Solution {
 	}
 
 	public int solution(int[][] rectangle, int characterX, int characterY, int itemX, int itemY) {
-		int sX;
-		int sY;
-		int cX;
-		int cY;
-		int iX;
-		int iY;
+		int startX;
+		int startY;
 		int idx;
 		int dist;
 		int[] dists;
@@ -57,35 +53,35 @@ class Solution {
 			return 0;
 		}
 		map = new boolean[MAX + 2][MAX + 2];
-		sX = MAX;
-		sY = MAX;
+		startX = MAX;
+		startY = MAX;
 		for (int[] rec : rectangle) {
 			add(rec[0] << 1, rec[1] << 1, rec[2] << 1, rec[3] << 1);
-			if (rec[1] < sY) {
-				sX = rec[0];
-				sY = rec[1];
-			} else if (rec[1] == sY && rec[0] < sX) {
-				sX = rec[0];
+			if (rec[1] < startY) {
+				startX = rec[0];
+				startY = rec[1];
+			} else if (rec[1] == startY && rec[0] < startX) {
+				startX = rec[0];
 			}
 		}
-		cX = characterX << 1;
-		cY = characterY << 1;
-		iX = itemX << 1;
-		iY = itemY << 1;
-		x = sX <<= 1;
-		y = sY <<= 1;
+		characterX <<= 1;
+		characterY <<= 1;
+		itemX <<= 1;
+		itemY <<= 1;
+		x = startX <<= 1;
+		y = startY <<= 1;
 		dir = 0;
 		idx = 0;
 		dist = 0;
 		dists = new int[2];
 		do {
-			if ((x == cX && y == cY) || (x == iX && y == iY)) {
+			if ((x == characterX && y == characterY) || (x == itemX && y == itemY)) {
 				dists[idx++] = dist;
 				dist = 0;
 			}
 			move();
 			dist++;
-		} while (x != sX || y != sY);
+		} while (x != startX || y != startY);
 		return Math.min(dists[0] + dist >>> 1, dists[1] >>> 1);
 	}
 }
