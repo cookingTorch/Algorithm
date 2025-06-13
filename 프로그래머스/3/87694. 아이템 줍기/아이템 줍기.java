@@ -49,9 +49,6 @@ class Solution {
 		int dist;
 		int[] dists;
 
-		if (characterX == itemX && characterY == itemY) {
-			return 0;
-		}
 		map = new boolean[MAX + 1 << 1][MAX + 1 << 1];
 		startX = MAX;
 		startY = MAX;
