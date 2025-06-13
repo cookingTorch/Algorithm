@@ -86,6 +86,6 @@ class Solution {
 			move();
 			dist++;
 		} while (x != sX || y != sY);
-		return Math.min(dists[0] + dist >> 1, dists[1] >> 1);
+		return Math.min(dists[0] + dist >>> 1, dists[1] >>> 1);
 	}
 }
