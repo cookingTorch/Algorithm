@@ -2,6 +2,31 @@ import java.util.PriorityQueue;
 
 class Solution {
     private static final int MAX = 500_000_001;
+    
+    private static final class Core implements Comparable<Core> {
+        int end;
+        int idx;
+        int time;
+        
+        Core(int end, int idx, int time) {
+            this.end = end;
+            this.idx = idx;
+            this.time = time;
+        }
+        
+        Core update() {
+            end += time;
+            return this;
+        }
+        
+        @Override
+        public int compareTo(Core o) {
+            if (this.end == o.end) {
+                return this.idx - o.idx;
+            }
+            return this.end - o.end;
+        }
+    }
 
     private int lowerBound(int n, int[] cores) {
         int i;
@@ -22,7 +47,7 @@ class Solution {
                     break;
                 }
             }
-            if (i == len) {
+            if (cnt < n) {
                 left = mid + 1;
             } else {
                 right = mid;
@@ -36,21 +61,18 @@ class Solution {
         int len;
         int cnt;
         int time;
-        int[] cur;
-        PriorityQueue<int[]> pq;
+        PriorityQueue<Core> pq;
 
         time = lowerBound(n, cores) - 1;
-        pq = new PriorityQueue<>((o1, o2) -> o1[0] == o2[0] ? o1[1] - o2[1] : o1[0] - o2[0]);
         len = cores.length;
+        pq = new PriorityQueue<>(len);
         for (i = 0; i < len; i++) {
             n -= cnt = time / cores[i] + 1;
-            pq.offer(new int[] {cnt * cores[i], i});
+            pq.offer(new Core(cnt * cores[i], i, cores[i]));
         }
         while (--n > 0) {
-            cur = pq.poll();
-            cur[0] += cores[cur[1]];
-            pq.offer(cur);
+            pq.offer(pq.poll().update());
         }
-        return pq.peek()[1] + 1;
+        return pq.peek().idx + 1;
     }
 }
