@@ -1,103 +1,91 @@
 class Solution {
-    private static final int SIZE = 51;
-    private static final int MAX = SIZE * SIZE;
+	private static final int MAX = 100;
+	private static final int[] dx = {0, 1, 0, -1, 0, 1, 0};
+	private static final int[] dy = {-1, 0, 1, 0, -1, 0, 1};
 
-    private int start, characterDist, itemDist, dist;
-    private int[] adj;
+	private int x;
+	private int y;
+	private int dir;
+	private boolean[][] map;
 
-    private void addAdj(int[] rectangle) {
-        int startX, startY, endX, endY, curr, i;
+	private void add(int x1, int y1, int x2, int y2) {
+		int i;
 
-        startX = rectangle[0];
-        startY = rectangle[1];
-        start = Math.min(start, startX * SIZE + startY);
-        endX = rectangle[2];
-        endY = rectangle[3];
-        for (i = startY; i < endY; i++) {
-            curr = startX * SIZE + i;
-            if (adj[curr] == 0) {
-                adj[curr] = curr + 1;
-            } else {
-                adj[curr] = -1;
-            }
-        }
-        for (i = startX; i < endX; i++) {
-            curr = i * SIZE + endY;
-            if (adj[curr] == 0) {
-                adj[curr] = curr + SIZE;
-            } else {
-                adj[curr] = -1;
-            }
-        }
-        for (i = endY; i > startY; i--) {
-            curr = endX * SIZE + i;
-            if (adj[curr] == 0) {
-                adj[curr] = curr - 1;
-            } else {
-                adj[curr] = -1;
-            }
-        }
-        for (i = endX; i > startX; i--) {
-            curr = i * SIZE + startY;
-            if (adj[curr] == 0) {
-                adj[curr] = curr - SIZE;
-            } else {
-                adj[curr] = -1;
-            }
-        }
-    }
+		for (i = x1; i <= x2; i++) {
+			map[i][y1] = true;
+		}
+		for (i = y1; i <= y2; i++) {
+			map[x2][i] = true;
+		}
+		for (i = x2; i >= x1; i--) {
+			map[i][y2] = true;
+		}
+		for (i = y2; i >= y1; i--) {
+			map[x1][i] = true;
+		}
+	}
 
-    private void getDist(int characterX, int characterY, int itemX, int itemY) {
-        int curr, next, character, item, dir;
+	private void move() {
+		int i;
+		int nx;
+		int ny;
 
-        character = characterX * SIZE + characterY;
-        item = itemX * SIZE + itemY;
-        if (start == character) {
-            characterDist = 0;
-        } else if (start == item) {
-            itemDist = 0;
-        }
-        next = 0;
-        dir = 1;
-        curr = start + 1;
-        for (dist = 1; curr != start; dist++) {
-            if (curr == character) {
-                characterDist = dist;
-            } else if (curr == item) {
-                itemDist = dist;
-            }
-            if (adj[curr] > 0) {
-                next = adj[curr];
-            } else {
-                switch (dir) {
-                case 1:
-                    next = curr - SIZE;
-                    break;
-                case SIZE:
-                    next = curr + 1;
-                    break;
-                case -1:
-                    next = curr + SIZE;
-                    break;
-                case -SIZE:
-                    next = curr - 1;
-                }
-            }
-            dir = next - curr;
-            curr = next;
-        }
-    }
+		for (i = 0; i < 4; i++) {
+			nx = x + dx[dir + i];
+			ny = y + dy[dir + i];
+			if (map[nx][ny]) {
+				x = nx;
+				y = ny;
+				break;
+			}
+		}
+		dir = (dir + i + 3) % 4;
+	}
 
-    public int solution(int[][] rectangle, int characterX, int characterY, int itemX, int itemY) {
-        int min, i;
+	public int solution(int[][] rectangle, int characterX, int characterY, int itemX, int itemY) {
+		int sX;
+		int sY;
+		int cX;
+		int cY;
+		int iX;
+		int iY;
+		int idx;
+		int dist;
+		int[] dists;
 
-        adj = new int[MAX];
-        start = MAX;
-        for (i = 0; i < rectangle.length; i++) {
-            addAdj(rectangle[i]);
-        }
-        getDist(characterX, characterY, itemX, itemY);
-        min = Math.abs(itemDist - characterDist);
-        return Math.min(min, dist - min);
-    }
+		if (characterX == itemX && characterY == itemY) {
+			return 0;
+		}
+		map = new boolean[MAX + 2][MAX + 2];
+		sX = MAX;
+		sY = MAX;
+		for (int[] rec : rectangle) {
+			add(rec[0] << 1, rec[1] << 1, rec[2] << 1, rec[3] << 1);
+			if (rec[1] < sY) {
+				sX = rec[0];
+				sY = rec[1];
+			} else if (rec[1] == sY && rec[0] < sX) {
+				sX = rec[0];
+			}
+		}
+		cX = characterX << 1;
+		cY = characterY << 1;
+		iX = itemX << 1;
+		iY = itemY << 1;
+		x = sX <<= 1;
+		y = sY <<= 1;
+		dir = 0;
+		idx = 0;
+		dist = 0;
+		dists = new int[2];
+		do {
+			if ((x == cX && y == cY) || (x == iX && y == iY)) {
+				dists[idx++] = dist;
+				dist = 0;
+			}
+			move();
+			dist++;
+		} while (x != sX || y != sY);
+		return Math.min(dists[0] + dist >> 1, dists[1] >> 1);
+	}
 }
