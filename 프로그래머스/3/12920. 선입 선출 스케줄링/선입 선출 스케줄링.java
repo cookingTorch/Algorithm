@@ -2,23 +2,23 @@ import java.util.PriorityQueue;
 
 class Solution {
     private static final int MAX = 500_000_001;
-    
+
     private static final class Core implements Comparable<Core> {
         int end;
         int idx;
         int time;
-        
+
         Core(int end, int idx, int time) {
             this.end = end;
             this.idx = idx;
             this.time = time;
         }
-        
+
         Core update() {
             end += time;
             return this;
         }
-        
+
         @Override
         public int compareTo(Core o) {
             if (this.end == o.end) {
@@ -62,7 +62,7 @@ class Solution {
         int cnt;
         int time;
         PriorityQueue<Core> pq;
-
+        
         time = lowerBound(n, cores) - 1;
         len = cores.length;
         pq = new PriorityQueue<>(len);
