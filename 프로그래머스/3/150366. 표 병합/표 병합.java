@@ -96,11 +96,10 @@ class Solution {
             return;
         }
         if (vals[u] == null) {
+            update(u, null);
             union(v, u);
         } else {
-            if (vals[v] != null) {
-                update(v, null);
-            }
+            update(v, null);
             union(u, v);
         }
     }
