@@ -33,15 +33,10 @@ class Solution {
     }
 
     public long solution(int[] a, int[][] edges) {
-        int u;
-        int v;
-
         adj = new Edge[a.length];
         for (int[] edge : edges) {
-            u = edge[0];
-            v = edge[1];
-            adj[u] = new Edge(v, adj[u]);
-            adj[v] = new Edge(u, adj[v]);
+            adj[edge[0]] = new Edge(edge[1], adj[edge[0]]);
+            adj[edge[1]] = new Edge(edge[0], adj[edge[1]]);
         }
         weights = a;
         return dfs(0, 0) == 0 ? ans : FAIL;
