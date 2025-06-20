@@ -16,16 +16,19 @@ class Solution {
     private static Edge[] adj;
 
     private static long dfs(int parent, int node) {
+        long child;
         long weight;
         Edge edge;
 
         weight = weights[node];
         for (edge = adj[node]; edge != null; edge = edge.next) {
-            if (edge.to != parent) {
-                weight += dfs(node, edge.to);
+            if (edge.to == parent) {
+                continue;
             }
+            child = dfs(node, edge.to);
+            weight += child;
+            ans += Math.abs(child);
         }
-        ans += Math.abs(weight);
         return weight;
     }
 
