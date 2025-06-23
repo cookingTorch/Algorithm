@@ -6,7 +6,7 @@ class Solution {
         int len;
         int[] dp;
 
-        len = tops.length + 1 << 1;
+        len = n + 1 << 1;
         dp = new int[len];
         dp[0] = 1;
         dp[1] = 1;
