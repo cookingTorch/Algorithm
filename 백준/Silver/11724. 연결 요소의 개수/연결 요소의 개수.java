@@ -1,56 +1,54 @@
-import java.io.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    private static void dfs(ArrayList<ArrayList<Integer>> adj, boolean[] visited, int node) {
-        int next, size, i;
+    private static final String DELIM = " ";
 
-        size = adj.get(node).size();
-        for (i = 0; i < size; i++) {
-            next = adj.get(node).get(i);
-            if (!visited[next]) {
-                visited[next] = true;
-                dfs(adj, visited, next);
-            }
+    private static int[] roots;
+
+    private static int find(int v) {
+        if (roots[v] <= 0) {
+            return v;
         }
+        return roots[v] = find(roots[v]);
+    }
+
+    private static boolean union(int u, int v) {
+        u = find(u);
+        v = find(v);
+        if (u == v) {
+            return false;
+        }
+        if (roots[u] > roots[v]) {
+            roots[u] = v;
+        } else {
+            if (roots[u] == roots[v]) {
+                roots[u]--;
+            }
+            roots[v] = u;
+        }
+        return true;
     }
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder sb = new StringBuilder();
+        int n;
+        int m;
+        BufferedReader br;
         StringTokenizer st;
 
-        int n, m, node1, node2, cnt, i;
-        boolean[] visited;
-        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
-
-        st = new StringTokenizer(br.readLine());
+        br = new BufferedReader(new InputStreamReader(System.in));
+        st = new StringTokenizer(br.readLine(), DELIM, false);
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
-        for (i = 0; i < n + 1; i++)
-            adj.add(new ArrayList<>());
-        for (i = 0; i < m; i++) {
-            st = new StringTokenizer(br.readLine());
-            node1 = Integer.parseInt(st.nextToken());
-            node2 = Integer.parseInt(st.nextToken());
-            adj.get(node1).add(node2);
-            adj.get(node2).add(node1);
-        }
-        visited = new boolean[n + 1];
-        cnt = 0;
-        for (i = 1; i <= n; i++) {
-            if (!visited[i]) {
-                visited[i] = true;
-                cnt++;
-                dfs(adj, visited, i);
+        roots = new int[n + 1];
+        while (m-- > 0) {
+            st = new StringTokenizer(br.readLine(), DELIM, false);
+            if (union(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()))) {
+                n--;
             }
         }
-        sb.append(cnt);
-
-        bw.write(sb.toString());
-        bw.flush();
-        bw.close();
+        System.out.print(n);
     }
 }
