@@ -13,11 +13,10 @@ class Solution {
         for (i = 2; i < len; i += 2) {
             if (tops[(i >>> 1) - 1] == 0) {
                 dp[i] = (dp[i - 2] + dp[i - 1]) % MOD;
-                dp[i + 1] = (dp[i] + dp[i - 1]) % MOD;
             } else {
                 dp[i] = (dp[i - 2] + (dp[i - 1] << 1)) % MOD;
-                dp[i + 1] = (dp[i] + dp[i - 1]) % MOD;
             }
+            dp[i + 1] = (dp[i] + dp[i - 1]) % MOD;
         }
         return dp[len - 1];
     }
