@@ -4,59 +4,70 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static final int MAX_N = 1_000;
-	private static final char LINE_BREAK = '\n';
+    private static final int MAX_SIZE = 1_000_000;
+    private static final char LINE_FEED = '\n';
+    private static final String DELIM = " ";
 
-	private static int[] cards;
-	private static int[][] dp;
+    private static int solution(int n, int[] arr, StringTokenizer st) {
+        int a;
+        int b;
+        int c;
+        int l;
+        int r;
+        int i;
+        int sum;
+        int diff;
+        int size;
 
-	private static BufferedReader br;
+        sum = 0;
+        size = 0;
+        for (i = 0; i < n; i++) {
+            sum += arr[size++] = Integer.parseInt(st.nextToken());
+            while (size >= 3) {
+                a = arr[size - 3];
+                b = arr[size - 2];
+                c = arr[size - 1];
+                if (b >= Math.max(a, c)) {
+                    arr[(size -= 2) - 1] = a + c - b;
+                } else {
+                    break;
+                }
+            }
+        }
+        diff = 0;
+        l = 0;
+        r = size - 1;
+        while (l <= r) {
+            if (arr[l] > arr[r]) {
+                diff += arr[l++];
+            } else {
+                diff += arr[r--];
+            }
+            if (l > r) {
+                break;
+            }
+            if (arr[l] > arr[r]) {
+                diff -= arr[l++];
+            } else {
+                diff -= arr[r--];
+            }
+        }
+        return sum + diff >>> 1;
+    }
 
-	private static final int getDp(int left, int right, int sum) {
-		if (dp[left][right] != 0) {
-			return dp[left][right];
-		}
-		return dp[left][right] = sum - Math.min(
-				getDp(left + 1, right, sum - cards[left]),
-				getDp(left, right - 1, sum - cards[right])
-		);
-	}
+    public static void main(String[] args) throws IOException {
+        int t;
+        int[] arr;
+        StringBuilder sb;
+        BufferedReader br;
 
-	private static final int solution() throws IOException {
-		int n;
-		int i;
-		int sum;
-		StringTokenizer st;
-
-		n = Integer.parseInt(br.readLine());
-		for (i = 0; i < n; i++) {
-			dp[0][i] = 0;
-		}
-		for (i = 0; i < n; i++) {
-			System.arraycopy(dp[0], 0, dp[i], 0, n);
-		}
-		sum = 0;
-		st = new StringTokenizer(br.readLine(), " ", false);
-		for (i = 0; i < n; i++) {
-			cards[i] = Integer.parseInt(st.nextToken());
-			dp[i][i] = cards[i];
-			sum += cards[i];
-		}
-		return getDp(0, n - 1, sum);
-	}
-
-	public static void main(String[] args) throws IOException {
-		int t;
-		StringBuilder sb;
-
-		cards = new int[MAX_N];
-		dp = new int[MAX_N][MAX_N];
-		br = new BufferedReader(new InputStreamReader(System.in));
-		t = Integer.parseInt(br.readLine());
-		sb = new StringBuilder();
-		while (t-- > 0) {
-			sb.append(solution()).append(LINE_BREAK);
-		}
-		System.out.print(sb.toString());
-	}
+        arr = new int[MAX_SIZE];
+        br = new BufferedReader(new InputStreamReader(System.in));
+        sb = new StringBuilder();
+        t = Integer.parseInt(br.readLine());
+        while (t-- > 0) {
+            sb.append(solution(Integer.parseInt(br.readLine()), arr, new StringTokenizer(br.readLine(), DELIM, false))).append(LINE_FEED);
+        }
+        System.out.print(sb.toString());
+    }
 }
