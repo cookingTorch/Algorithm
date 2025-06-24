@@ -19,7 +19,7 @@ public class Main {
         long sum;
         long diff;
 
-        sum = 0;
+        sum = 0L;
         size = 0;
         for (i = 0; i < n; i++) {
             sum += arr[size++] = Integer.parseInt(st.nextToken());
@@ -34,7 +34,7 @@ public class Main {
                 }
             }
         }
-        diff = 0;
+        diff = 0L;
         l = 0;
         r = size - 1;
         while (l <= r) {
