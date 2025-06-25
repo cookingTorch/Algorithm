@@ -15,8 +15,8 @@ class Solution {
         int colX;
         int cntO;
         int cntX;
-        int winO;
-        int winX;
+        boolean winO;
+        boolean winX;
 
         lO = 0;
         lX = 0;
@@ -24,8 +24,8 @@ class Solution {
         rX = 0;
         cntO = 0;
         cntX = 0;
-        winO = 0;
-        winX = 0;
+        winO = false;
+        winX = false;
         for (i = 0; i < 3; i++) {
             rowO = 0;
             rowX = 0;
@@ -55,27 +55,11 @@ class Solution {
             }
             cntO += rowO;
             cntX += rowX;
-            if (rowO == 3) {
-                winO++;
-            } else if (rowX == 3) {
-                winX++;
-            }
-            if (colO == 3) {
-                winO++;
-            } else if (colX == 3) {
-                winX++;
-            }
+            winO |= rowO == 3 || colO == 3;
+            winX |= rowX == 3 || colX == 3;
         }
-        if (lO == 3) {
-            winO++;
-        } else if (lX == 3) {
-            winX++;
-        }
-        if (rO == 3) {
-            winO++;
-        } else if (rX == 3) {
-            winX++;
-        }
-        return (winO == 1 ? winX == 0 && cntO - cntX == 1 : winX == 1 ? cntO == cntX : winO == 0 && winX == 0 && cntO == cntX || cntO - cntX == 1) ? 1 : 0;
+        winO |= lO == 3 || rO == 3;
+        winX |= lX == 3 || rX == 3;
+        return (cntO == cntX && !winO) || (cntO - cntX == 1 && !winX) ? 1 : 0;
     }
 }
