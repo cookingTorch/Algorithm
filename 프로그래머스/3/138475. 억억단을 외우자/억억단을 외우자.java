@@ -5,29 +5,29 @@ class Solution {
         int len;
         int max;
         int prev;
-        int[] spf;
+        int[] div;
         int[] exp;
         int[] cnt;
         int[] num;
         int[] ans;
 
-        spf = new int[e + 1];
+        div = new int[e + 1];
         exp = new int[e + 1];
         cnt = new int[e + 1];
         cnt[1] = 1;
         for (i = 2; i <= e; i++) {
-            if (spf[i] == 0) {
-                spf[i] = i;
+            if (div[i] == 0) {
+                div[i] = i;
                 exp[i] = 2;
                 cnt[i] = 2;
                 for (j = i << 1; j <= e; j += i) {
-                    if (spf[j] == 0) {
-                        spf[j] = i;
+                    if (div[j] == 0) {
+                        div[j] = i;
                     }
                 }
             } else {
-                prev = i / spf[i];
-                if (spf[prev] == spf[i]) {
+                prev = i / div[i];
+                if (div[prev] == div[i]) {
                     exp[i] = exp[prev] + 1;
                     cnt[i] = cnt[prev] / exp[prev] * exp[i];
                 } else {
