@@ -48,6 +48,6 @@ class Solution {
                     x1 = Math.max(x1 - dx, 0);
             }
         }
-        return Math.max((1L + x2 - x1) * (1L + y2 - y1), 0L);
+        return Math.max((x2 - x1 + 1L) * (y2 - y1 + 1L), 0L);
     }
 }
