@@ -1,8 +1,10 @@
 class Solution {
     private static final char P = 'P';
-    private static final char X = 'X';
+    private static final char O = 'O';
     private static final int SIZE = 5;
     private static final int MAX = SIZE + 2;
+    private static final int TRUE = 1;
+    private static final int FALSE = 0;
     private static final int[] dx1 = {-1, 0, 1, 0};
     private static final int[] dy1 = {0, 1, 0, -1};
     private static final int[][] dx2 = {{-1, -2, -1}, {-1, 0, 1}, {1, 2, 1}, {-1, 0, 1}};
@@ -20,12 +22,11 @@ class Solution {
             if (ch == P) {
                 return false;
             }
-            if (ch == X) {
-                continue;
-            }
-            for (j = 0; j < 3; j++) {
-                if (map[x + dx2[i][j]][y + dy2[i][j]] == P) {
-                    return false;
+            if (ch == O) {
+                for (j = 0; j < 3; j++) {
+                    if (map[x + dx2[i][j]][y + dy2[i][j]] == P) {
+                        return false;
+                    }
                 }
             }
         }
@@ -49,12 +50,12 @@ class Solution {
             for (j = 0; j < SIZE; j++) {
                 place[j].getChars(0, SIZE, map[j + 2], 2);
             }
-            ans[i] = 1;
+            ans[i] = TRUE;
             for (j = 2; j <= MAX; j++) {
                 for (k = 2; k <= MAX; k++) {
                     if (map[j][k] == P) {
                         if (!validate(j, k)) {
-                            ans[i] = 0;
+                            ans[i] = FALSE;
                             continue loop;
                         }
                     }
