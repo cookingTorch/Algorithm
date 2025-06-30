@@ -1,6 +1,6 @@
 class Solution {
     private static final char P = 'P';
-    private static final char O = 'O';
+    private static final char X = 'X';
     private static final int SIZE = 5;
     private static final int MAX = SIZE + 2;
     private static final int TRUE = 1;
@@ -19,14 +19,15 @@ class Solution {
 
         for (i = 0; i < 4; i++) {
             ch = map[x + dx1[i]][y + dy1[i]];
+            if (ch == X) {
+                continue;
+            }
             if (ch == P) {
                 return false;
             }
-            if (ch == O) {
-                for (j = 0; j < 3; j++) {
-                    if (map[x + dx2[i][j]][y + dy2[i][j]] == P) {
-                        return false;
-                    }
+            for (j = 0; j < 3; j++) {
+                if (map[x + dx2[i][j]][y + dy2[i][j]] == P) {
+                    return false;
                 }
             }
         }
