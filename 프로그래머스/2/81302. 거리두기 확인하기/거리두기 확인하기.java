@@ -1,6 +1,5 @@
 class Solution {
 	private static final int P = 'P';
-	private static final int O = 'O';
 	private static final int X = 'X';
 	private static final int SIZE = 5;
 	private static final int[] dx1 = {-1, 0, 1, 0};
