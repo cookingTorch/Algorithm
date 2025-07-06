@@ -46,8 +46,8 @@ class Solution {
         size = (int) Math.pow(NUMS, half);
         a = new int[size];
         b = new int[size];
-        thr = 1 << n;
-        full = thr - 1;
+        full = (1 << n) - 1;
+        thr = 1 << n >> 1;
         max = 0;
         ans = 0;
         for (mask = (1 << half) - 1; mask < thr;) {
@@ -67,6 +67,15 @@ class Solution {
             if (cnt > max) {
                 max = cnt;
                 ans = mask;
+            }
+            cnt = 0;
+            for (i = 0, j = 0; i < size; i++) {
+                for (; j < size && b[i] > a[j]; j++);
+                cnt += j;
+            }
+            if (cnt > max) {
+                max = cnt;
+                ans = ~mask & full;
             }
             c = mask & -mask;
             r = mask + c;
