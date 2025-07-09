@@ -1,79 +1,67 @@
 import java.util.Arrays;
+import java.util.HashMap;
 
 class Solution {
-    private static final int INF = Integer.MAX_VALUE;
-
-    private static final int X = 0;
-    private static final int Y = 1;
-
-    private static int[][] datas;
-
-    private static int upperBound(int l, int r, int val, int xy) {
-        int mid;
-
-        while (l < r) {
-            mid = l + r >>> 1;
-            if (datas[mid][xy] <= val) {
-                l = mid + 1;
-            } else {
-                r = mid;
-            }
-        }
-        return r;
-    }
-
-    private static int count(int n, int[][] data) {
-        int y;
+    public int solution(int n, int[][] data) {
+        int r;
+        int c;
         int i;
         int j;
-        int ni;
-        int nj;
-        int low;
-        int min;
+        int x1;
+        int y1;
+        int x2;
+        int y2;
         int cnt;
+        int[] xs;
+        int[] ys;
+        int[][] dp;
+        HashMap<Integer, Integer> mapX;
+        HashMap<Integer, Integer> mapY;
 
+        xs = new int[n];
+        ys = new int[n];
+        for (i = 0; i < n; i++) {
+            xs[i] = data[i][0];
+            ys[i] = data[i][1];
+        }
+        xs = Arrays.stream(xs).distinct().sorted().toArray();
+        ys = Arrays.stream(ys).distinct().sorted().toArray();
+        r = xs.length;
+        c = ys.length;
+        mapX = new HashMap<>();
+        mapY = new HashMap<>();
+        for (i = 0; i < r; i++) {
+            mapX.put(xs[i], i + 1);
+        }
+        for (i = 0; i < c; i++) {
+            mapY.put(ys[i], i + 1);
+        }
+        dp = new int[r + 1][c + 1];
+        for (int[] pos : data) {
+            pos[0] = mapX.get(pos[0]);
+            pos[1] = mapY.get(pos[1]);
+            dp[pos[0]][pos[1]]++;
+        }
+        for (i = 1; i <= r; i++) {
+            for (j = 1; j <= c; j++) {
+                dp[i][j] += dp[i - 1][j] + dp[i][j - 1] - dp[i - 1][j - 1];
+            }
+        }
         cnt = 0;
-        for (i = 0; i < n;) {
-            ni = upperBound(i + 1, n, data[i][X], X);
-            for (; i < ni; i++) {
-                if ((y = data[i][Y]) == INF) {
+        for (i = 0; i < n; i++) {
+            for (j = i + 1; j < n; j++) {
+                if (data[i][0] == data[j][0] || data[i][1] == data[j][1]) {
                     continue;
                 }
-                min = INF;
-                for (j = ni; j < n; j = nj) {
-                    nj = upperBound(j + 1, n, data[j][X], X);
-                    low = upperBound(j, nj, y, Y);
-                    cnt += upperBound(j, nj, min, Y) - low;
-                    if (low < nj) {
-                        min = Math.min(min, data[low][Y]);
-                    }
+                x1 = Math.min(data[i][0], data[j][0]);
+                y1 = Math.min(data[i][1], data[j][1]);
+                x2 = Math.max(data[i][0], data[j][0]);
+                y2 = Math.max(data[i][1], data[j][1]);
+                if (dp[x2 - 1][y2 - 1] - dp[x1][y2 - 1] - dp[x2 - 1][y1] + dp[x1][y1] == 0) {
+                    cnt++;
                 }
             }
         }
-        return cnt;
-    }
-
-    public int solution(int n, int[][] data) {
-        int cnt;
-
-        Arrays.sort(data, 0, n, (o1, o2) -> {
-            if (o1[X] == o2[X]) {
-                return o1[Y] - o2[Y];
-            }
-            return o1[X] - o2[X];
-        });
-        datas = data;
-        cnt = count(n, data);
-        for (int[] pos : data) {
-            pos[X] = ~pos[X];
-        }
-        Arrays.sort(data, 0, n, (o1, o2) -> {
-            if (o1[X] == o2[X]) {
-                return o1[Y] - o2[Y];
-            }
-            return o1[X] - o2[X];
-        });
-        cnt += count(n, data);
         return cnt;
     }
 }
