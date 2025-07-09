@@ -4,14 +4,14 @@ class Solution {
     private static int[] roots;
     private static int[][] cnt;
     private static boolean[] reverse;
-    
+
     private static int find(int v) {
         if (roots[v] <= 0) {
             return v;
         }
         return roots[v] = find(roots[v]);
     }
-    
+
     private static void union(int u, int v) {
         if (roots[u] > roots[v]) {
             roots[u] = v;
@@ -41,7 +41,7 @@ class Solution {
         }
         return v;
     }
-    
+
     public int[] solution(int[] nodes, int[][] edges) {
         int i;
         int len;
@@ -49,7 +49,7 @@ class Solution {
         HashMap<Integer,Integer> map;
 
         len = nodes.length;
-        map = new HashMap<>();
+        map = new HashMap<>((int) Math.ceil(len / 0.75));
         reverse = new boolean[len + 1];
         cnt = new int[len + 1][2];
         for (i = 1; i <= len; i++) {
