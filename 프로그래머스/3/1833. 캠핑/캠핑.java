@@ -1,7 +1,24 @@
 import java.util.Arrays;
-import java.util.HashMap;
 
 class Solution {
+    private static int binarySearch(int[] arr, int val) {
+        int l;
+        int r;
+        int mid;
+        
+        l = 0;
+        r = arr.length;
+        while (l < r) {
+            mid = l + r >>> 1;
+            if (arr[mid] < val) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+        return r;
+    }
+
     public int solution(int n, int[][] data) {
         int r;
         int c;
@@ -15,8 +32,6 @@ class Solution {
         int[] xs;
         int[] ys;
         int[][] dp;
-        HashMap<Integer, Integer> mapX;
-        HashMap<Integer, Integer> mapY;
 
         xs = new int[n];
         ys = new int[n];
@@ -28,18 +43,10 @@ class Solution {
         ys = Arrays.stream(ys).distinct().sorted().toArray();
         r = xs.length;
         c = ys.length;
-        mapX = new HashMap<>();
-        mapY = new HashMap<>();
-        for (i = 0; i < r; i++) {
-            mapX.put(xs[i], i + 1);
-        }
-        for (i = 0; i < c; i++) {
-            mapY.put(ys[i], i + 1);
-        }
         dp = new int[r + 1][c + 1];
         for (int[] pos : data) {
-            pos[0] = mapX.get(pos[0]);
-            pos[1] = mapY.get(pos[1]);
+            pos[0] = binarySearch(xs, pos[0]) + 1;
+            pos[1] = binarySearch(ys, pos[1]) + 1;
             dp[pos[0]][pos[1]]++;
         }
         for (i = 1; i <= r; i++) {
