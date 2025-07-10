@@ -1,15 +1,15 @@
 import java.util.PriorityQueue;
 
 class Solution {
-    private final int INF = Integer.MAX_VALUE;
-    private final int DIFF = 'A';
-    private final int ALPHA = 26;
-    private final int SIZE = ALPHA << 1;
-    private final int EMPTY = '.' - DIFF;
-    private final int WALL = '*' - DIFF;
-    private final String IMPOSSIBLE = "IMPOSSIBLE";
+    private static final int INF = Integer.MAX_VALUE;
+    private static final int DIFF = 'A';
+    private static final int ALPHA = 26;
+    private static final int SIZE = ALPHA << 1;
+    private static final int EMPTY = '.' - DIFF;
+    private static final int WALL = '*' - DIFF;
+    private static final String IMPOSSIBLE = "IMPOSSIBLE";
 
-    private final class Edge {
+    private static final class Edge {
         int to;
         Edge next;
 
@@ -19,12 +19,12 @@ class Solution {
         }
     }
 
-    private int visited;
-    private int[] degree;
-    private int[][] map;
-    private Edge[] adj;
+    private static int visited;
+    private static int[] degree;
+    private static int[][] map;
+    private static Edge[] adj;
 
-    private boolean addEdge(int u, int v) {
+    private static boolean addEdge(int u, int v) {
         if (u == WALL) {
             degree[v] = INF;
             return false;
@@ -36,7 +36,7 @@ class Solution {
         return true;
     }
 
-    private void addParent(int v, int x1, int y1, int x2, int y2) {
+    private static void addParent(int v, int x1, int y1, int x2, int y2) {
         int i;
         int min;
         int max;
@@ -83,7 +83,7 @@ class Solution {
         }
     }
 
-    private String topo(int cnt) {
+    private static String topo(int cnt) {
         int i;
         int to;
         int cur;
