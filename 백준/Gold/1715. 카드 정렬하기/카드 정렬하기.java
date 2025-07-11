@@ -5,7 +5,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 
 public class Main {
-    private static final int INF = Integer.MAX_VALUE >>> 1;
+    private static final int INF = Integer.MAX_VALUE;
 
     public static void main(String[] args) throws IOException {
         int n;
