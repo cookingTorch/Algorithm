@@ -5,70 +5,75 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static class Edge implements Comparable<Edge> {
-		int u, v, weight;
-		
+	private static final String DELIM = " ";
+
+	private static final class Edge implements Comparable<Edge> {
+		int u;
+		int v;
+		int weight;
+
 		Edge(int u, int v, int weight) {
 			this.u = u;
 			this.v = v;
 			this.weight = weight;
 		}
-		
+
 		@Override
 		public int compareTo(Edge o) {
-			return Integer.compare(this.weight, o.weight);
+			return weight - o.weight;
 		}
 	}
-	
-	private static int[] root;
-	
+
+	private static int[] roots;
+
+	private static int find(int v) {
+		if (roots[v] <= 0) {
+			return v;
+		}
+		return roots[v] = find(roots[v]);
+	}
+
 	private static boolean union(int u, int v) {
-		int ru, rv;
-		
-		if ((ru = find(u)) == (rv = find(v))) {
+		if ((u = find(u)) == (v = find(v))) {
 			return false;
 		}
-		if (root[ru] > root[rv]) {
-			root[ru] = rv;
+		if (roots[u] > roots[v]) {
+			roots[u] = v;
 		} else {
-			if (root[ru] == root[rv]) {
-				root[ru]--;
+			if (roots[u] == roots[v]) {
+				roots[u]--;
 			}
-			root[rv] = ru;
+			roots[v] = u;
 		}
 		return true;
 	}
-	
-	private static int find(int u) {
-		if (root[u] <= 0) {
-			return u;
-		}
-		return root[u] = find(root[u]);
-	}
-	
+
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		
-		int v, e, ans, i;
+		int v;
+		int e;
+		int cnt;
+		int ans;
 		Edge edge;
 		PriorityQueue<Edge> pq;
-		
-		st = new StringTokenizer(br.readLine());
+		BufferedReader br;
+		StringTokenizer st;
+
+		br = new BufferedReader(new InputStreamReader(System.in));
+		st = new StringTokenizer(br.readLine(), DELIM, false);
 		v = Integer.parseInt(st.nextToken());
 		e = Integer.parseInt(st.nextToken());
-		pq = new PriorityQueue<>();
-		for (i = 0; i < e; i++) {
-			st = new StringTokenizer(br.readLine());
-			pq.add(new Edge(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
+		pq = new PriorityQueue<>(e);
+		while (e-- > 0) {
+			st = new StringTokenizer(br.readLine(), DELIM, false);
+			pq.offer(new Edge(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
 		}
-		root = new int[v + 1];
+		roots = new int[v + 1];
 		ans = 0;
-		for (i = 0; i < v - 1;) {
+		for (cnt = 1; cnt < v;) {
 			edge = pq.poll();
 			if (union(edge.u, edge.v)) {
 				ans += edge.weight;
-				i++;
+				cnt++;
 			}
 		}
 		System.out.print(ans);
