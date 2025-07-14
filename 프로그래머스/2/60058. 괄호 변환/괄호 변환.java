@@ -23,20 +23,16 @@ class Solution {
 			isCorrect = false;
 			cnt = -1;
 		}
-		mid = 0;
-		for (i = l + 1; i <= r; i++) {
+		for (i = l + 1; i <= r && cnt != 0; i++) {
 			if (str[i] == L) {
 				cnt++;
 			} else {
-				cnt--;
-				if (mid == 0 && cnt < 0) {
+				if (--cnt < 0) {
 					isCorrect = false;
 				}
 			}
-			if (mid == 0 && cnt == 0) {
-				mid = i + 1;
-			}
 		}
+		mid = i;
 		if (isCorrect) {
 			System.arraycopy(str, l, res, 0, mid - l);
 			System.arraycopy(dnc(mid, r), 0, res, mid - l, r - mid + 1);
