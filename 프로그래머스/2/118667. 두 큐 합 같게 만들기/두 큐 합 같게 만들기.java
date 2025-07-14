@@ -30,7 +30,7 @@ class Solution {
 		}
 		len *= 3;
 		dest >>>= 1;
-		for (i = 0; i <= len; i++) {
+		for (i = 0; i < len; i++) {
 			if (sum > dest) {
 				num = q1.pollFirst();
 				q2.addLast(num);
@@ -43,6 +43,6 @@ class Solution {
 				break;
 			}
 		}
-		return i > len ? FAIL : i;
+		return i == len ? FAIL : i;
 	}
 }
