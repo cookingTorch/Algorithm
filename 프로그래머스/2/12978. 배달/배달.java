@@ -22,30 +22,33 @@ class Solution {
         int v;
         int w;
         int cnt;
-        boolean[] visited;
+        int[] dist;
         Edge node;
         Edge edge;
         PriorityQueue<Edge> pq;
 
         pq = new PriorityQueue<>();
-        visited = new boolean[n + 1];
+        dist = new int[n + 1];
+        k++;
+        for (v = 2; v <= n; v++) {
+            dist[v] = k;
+        }
         pq.offer(new Edge(1, 0, null));
         cnt = 0;
         while (!pq.isEmpty()) {
             node = pq.poll();
             v = node.to;
             w = node.weight;
-            if (visited[v]) {
+            if (dist[v] < w) {
                 continue;
             }
-            visited[v] = true;
             cnt++;
             for (edge = adj[v]; edge != null; edge = edge.next) {
-                if (visited[edge.to] || w + edge.weight > k) {
-                    continue;
+                if (w + edge.weight < dist[edge.to]) {
+                    dist[edge.to] = w + edge.weight;
+                    edge.weight += w;
+                    pq.offer(edge);
                 }
-                edge.weight += w;
-                pq.offer(edge);
             }
         }
         return cnt;
