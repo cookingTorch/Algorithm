@@ -23,8 +23,7 @@ class Solution {
             cnt = -1;
             isCorrect = false;
         }
-        thr = start + len;
-        for (i = start + 1; i < thr && cnt != 0; i++) {
+        for (i = start + 1; cnt != 0; i++) {
             if (str[i] == L) {
                 cnt++;
             } else {
@@ -45,6 +44,7 @@ class Solution {
         str[start] = L;
         dnc(start + 1, v);
         str[start + v + 1] = R;
+        thr = start + len;
         for (i = start + v + 2; i < thr; i++) {
             str[i] = (char) (str[i] == L ? R : L);
         }
