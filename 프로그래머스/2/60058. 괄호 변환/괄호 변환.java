@@ -1,9 +1,9 @@
 class Solution {
-    private static final int L = '(';
-    private static final int R = ')';
+    private static final char L = '(';
+    private static final char R = ')';
 
-    private static char[] str;
-    private static char[] tmp;
+    private static boolean[] str;
+    private static boolean[] tmp;
 
     private static void dnc(int start, int len) {
         int u;
@@ -16,7 +16,7 @@ class Solution {
         if (len == 0) {
             return;
         }
-        if (str[start] == L) {
+        if (str[start]) {
             cnt = 1;
             isCorrect = true;
         } else {
@@ -24,7 +24,7 @@ class Solution {
             isCorrect = false;
         }
         for (i = start + 1; cnt != 0; i++) {
-            if (str[i] == L) {
+            if (str[i]) {
                 cnt++;
             } else {
                 if (--cnt < 0) {
@@ -38,22 +38,33 @@ class Solution {
             dnc(start + u, v);
             return;
         }
-        System.arraycopy(str, start + u, tmp, 0, v);
-        System.arraycopy(str, start + 1, str, start + v + 2, u - 2);
-        System.arraycopy(tmp, 0, str, start + 1, v);
-        str[start] = L;
+        System.arraycopy(str, start + 1, tmp, start + v + 2, u - 2);
+        System.arraycopy(str, start + u, str, start + 1, v);
+        str[start] = true;
         dnc(start + 1, v);
-        str[start + v + 1] = R;
+        str[start + v + 1] = false;
         thr = start + len;
         for (i = start + v + 2; i < thr; i++) {
-            str[i] = (char) (str[i] == L ? R : L);
+            str[i] = !tmp[i];
         }
     }
 
     public String solution(String p) {
-        str = p.toCharArray();
-        tmp = new char[str.length];
-        dnc(0, str.length);
-        return new String(str);
+        int i;
+        int len;
+        char[] ans;
+
+        len = p.length();
+        str = new boolean[len];
+        for (i = 0; i < len; i++) {
+            str[i] = p.charAt(i) == L;
+        }
+        tmp = new boolean[len];
+        dnc(0, len);
+        ans = new char[len];
+        for (i = 0; i < len; i++) {
+            ans[i] = str[i] ? L : R;
+        }
+        return new String(ans);
     }
 }
