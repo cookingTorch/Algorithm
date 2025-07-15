@@ -1,61 +1,59 @@
 class Solution {
-	private static final int L = '(';
-	private static final int R = ')';
-	private static final char[] NIL = new char[0];
+    private static final int L = '(';
+    private static final int R = ')';
 
-	private static char[] str;
+    private static char[] str;
+    private static char[] tmp;
 
-	private static char[] dnc(int l, int r) {
-		int i;
-		int cnt;
-		int mid;
-		char[] res;
-		boolean isCorrect;
+    private static void dnc(int start, int len) {
+        int u;
+        int v;
+        int i;
+        int cnt;
+        int thr;
+        boolean isCorrect;
 
-		if (l > r) {
-			return NIL;
-		}
-		res = new char[r - l + 1];
-		if (str[l] == L) {
-			isCorrect = true;
-			cnt = 1;
-		} else {
-			isCorrect = false;
-			cnt = -1;
-		}
-		for (i = l + 1; i <= r && cnt != 0; i++) {
-			if (str[i] == L) {
-				cnt++;
-			} else {
-				if (--cnt < 0) {
-					isCorrect = false;
-				}
-			}
-		}
-		mid = i;
-		if (isCorrect) {
-			System.arraycopy(str, l, res, 0, mid - l);
-			System.arraycopy(dnc(mid, r), 0, res, mid - l, r - mid + 1);
-			return res;
-		}
-		res[0] = L;
-		System.arraycopy(dnc(mid, r), 0, res, 1, r - mid + 1);
-		res[r - mid + 2] = R;
-		for (i = l + 1; i < mid - 1; i++) {
-			if (str[i] == L) {
-				res[r - mid + 2 + i - l] = R;
-			} else {
-				res[r - mid + 2 + i - l] = L;
-			}
-		}
-		return res;
-	}
+        if (len == 0) {
+            return;
+        }
+        if (str[start] == L) {
+            cnt = 1;
+            isCorrect = true;
+        } else {
+            cnt = -1;
+            isCorrect = false;
+        }
+        thr = start + len;
+        for (i = start + 1; i < thr && cnt != 0; i++) {
+            if (str[i] == L) {
+                cnt++;
+            } else {
+                if (--cnt < 0) {
+                    isCorrect = false;
+                }
+            }
+        }
+        u = i - start;
+        v = len - u;
+        if (isCorrect) {
+            dnc(start + u, v);
+            return;
+        }
+        System.arraycopy(str, start + u, tmp, 0, v);
+        System.arraycopy(str, start + 1, str, start + v + 2, u - 2);
+        System.arraycopy(tmp, 0, str, start + 1, v);
+        str[start] = L;
+        dnc(start + 1, v);
+        str[start + v + 1] = R;
+        for (i = start + v + 2; i < thr; i++) {
+            str[i] = (char) (str[i] == L ? R : L);
+        }
+    }
 
-	public String solution(String p) {
-		int len;
-
-		str = p.toCharArray();
-		len = str.length;
-		return new String(dnc(0, len - 1));
-	}
+    public String solution(String p) {
+        str = p.toCharArray();
+        tmp = new char[str.length];
+        dnc(0, str.length);
+        return new String(str);
+    }
 }
