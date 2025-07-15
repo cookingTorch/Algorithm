@@ -11,19 +11,16 @@ class Solution {
         long diff;
 
         len = queue1.length;
-        arr = new int[len << 1];
-        System.arraycopy(queue1, 0, arr, 0, len);
-        System.arraycopy(queue2, 0, arr, len, len);
         diff = 0L;
         for (i = 0; i < len; i++) {
-            diff += queue1[i];
-        }
-        for (i = 0; i < len; i++) {
-            diff -= queue2[i];
+            diff += queue1[i] - queue2[i];
         }
         if ((diff & 1) != 0) {
             return FAIL;
         }
+        arr = new int[len << 1];
+        System.arraycopy(queue1, 0, arr, 0, len);
+        System.arraycopy(queue2, 0, arr, len, len);
         l = 0;
         r = len;
         thr = len * 3;
