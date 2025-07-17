@@ -5,7 +5,6 @@ import java.util.StringTokenizer;
 class Solution {
     private static final int ADD = 0;
     private static final int SUB = 1;
-    private static final int MUL = 2;
     private static final int PLUS = '+';
     private static final int MINUS = '-';
     private static final int[][] PRIORITIES = {
@@ -19,15 +18,12 @@ class Solution {
     private static ArrayDeque<Integer> opStack;
 
     private static void calc(int op) {
-        switch (op) {
-            case ADD:
-                numStack.addFirst(numStack.pollFirst() + numStack.pollFirst());
-                break;
-            case SUB:
-                numStack.addFirst(-numStack.pollFirst() + numStack.pollFirst());
-                break;
-            case MUL:
-                numStack.addFirst(numStack.pollFirst() * numStack.pollFirst());
+        if (op == ADD) {
+            numStack.addFirst(numStack.pollFirst() + numStack.pollFirst());
+        } else if (op == SUB) {
+            numStack.addFirst(-numStack.pollFirst() + numStack.pollFirst());
+        } else {
+            numStack.addFirst(numStack.pollFirst() * numStack.pollFirst());
         }
     }
 
