@@ -59,7 +59,7 @@ class Solution {
         for (i = 1; st.hasMoreTokens(); i++) {
             op = st.nextToken().charAt(0);
             ops[i] = op == PLUS ? 0 : op == MINUS ? 1 : 2;
-            nums[i] = (long) Integer.parseInt(st.nextToken());
+            nums[i] = Integer.parseInt(st.nextToken());
         }
         max = 0L;
         opStack = new ArrayDeque<>();
