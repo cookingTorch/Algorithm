@@ -6,7 +6,6 @@ class Solution {
     private static final int ADD = 0;
     private static final int SUB = 1;
     private static final int MUL = 2;
-    private static final int MAX_LEN = 50;
     private static final int PLUS = '+';
     private static final int MINUS = '-';
     private static final int[][] PRIORITIES = {
