@@ -1,11 +1,11 @@
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 class Solution {
     private static final int ADD = 0;
     private static final int SUB = 1;
     private static final int MUL = 2;
-    private static final int MAX_LEN = 50;
     private static final int PLUS = '+';
     private static final int MINUS = '-';
     private static final int[][] PRIORITIES = {
@@ -31,9 +31,11 @@ class Solution {
         }
     }
 
-    private static long eval(int[] ops, long[] nums, int len, int[] priority) {
+    private static long eval(int[] ops, long[] nums, int[] priority) {
         int i;
+        int len;
 
+        len = nums.length;
         numStack.addFirst(nums[0]);
         for (i = 1; i < len; i++) {
             while (!opStack.isEmpty() && priority[opStack.peekFirst()] >= priority[ops[i]]) {
@@ -55,24 +57,32 @@ class Solution {
         int[] ops;
         long max;
         long[] nums;
+        ArrayList<Long> numList;
+        ArrayList<Integer> opList;
         StringTokenizer st;
 
-        ops = new int[MAX_LEN];
-        nums = new long[MAX_LEN];
+        opList = new ArrayList<>();
+        numList = new ArrayList<>();
         st = new StringTokenizer(expression, DELIM, true);
-        ops[0] = 0;
-        nums[0] = Long.parseLong(st.nextToken());
-        for (i = 1; st.hasMoreTokens(); i++) {
+        opList.add(0);
+        numList.add(Long.parseLong(st.nextToken()));
+        while (st.hasMoreTokens()) {
             op = st.nextToken().charAt(0);
-            ops[i] = op == PLUS ? 0 : op == MINUS ? 1 : 2;
-            nums[i] = Integer.parseInt(st.nextToken());
+            opList.add(op == PLUS ? 0 : op == MINUS ? 1 : 2);
+            numList.add((long) Integer.parseInt(st.nextToken()));
         }
-        len = i;
+        len = numList.size();
+        ops = new int[len];
+        nums = new long[len];
+        for (i = 0; i < len; i++) {
+            ops[i] = opList.get(i);
+            nums[i] = numList.get(i);
+        }
         max = 0L;
         opStack = new ArrayDeque<>();
         numStack = new ArrayDeque<>();
         for (int[] priority : PRIORITIES) {
-            max = Math.max(max, Math.abs(eval(ops, nums, len, priority)));
+            max = Math.max(max, Math.abs(eval(ops, nums, priority)));
         }
         return max;
     }
