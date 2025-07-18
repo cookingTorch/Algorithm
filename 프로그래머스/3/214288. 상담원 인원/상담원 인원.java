@@ -1,94 +1,66 @@
-import java.util.ArrayList;
-import java.util.PriorityQueue;
+import java.util.*;
 
 class Solution {
-    private static PriorityQueue<Integer> pq;
-
-    private static int calc(ArrayList<int[]> reqs, int cnt) {
-        int i;
-        int len;
-        int res;
-        int prev;
-        int[] req;
-
-        len = reqs.size();
-        for (i = 0; i < cnt; i++) {
-            req = reqs.get(i);
-            pq.offer(req[0] + req[1]);
+    private List<List<Integer[]>> timeTable(int k, int[][] reqs) {
+        List<List<Integer[]>> result = new ArrayList<>();
+        for (int idx = 0; idx <= k; idx++) {
+            result.add(new ArrayList<>());
         }
-        res = 0;
-        for (; i < len; i++) {
-            req = reqs.get(i);
-            prev = pq.poll();
-            if (prev > req[0]) {
-                res += prev - req[0];
-                pq.offer(prev + req[1]);
-            } else {
-                pq.offer(req[0] + req[1]);
-            }
+        for (int[] req : reqs) {
+            int start = req[0];
+            int end = start + req[1];
+            int type = req[2];
+            result.get(type).add(new Integer[] { start, end });
         }
-        pq.clear();
-        return res;
+        return result;
     }
-
-    private static int genVal(ArrayList<int[]> reqs, int[] vals) {
-        int i;
-        int val;
-        int thr;
-
-        val = calc(reqs, 1);
-        thr = Math.min(vals.length, reqs.size());
-        for (i = 2; i <= thr; i++) {
-            vals[i - 1] = val - calc(reqs, i);
+    private void calcTimeGap(int[] gapTable, List<Integer[]> timeTable) {
+        for (int i = 0; i < gapTable.length; i++) {
+            int maxPpl = i + 1;
+            int count = 0;
+            int gapTotal = 0;
+            PriorityQueue<Integer> endQ = new PriorityQueue<>();
+            for (Integer[] time : timeTable) {
+                int nowStart = time[0];
+                int nowEnd = time[1];
+                while (!endQ.isEmpty() && nowStart >= endQ.peek()) {
+                    endQ.poll();
+                    count--;
+                }
+                if (endQ.isEmpty() || nowStart < endQ.peek()) {
+                    count++;
+                }
+                if (count > maxPpl) {
+                    int gap = endQ.poll() - nowStart;
+                    nowEnd += gap;
+                    gapTotal += gap;
+                    count--;
+                }
+                endQ.add(nowEnd);
+            }
+            gapTable[i] = gapTotal;
         }
-        return val;
+    }
+    private int getMinTimeGap(int maxPpl, int[][] gapTable, int type) {
+        int minTotal = Integer.MAX_VALUE;
+        for (int i = 0; i <= maxPpl; i++) {
+            int value = gapTable[type][i];
+            if (type < gapTable.length - 1) {
+                value += getMinTimeGap(maxPpl - i, gapTable, type + 1);
+            }
+            minTotal = Math.min(minTotal, value);
+        }
+        return minTotal;
     }
 
     public int solution(int k, int n, int[][] reqs) {
-        int i;
-        int j;
-        int l;
-        int max;
-        int len;
-        int[] dp;
-        int[] val;
-        int[] next;
-        int[][] vals;
-        ArrayList<int[]>[] arr;
-
-        arr = new ArrayList[k];
-        for (i = 0; i < k; i++) {
-            arr[i] = new ArrayList<>();
+        int answer = 0;
+        List<List<Integer[]>> timeTable = timeTable(k, reqs);
+        int[][] gapTable = new int[k + 1][n - k + 1];
+        for (int i = 1; i <= k; i++) {
+            calcTimeGap(gapTable[i], timeTable.get(i));
         }
-        for (int[] req : reqs) {
-            arr[req[2] - 1].add(req);
-        }
-        max = 0;
-        n -= k;
-        vals = new int[k][];
-        pq = new PriorityQueue<>();
-        for (i = 0; i < k; i++) {
-            vals[i] = new int[Math.min(arr[i].size(), n + 1)];
-            if (vals[i].length == 0) {
-                continue;
-            }
-            max += genVal(arr[i], vals[i]);
-        }
-        dp = new int[n + 1];
-        for (i = 0; i < k; i++) {
-            val = vals[i];
-            if (val.length == 0) {
-                continue;
-            }
-            len = val.length;
-            next = new int[n + 1];
-            for (j = 0; j <= n; j++) {
-                for (l = 0; l < len && j + l <= n; l++) {
-                    next[j + l] = Math.max(next[j + l], dp[j] + val[l]);
-                }
-            }
-            dp = next;
-        }
-        return max - dp[n];
+        answer = getMinTimeGap(n - k, gapTable, 1);
+        return answer;
     }
 }
