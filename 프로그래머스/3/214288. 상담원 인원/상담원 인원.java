@@ -50,10 +50,9 @@ class Solution {
         int l;
         int max;
         int len;
+        int[] prev;
+        int[] vals;
         int[] dp;
-        int[] val;
-        int[] next;
-        int[][] vals;
         ArrayList<int[]>[] arr;
 
         arr = new ArrayList[k];
@@ -63,32 +62,25 @@ class Solution {
         for (int[] req : reqs) {
             arr[req[2] - 1].add(req);
         }
-        max = 0;
         n -= k;
-        vals = new int[k][];
+        max = 0;
+        vals = new int[n + 1];
         pq = new PriorityQueue<>();
-        for (i = 0; i < k; i++) {
-            vals[i] = new int[Math.min(arr[i].size(), n + 1)];
-            if (vals[i].length == 0) {
-                continue;
-            }
-            max += genVal(arr[i], vals[i]);
-        }
+        prev = new int[n + 1];
         dp = new int[n + 1];
         for (i = 0; i < k; i++) {
-            val = vals[i];
-            if (val.length == 0) {
+            len = Math.min(arr[i].size(), n + 1);
+            if (len == 0) {
                 continue;
             }
-            len = val.length;
-            next = new int[n + 1];
+            max += genVal(arr[i], vals);
             for (j = 0; j <= n; j++) {
-                for (l = 0; l < len && j + l <= n; l++) {
-                    next[j + l] = Math.max(next[j + l], dp[j] + val[l]);
+                for (l = 1; l < len && j + l <= n; l++) {
+                    dp[j + l] = Math.max(dp[j + l], prev[j] + vals[l]);
                 }
             }
-            dp = next;
+            System.arraycopy(dp, 0, prev, 0, n + 1);
         }
-        return max - dp[n];
+        return max - prev[n];
     }
 }
