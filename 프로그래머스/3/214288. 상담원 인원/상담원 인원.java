@@ -81,6 +81,6 @@ class Solution {
             }
             System.arraycopy(dp, 0, prev, 0, n + 1);
         }
-        return max - prev[n];
+        return max - dp[n];
     }
 }
