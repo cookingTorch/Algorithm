@@ -7,7 +7,6 @@ class Solution {
     private static final int[] dx = {-1, 0, 1, 0};
     private static final int[] dy = {0, 1, 0, -1};
 
-    private static int r;
     private static int c;
     private static int[][] board;
     private static ArrayList<int[]> block;
@@ -51,7 +50,7 @@ class Solution {
         for (i = 0; i < 4; i++) {
             nx = x + dx[i];
             ny = y + dy[i];
-            if (nx < 0 || nx >= r || ny < 0 || ny >= c || board[nx][ny] != num) {
+            if (nx < 0 || nx >= c || ny < 0 || ny >= c || board[nx][ny] != num) {
                 continue;
             }
             dfs(nx, ny, num);
@@ -67,12 +66,11 @@ class Solution {
         ArrayList<Integer> key;
         HashMap<ArrayList<Integer>, Integer> map;
 
-        r = game_board.length;
-        c = game_board[0].length;
+        c = game_board.length; // 행 = 열
         board = game_board;
         block = new ArrayList<>();
         map = new HashMap<>();
-        for (i = 0; i < r; i++) {
+        for (i = 0; i < c; i++) {
             for (j = 0; j < c; j++) {
                 if (game_board[i][j] == 0) {
                     block.clear();
@@ -84,7 +82,7 @@ class Solution {
         }
         board = table;
         cnt = 0;
-        for (i = 0; i < r; i++) {
+        for (i = 0; i < c; i++) {
             for (j = 0; j < c; j++) {
                 if (table[i][j] == 1) {
                     block.clear();
