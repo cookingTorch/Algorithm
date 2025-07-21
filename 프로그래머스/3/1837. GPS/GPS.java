@@ -1,87 +1,98 @@
-import java.util.Arrays;
 import java.util.ArrayDeque;
 
 class Solution {
-    private static final int MAX_N = 200;
     private static final int INF = Integer.MAX_VALUE;
-    
-    private static final class Node {
-    	int idx;
-    	Node next;
-    	
-    	Node(int idx, Node next) {
-    		this.idx = idx;
-    		this.next = next;
-    	}
+    private static final int FAIL = -1;
+
+    private static final class Edge {
+        int to;
+        Edge next;
+
+        Edge(int to, Edge next) {
+            this.to = to;
+            this.next = next;
+        }
     }
-    
-    private static int n;
-    private static int[] level = new int[MAX_N + 1];
-    private static ArrayDeque<Integer> q = new ArrayDeque<>();
-    private static Node[] adj;
-    
+
+    private static int size;
+    private static int[] level;
+    private static Edge[] adj;
+
     private static void bfs(int end) {
-    	int curr, i;
-    	Node next;
-    	
-        for (i = 1; i <= n; i++) {
+        int i;
+        int cur;
+        Edge edge;
+        ArrayDeque<Integer> q;
+
+        level = new int[size + 1];
+        for (i = 1; i <= size; i++) {
             level[i] = INF;
         }
-    	level[end] = 0;
-    	q.addLast(end);
-    	while (!q.isEmpty()) {
-    		curr = q.pollFirst();
-    		for (next = adj[curr]; next != null; next = next.next) {
-    			if (level[next.idx] == INF) {
-    				level[next.idx] = level[curr] + 1;
-    				q.addLast(next.idx);
-    			}
-    		}
-    	}
+        level[end] = 0;
+        q = new ArrayDeque<>();
+        q.addLast(end);
+        while (!q.isEmpty()) {
+            cur = q.pollFirst();
+            for (edge = adj[cur]; edge != null; edge = edge.next) {
+                if (level[edge.to] == INF) {
+                    level[edge.to] = level[cur] + 1;
+                    q.addLast(edge.to);
+                }
+            }
+        }
     }
-    
+
     private static int bfs01(int k, int[] gpsLog) {
-        int idx, next, cnt, dist;
-        int[] curr;
+        int t;
+        int to;
+        int cnt;
+        int node;
+        int[] cur;
         boolean[][] visited;
+        Edge edge;
         ArrayDeque<int[]> dq;
-        Node node;
-        
-        visited = new boolean[n + 1][k + 1];
+
+        visited = new boolean[size + 1][k + 1];
         dq = new ArrayDeque<>();
         dq.addLast(new int[] {gpsLog[0], 1, 0});
         for (;;) {
-            curr = dq.pollFirst();
-            idx = curr[0];
-            cnt = curr[1];
-            dist = curr[2];
-            if (cnt == k) {
-                return dist;
+            cur = dq.pollFirst();
+            node = cur[0];
+            t = cur[1];
+            cnt = cur[2];
+            if (t == k) {
+                return cnt;
             }
-            for (node = adj[idx]; node != null; node = node.next) {
-                next = node.idx;
-            	if (level[next] < k - cnt && !visited[next][cnt + 1]) {
-            		if (next == gpsLog[cnt]) {
-            			dq.addFirst(new int[] {next, cnt + 1, dist});
+            for (edge = adj[node]; edge != null; edge = edge.next) {
+                to = edge.to;
+                if (level[to] < k - t && !visited[to][t + 1]) {
+                    if (to == gpsLog[t]) {
+                        dq.addFirst(new int[] {to, t + 1, cnt});
                     } else {
-                        dq.addLast(new int[] {next, cnt + 1, dist + 1});
+                        dq.addLast(new int[] {to, t + 1, cnt + 1});
                     }
-                    visited[next][cnt + 1] = true;
-            	}
+                    visited[to][t + 1] = true;
+                }
             }
         }
     }
-    
+
     public int solution(int n, int m, int[][] edge_list, int k, int[] gps_log) {
-        this.n = n;
-        adj = new Node[n + 1];
-        for (int[] edge : edge_list) {
-        	adj[edge[0]] = new Node(edge[1], adj[edge[0]]);
-        	adj[edge[1]] = new Node(edge[0], adj[edge[1]]);
+        int u;
+        int v;
+        int i;
+
+        size = n;
+        adj = new Edge[n + 1];
+        for (i = 0; i < m; i++) {
+            u = edge_list[i][0];
+            v = edge_list[i][1];
+            adj[u] = new Edge(v, adj[u]);
+            adj[v] = new Edge(u, adj[v]);
         }
         bfs(gps_log[k - 1]);
-        if (level[gps_log[0]] > k - 1) {
-        	return -1;
+        if (level[gps_log[0]] >= k) {
+            return FAIL;
         }
         return bfs01(k, gps_log);
     }
