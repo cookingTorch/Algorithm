@@ -18,33 +18,42 @@ class Solution {
 	}
 
 	public String[] solution(String[] files) {
-		Arrays.asList(files).sort((o1, o2) -> {
+		Arrays.sort(files, 0, files.length, (o1, o2) -> {
 			int i;
 			int j;
 			int ch1;
 			int ch2;
-			int len;
+			int len1;
+			int len2;
 			int num1;
 			int num2;
 
-			for (i = 0; !isNum(ch1 = o1.charAt(i)) & !isNum(ch2 = o2.charAt(i)); i++) {
-				if ((ch1 = lower(ch1)) != (ch2 = lower(ch2))) {
+			for (i = 0;; i++) {
+				ch1 = o1.charAt(i);
+				ch2 = o2.charAt(i);
+				if (isNum(ch1) && isNum(ch2)) {
+					break;
+				}
+				if (lower(ch1) != lower(ch2)) {
 					return ch1 - ch2;
 				}
 			}
-			if (!isNum(ch1)) {
-				return 1;
-			} else if (!isNum(ch2)) {
-				return -1;
-			}
-			len = o1.length();
-			num1 = 0;
-			for (j = i; j < len && isNum(ch1 = o1.charAt(j)); j++) {
+			len1 = o1.length();
+			num1 = ch1 - ZERO;
+			for (j = ++i; j < len1; j++) {
+				ch1 = o1.charAt(j);
+				if (!isNum(ch1)) {
+					break;
+				}
 				num1 = num1 * 10 + ch1 - ZERO;
 			}
-			len = o2.length();
-			num2 = 0;
-			for (j = i; j < len && isNum(ch2 = o2.charAt(j)); j++) {
+			len2 = o2.length();
+			num2 = ch2 - ZERO;
+			for (; i < len2; i++) {
+				ch2 = o2.charAt(i);
+				if (!isNum(ch2)) {
+					break;
+				}
 				num2 = num2 * 10 + ch2 - ZERO;
 			}
 			return num1 - num2;

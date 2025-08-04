@@ -1,6 +1,6 @@
 # [level 2] [3차] 파일명 정렬 - 17686 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/17686?language=java) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/17686) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 08월 04일 21:42:53
+2025년 08월 04일 21:43:02
 
 ### 문제 설명
 
