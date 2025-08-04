@@ -9,23 +9,13 @@ class Solution {
 	private static final String L = "님이 나갔습니다.";
 	private static final String DELIM = " ";
 
-	private static final class Log {
-		int query;
-		String id;
-
-		Log(StringTokenizer st) {
-			this.query = st.nextToken().charAt(0);
-			this.id = st.nextToken();
-		}
-	}
-
 	public String[] solution(String[] record) {
 		int i;
 		int idx;
 		int len;
 		int size;
-		int query;
-		Log[] logs;
+		int[] queries;
+		String[] ids;
 		String[] ans;
 		HashMap<String, String> map;
 		StringTokenizer st;
@@ -33,26 +23,26 @@ class Solution {
 		map = new HashMap<>();
 		len = record.length;
 		size = len;
-		logs = new Log[len];
+		queries = new int[len];
+		ids = new String[len];
 		for (i = 0; i < len; i++) {
 			st = new StringTokenizer(record[i], DELIM, false);
-			logs[i] = new Log(st);
-			query = logs[i].query;
-			if (query == ENTER) {
-				map.put(logs[i].id, st.nextToken());
-			} else if (query == CHANGE) {
-				map.put(logs[i].id, st.nextToken());
+			queries[i] = st.nextToken().charAt(0);
+			ids[i] = st.nextToken();
+			if (queries[i] == ENTER) {
+				map.put(ids[i], st.nextToken());
+			} else if (queries[i] == CHANGE) {
+				map.put(ids[i], st.nextToken());
 				size--;
 			}
 		}
 		ans = new String[size];
 		idx = 0;
 		for (i = 0; i < len; i++) {
-			query = logs[i].query;
-			if (query == ENTER) {
-				ans[idx++] = map.get(logs[i].id) + E;
-			} else if (query == LEAVE) {
-				ans[idx++] = map.get(logs[i].id) + L;
+			if (queries[i] == ENTER) {
+				ans[idx++] = map.get(ids[i]) + E;
+			} else if (queries[i] == LEAVE) {
+				ans[idx++] = map.get(ids[i]) + L;
 			}
 		}
 		return ans;
