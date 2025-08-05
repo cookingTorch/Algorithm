@@ -3,25 +3,18 @@ class Solution {
 
     public int solution(int n) {
         int i;
-        long[] dp0;
-        long[] dp1;
+        long[] dp;
 
-        if (n == 1) {
-            return 1;
+        dp = new long[Math.max(6, n + 1)];
+        dp[0] = 1L;
+        dp[1] = 1L;
+        dp[2] = 3L;
+        dp[3] = 10L;
+        dp[4] = 23L;
+        dp[5] = 62L;
+        for (i = 6; i <= n; i++) {
+            dp[i] = (dp[i - 1] + (dp[i - 2] << 1) + 6 * dp[i - 3] + dp[i - 4] - dp[i - 6] + MOD) % MOD;
         }
-        if (n == 2) {
-            return 3;
-        }
-        dp0 = new long[n + 1];
-        dp1 = new long[n + 1];
-        dp0[0] = 1L;
-        dp0[1] = 1L;
-        dp0[2] = 3L;
-        dp1[2] = 2L;
-        for (i = 3; i <= n; i++) {
-            dp1[i] = (dp1[i - 3] + ((dp0[i - 3] + dp0[i - 2]) << 1)) % MOD;
-            dp0[i] = (dp0[i - 3] + dp0[i - 1] + dp1[i - 1] + dp1[i]) % MOD;
-        }
-        return (int) dp0[n];
+        return (int) dp[n];
     }
 }
