@@ -1,7 +1,7 @@
 import java.util.ArrayDeque;
 
 class Solution {
-    private static final int LOW = 'Z';
+    private static final int Z = 'Z';
     private static final int DIFF = 'a';
     private static final int ALPHA = 26;
     private static final char SPACE = ' ';
@@ -12,11 +12,15 @@ class Solution {
     private static boolean[] visited;
     private static ArrayDeque<String> dq;
 
+    private static boolean isLower(int ch) {
+        return ch > Z;
+    }
+
     private static boolean validate(int idx) {
         if (idx == len) {
             return true;
         }
-        if (str[idx] > LOW) {
+        if (isLower(str[idx])) {
             if (rule1(idx) || rule3(idx)) {
                 return true;
             }
@@ -38,29 +42,29 @@ class Solution {
     }
 
     private static boolean validate(String word, int idx, int ch) {
-        boolean res;
-
         visited[ch - DIFF] = true;
-        res = validate(word, idx);
+        if (validate(word, idx)) {
+            return true;
+        }
         visited[ch - DIFF] = false;
-        return res;
+        return false;
     }
 
     private static boolean validate(String word, int idx, int ch1, int ch2) {
-        boolean res;
-
         visited[ch1 - DIFF] = true;
         visited[ch2 - DIFF] = true;
-        res = validate(word, idx);
+        if (validate(word, idx)) {
+            return true;
+        }
         visited[ch1 - DIFF] = false;
         visited[ch2 - DIFF] = false;
-        return res;
+        return false;
     }
 
     private static boolean rule0(int idx) {
         int i;
 
-        for (i = idx; i < len && str[i] <= LOW; i++);
+        for (i = idx; i < len && !isLower(str[i]); i++);
         if (validate(new String(str, idx, i - idx), i)) {
             return true;
         }
@@ -79,7 +83,7 @@ class Solution {
             return false;
         }
         for (i = idx + 1; i < len && str[i] != ch; i++) {
-            if (str[i] > LOW) {
+            if (isLower(str[i])) {
                 return false;
             }
         }
@@ -98,13 +102,13 @@ class Solution {
             return false;
         }
         ch = str[idx + 1];
-        if (ch <= LOW || visited[ch - DIFF]) {
+        if (!isLower(ch) || visited[ch - DIFF]) {
             return false;
         }
         sb = new StringBuilder();
         sb.append(str[idx]);
         for (i = idx + 1; i < len && str[i] == ch; i++) {
-            if (++i == len || str[i] > LOW) {
+            if (++i == len || isLower(str[i])) {
                 return false;
             }
             sb.append(str[i]);
@@ -123,13 +127,13 @@ class Solution {
         }
         ch1 = str[idx];
         ch2 = str[idx + 2];
-        if (visited[ch1 - DIFF] || str[idx + 1] > LOW || ch2 <= LOW || visited[ch2 - DIFF]) {
+        if (visited[ch1 - DIFF] || isLower(str[idx + 1]) || !isLower(ch2) || visited[ch2 - DIFF]) {
             return false;
         }
         sb = new StringBuilder();
         sb.append(str[idx + 1]);
         for (i = idx + 2; i < len && str[i] == ch2; i++) {
-            if (++i == len || str[i] > LOW) {
+            if (++i == len || isLower(str[i])) {
                 return false;
             }
             sb.append(str[i]);
