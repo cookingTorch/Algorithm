@@ -15,7 +15,7 @@ class Solution {
         prev2 = 1L;
         prev1 = 3L;
         for (i = 2; i <= half; i++) {
-            cur = (4L * prev1 - prev2 + MOD) % MOD;
+            cur = ((prev1 << 2) - prev2 + MOD) % MOD;
             prev2 = prev1;
             prev1 = cur;
         }
