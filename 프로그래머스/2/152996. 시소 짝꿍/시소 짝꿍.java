@@ -9,7 +9,7 @@ class Solution {
         HashMap<Integer, Integer> map;
 
         map = new HashMap<>();
-        cnt = 0;
+        cnt = 0L;
         len = weights.length;
         for (i = 0; i < len; i++) {
             map.put(weights[i], map.getOrDefault(weights[i], 0) + 1);
