@@ -8,32 +8,32 @@ class Solution {
     public int[] solution(int[][] edges) {
         int i;
         int len;
+        int[] out;
         int[] edge;
         int[] result;
-        int[] outDegree;
         boolean[] in;
 
         in = new boolean[SIZE];
-        outDegree = new int[SIZE];
+        out = new int[SIZE];
         len = edges.length;
         for (i = 0; i < len; i++) {
             edge = edges[i];
-            outDegree[edge[0]]++;
+            out[edge[0]]++;
             in[edge[1]] = true;
         }
         result = new int[4];
         for (i = 1; i < SIZE; i++) {
-            if (outDegree[i] > 1) {
+            if (out[i] > 1) {
                 if (in[i]) {
                     result[EIGHT]++;
                 } else {
                     result[START] = i;
                 }
-            } else if (in[i] && outDegree[i] == 0) {
+            } else if (in[i] && out[i] == 0) {
                 result[STICK]++;
             }
         }
-        result[DONUT] = outDegree[result[START]] - result[STICK] - result[EIGHT];
+        result[DONUT] = out[result[START]] - result[STICK] - result[EIGHT];
         return result;
     }
 }
