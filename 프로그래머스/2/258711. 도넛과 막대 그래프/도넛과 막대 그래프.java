@@ -1,34 +1,39 @@
 class Solution {
-    private static final int SIZE = 1000001;
-    
+    private static final int SIZE = 1_000_001;
+    private static final int START = 0;
+    private static final int DONUT = 1;
+    private static final int STICK = 2;
+    private static final int EIGHT = 3;
+
     public int[] solution(int[][] edges) {
         int i;
-        int max;
+        int len;
+        int[] edge;
         int[] result;
         int[] outDegree;
         boolean[] in;
-        
-        max = 0;
+
         in = new boolean[SIZE];
         outDegree = new int[SIZE];
-        for (int[] edge : edges) {
+        len = edges.length;
+        for (i = 0; i < len; i++) {
+            edge = edges[i];
             outDegree[edge[0]]++;
             in[edge[1]] = true;
-            max = Math.max(max, Math.max(edge[0], edge[1]));
         }
         result = new int[4];
-        for (i = 1; i <= max; i++) {
+        for (i = 1; i < SIZE; i++) {
             if (outDegree[i] > 1) {
                 if (in[i]) {
-                    result[3]++;
+                    result[EIGHT]++;
                 } else {
-                    result[0] = i;
+                    result[START] = i;
                 }
             } else if (in[i] && outDegree[i] == 0) {
-                result[2]++;
+                result[STICK]++;
             }
         }
-        result[1] = outDegree[result[0]] - result[2] - result[3];
+        result[DONUT] = outDegree[result[START]] - result[STICK] - result[EIGHT];
         return result;
-    } 
+    }
 }
