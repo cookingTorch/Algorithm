@@ -1,12 +1,13 @@
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 class Solution {
 	private static final int IN = 2;
 	private static final int DIFF = '0';
 
-	private static final class Car implements Comparable<Car> {
+	private static final class Car {
 		private static final int NIL = -1;
 		private static final int MAX = 23 * 60 + 59;
 
@@ -16,13 +17,11 @@ class Solution {
 		private static int fee2;
 
 		int in;
-		int num;
 		int time;
 
-		Car(int num, int in) {
+		Car(int in) {
 			this.time = 0;
 			this.in = in;
-			this.num = num;
 		}
 
 		void in(int in) {
@@ -43,11 +42,6 @@ class Solution {
 			}
 			return fee1 + ((time - time1 - 1) / time2 + 1) * fee2;
 		}
-
-		@Override
-		public int compareTo(Car o) {
-			return num - o.num;
-		}
 	}
 
 	private static int toMin(String time) {
@@ -62,15 +56,14 @@ class Solution {
 		int size;
 		int inOut;
 		int[] ans;
-		Car[] arr;
-		HashMap<Integer, Car> map;
+		TreeMap<Integer, Car> map;
 		StringTokenizer st;
 
 		Car.time1 = fees[0];
 		Car.fee1 = fees[1];
 		Car.time2 = fees[2];
 		Car.fee2 = fees[3];
-		map = new HashMap<>();
+		map = new TreeMap<>();
 		len = records.length;
 		for (i = 0; i < len; i++) {
 			st = new StringTokenizer(records[i]);
@@ -81,22 +74,17 @@ class Solution {
 				if (map.containsKey(num)) {
 					map.get(num).in(time);
 				} else {
-					map.put(num, new Car(num, time));
+					map.put(num, new Car(time));
 				}
 			} else {
 				map.get(num).out(time);
 			}
 		}
 		size = map.size();
-		arr = new Car[size];
+		ans = new int[size];
 		i = 0;
 		for (Car car : map.values()) {
-			arr[i++] = car;
-		}
-		Arrays.sort(arr);
-		ans = new int[size];
-		for (i = 0; i < size; i++) {
-			ans[i] = arr[i].calc();
+			ans[i++] = car.calc();
 		}
 		return ans;
 	}
