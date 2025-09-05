@@ -48,7 +48,7 @@ class Solution {
 			}
 		}
 		ans = 0;
-		bitField = 1 << usrCnt;
+		bitField = ((1 << banCnt) - 1 << usrCnt - banCnt) + 1;
 		dp = new boolean[bitField];
 		dp[0] = true;
 		for (i = 0; i < bitField; i++) {
