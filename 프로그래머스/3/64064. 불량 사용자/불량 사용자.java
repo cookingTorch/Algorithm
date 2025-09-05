@@ -56,7 +56,7 @@ class Solution {
 				idx = Integer.bitCount(i);
 				if (idx == banCnt) {
 					ans++;
-				} else if (idx < banCnt) {
+				} else {
 					cnt = cnts[idx];
 					for (j = 0; j < cnt; j++) {
 						dp[i | usrs[idx][j]] = true;
