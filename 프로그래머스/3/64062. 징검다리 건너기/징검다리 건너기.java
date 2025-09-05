@@ -19,7 +19,11 @@ class Solution {
 				rock = stack.pollFirst();
 				if (i - stack.peekFirst()[0] - 1 >= k) {
 					min = Math.min(min, rock[1]);
+                    break;
 				}
+			}
+            while (stack.peekFirst()[1] <= stones[i]) {
+				rock = stack.pollFirst();
 			}
 			stack.addFirst(new int[] {i, stones[i]});
 		}
@@ -27,6 +31,7 @@ class Solution {
 			rock = stack.pollFirst();
 			if (len - stack.peekFirst()[0] - 1 >= k) {
 				min = Math.min(min, rock[1]);
+                break;
 			}
 		}
 		return min;
