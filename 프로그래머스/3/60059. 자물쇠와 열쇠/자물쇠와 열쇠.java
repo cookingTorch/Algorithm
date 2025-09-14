@@ -101,7 +101,7 @@ class Solution {
 		}
 		pat = new int[n];
 		txt = new int[len];
-		lps = new int[len];
+		lps = new int[n];
 		sum = m + n;
 		xor = (1 << n) - 1;
 		for (idx = 0; idx < 4; idx++) {
