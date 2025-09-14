@@ -1,93 +1,90 @@
+import java.util.ArrayDeque;
+
 class Solution {
-    private static final class Edge {
-        int to;
-        Edge next;
+	private static final int THR = 64;
 
-        Edge(int to, Edge next) {
-            this.to = to;
-            this.next = next;
-        }
-    }
+	private static final class Edge {
+		int to;
+		Edge next;
 
-    private static final class Node {
-        private long arr1;
-        private long arr2;
+		Edge(int to, Edge next) {
+			this.to = to;
+			this.next = next;
+		}
+	}
 
-        Node(int node) {
-            if (node > 64) {
-                arr2 |= (1L << node - 64);
-            } else {
-                arr1 |= (1L << node - 1);
-            }
-        }
+	private static void topo(int n, Edge[] adj, int[] degree, ArrayDeque<Integer> q, long[][] parents) {
+		int i;
+		int to;
+		int cur;
+		Edge edge;
 
-        void merge(Node o) {
-            arr1 |= o.arr1;
-            arr2 |= o.arr2;
-        }
+		for (i = 1; i <= n; i++) {
+			if (degree[i] == 0) {
+				q.addLast(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			cur = q.pollFirst();
+			if (cur < THR) {
+				for (edge = adj[cur]; edge != null; edge = edge.next) {
+					to = edge.to;
+					parents[to][0] |= parents[cur][0] | 1L << cur;
+					parents[to][1] |= parents[cur][1];
+					if (--degree[to] == 0) {
+						q.addLast(to);
+					}
+				}
+			} else {
+				for (edge = adj[cur]; edge != null; edge = edge.next) {
+					to = edge.to;
+					parents[to][0] |= parents[cur][0];
+					parents[to][1] |= parents[cur][1] | 1L << cur - THR;
+					if (--degree[to] == 0) {
+						q.addLast(to);
+					}
+				}
+			}
+		}
+	}
 
-        int getCnt() {
-            return Long.bitCount(arr1) + Long.bitCount(arr2);
-        }
-    }
+	public int solution(int n, int[][] results) {
+		int u;
+		int v;
+		int i;
+		int cnt;
+		int[] in;
+		int[] out;
+		long[][] lower;
+		long[][] higher;
+		Edge[] forward;
+		Edge[] backward;
+		ArrayDeque<Integer> q;
 
-    Edge[] adj;
-    Edge[] adjR;
-    Node[] dp;
-    Node[] dpR;
-
-    private Node getDp(int node) {
-        Node res;
-        Edge edge;
-
-        if (dp[node] != null) {
-            return dp[node];
-        }
-        res = new Node(node);
-        for (edge = adj[node]; edge != null; edge = edge.next) {
-            res.merge(getDp(edge.to));
-        }
-        return dp[node] = res;
-    }
-
-    private Node getDpR(int node) {
-        Node res;
-        Edge edge;
-
-        if (dpR[node] != null) {
-            return dpR[node];
-        }
-        res = new Node(node);
-        for (edge = adjR[node]; edge != null; edge = edge.next) {
-            res.merge(getDpR(edge.to));
-        }
-        return dpR[node] = res;
-    }
-
-    public int solution(int n, int[][] results) {
-        int u;
-        int v;
-        int i;
-        int len;
-        int ans;
-
-        adj = new Edge[n + 1];
-        adjR = new Edge[n + 1];
-        len = results.length;
-        for (i = 0; i < len; i++) {
-            u = results[i][0];
-            v = results[i][1];
-            adj[u] = new Edge(v, adj[u]);
-            adjR[v] = new Edge(u, adjR[v]);
-        }
-        dp = new Node[n + 1];
-        dpR = new Node[n + 1];
-        ans = 0;
-        for (i = 1; i <= n; i++) {
-            if (getDp(i).getCnt() + getDpR(i).getCnt() == n + 1) {
-                ans++;
-            }
-        }
-        return ans;
-    }
+		forward = new Edge[n + 1];
+		backward = new Edge[n + 1];
+		in = new int[n + 1];
+		out = new int[n + 1];
+		i = results.length;
+		while (i-- > 0) {
+			u = results[i][0];
+			v = results[i][1];
+			forward[u] = new Edge(v, forward[u]);
+			backward[v] = new Edge(u, backward[v]);
+			out[u]++;
+			in[v]++;
+		}
+		higher = new long[n + 1][2];
+		lower = new long[n + 1][2];
+		q = new ArrayDeque<>();
+		topo(n, forward, in, q, higher);
+		topo(n, backward, out, q, lower);
+		cnt = 0;
+		for (i = 1; i <= n; i++) {
+			if (Long.bitCount(higher[i][0]) + Long.bitCount(higher[i][1]) + Long.bitCount(lower[i][0]) + Long.bitCount(lower[i][1]) == n - 1) {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
 }
