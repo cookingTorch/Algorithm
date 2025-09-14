@@ -3,34 +3,6 @@ class Solution {
 	private int xor;
 	private int[] lps;
 
-	private boolean kmp(int[] pat, int patLen, int[] txt, int txtLen) {
-		int i;
-		int j;
-
-		for (i = 1, j = 0; i < patLen; ) {
-			if (pat[i] == pat[j]) {
-				lps[i++] = ++j;
-			} else if (j != 0) {
-				j = lps[j - 1];
-			} else {
-				lps[i++] = 0;
-			}
-		}
-		for (i = 0, j = 0; i < txtLen; ) {
-			if (txt[i] == pat[j]) {
-				if (++j == patLen) {
-					return true;
-				}
-				i++;
-			} else if (j != 0) {
-				j = lps[j - 1];
-			} else {
-				i++;
-			}
-		}
-		return false;
-	}
-
 	private void buildPat(int[][] lock, int[] pat, int idx) {
 		int i;
 		int j;
@@ -74,6 +46,34 @@ class Solution {
 				}
 				break;
 		}
+	}
+
+	private boolean kmp(int[] pat, int patLen, int[] txt, int txtLen) {
+		int i;
+		int j;
+
+		for (i = 1, j = 0; i < patLen; ) {
+			if (pat[i] == pat[j]) {
+				lps[i++] = ++j;
+			} else if (j != 0) {
+				j = lps[j - 1];
+			} else {
+				lps[i++] = 0;
+			}
+		}
+		for (i = 0, j = 0; i < txtLen; ) {
+			if (txt[i] == pat[j]) {
+				if (++j == patLen) {
+					return true;
+				}
+				i++;
+			} else if (j != 0) {
+				j = lps[j - 1];
+			} else {
+				i++;
+			}
+		}
+		return false;
 	}
 
 	public boolean solution(int[][] key, int[][] lock) {
