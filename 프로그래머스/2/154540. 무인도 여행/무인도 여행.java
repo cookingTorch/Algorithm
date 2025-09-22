@@ -23,10 +23,9 @@ class Solution {
 		for (i = 0; i < 4; i++) {
 			nx = x + dx[i];
 			ny = y + dy[i];
-			if (nx < 0 || nx >= r || ny < 0 || ny >= c || map[nx][ny] == SEA) {
-				continue;
+			if (0 <= nx && nx < r && 0 <= ny && ny < c && map[nx][ny] != SEA) {
+				res += dfs(nx, ny);
 			}
-			res += dfs(nx, ny);
 		}
 		return res;
 	}
