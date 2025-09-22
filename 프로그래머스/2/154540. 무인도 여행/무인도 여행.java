@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 
 class Solution {
 	private static final int DIFF = '0';
@@ -52,7 +51,6 @@ class Solution {
 		if (list.isEmpty()) {
 			return FAIL;
 		}
-		Collections.sort(list);
-		return list.stream().mapToInt(x -> x).toArray();
+		return list.stream().mapToInt(x -> x).sorted().toArray();
 	}
 }
