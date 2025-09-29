@@ -7,7 +7,7 @@ class Solution {
 		PriorityQueue<Integer> pq;
 
 		len = enemy.length;
-		pq = new PriorityQueue<>(k, (o1, o2) -> o2 - o1);
+		pq = new PriorityQueue<>(len, (o1, o2) -> o2 - o1);
 		for (i = 0; i < len; i++) {
 			pq.offer(enemy[i]);
 			if ((n -= enemy[i]) < 0) {
