@@ -3,7 +3,9 @@
 
 using namespace std;
 
-int roots[201];
+constexpr int MAX_N = 200;
+
+int roots[MAX_N + 1];
 
 int find(int v) {
     if (roots[v] <= 0) {
