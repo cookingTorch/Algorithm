@@ -12,12 +12,18 @@ vector<int> solution(int n, int s) {
     vector<int> ans;
 
     if (n > s) {
-        ans.resize(1, FAIL);
+        ans.emplace_back(FAIL);
         return ans;
     }
-    ans.resize(n, (s - 1) / n);
-    for (i = n - ((s - 1) % n + 1); i < n; i++) {
-        ans[i]++;
+    ans.reserve(n);
+    num = (s - 1) / n;
+    thr = n - ((s - 1) % n + 1);
+    for (i = 0; i < thr; i++) {
+        ans.emplace_back(num);
+    }
+    num++;
+    for (; i < n; i++) {
+        ans.emplace_back(num);
     }
     return ans;
 }
