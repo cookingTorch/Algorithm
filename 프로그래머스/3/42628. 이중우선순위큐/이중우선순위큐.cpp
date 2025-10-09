@@ -37,7 +37,7 @@ vector<int> solution(vector<string> operations) {
     Node* node;
     Node* max_nil;
     Node* min_nil;
-    vector<int> ans;
+    vector<int> ans(2);
     priority_queue<Node*, vector<Node*>, max_cmp> max_pq;
     priority_queue<Node*, vector<Node*>, min_cmp> min_pq;
     stringstream ss;
@@ -77,15 +77,12 @@ vector<int> solution(vector<string> operations) {
     while ((node = max_pq.top())->del) {
         max_pq.pop();
     }
-    if (node == max_nil) {
-        ans.emplace_back(0);
-        ans.emplace_back(0);
-    } else {
-        ans.emplace_back(node->num);
+    if (node != max_nil) {
+        ans[0] = node->num;
         while ((node = min_pq.top())->del) {
             min_pq.pop();
         }
-        ans.emplace_back(node->num);
+        ans[1] = node->num;
     }
     return ans;
 }
