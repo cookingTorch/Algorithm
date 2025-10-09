@@ -1,10 +1,10 @@
 # [level 3] 최고의 집합 - 12938 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12938) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12938?language=cpp) 
 
 ### 성능 요약
 
-메모리: 73.8 MB, 시간: 0.25 ms
+메모리: 5.5 MB, 시간: 2.24 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 05월 13일 11:04:11
+2025년 10월 09일 18:34:30
 
 ### 문제 설명
 
