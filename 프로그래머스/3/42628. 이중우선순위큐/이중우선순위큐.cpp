@@ -56,36 +56,36 @@ vector<int> solution(vector<string> operations) {
             max_pq.emplace(node);
         } else {
             if (num == MAX) {
-                while (max_pq.top()->del) {
+                while ((node = max_pq.top())->del) {
                     max_pq.pop();
                 }
-                if (max_pq.top() != max_nil) {
-                    max_pq.top()->del = true;
+                if (node != max_nil) {
+                    node->del = true;
                     max_pq.pop();
                 }
             } else {
-                while (min_pq.top()->del) {
+                while ((node = min_pq.top())->del) {
                     min_pq.pop();
                 }
-                if (min_pq.top() != min_nil) {
-                    min_pq.top()->del = true;
+                if (node != min_nil) {
+                    node->del = true;
                     min_pq.pop();
                 }
             }
         }
     }
-    while (max_pq.top()->del) {
+    while ((node = max_pq.top())->del) {
         max_pq.pop();
     }
-    if (max_pq.top() == max_nil) {
+    if (node == max_nil) {
         ans.emplace_back(0);
         ans.emplace_back(0);
     } else {
-        ans.emplace_back(max_pq.top()->num);
-        while (min_pq.top()->del) {
+        ans.emplace_back(node->num);
+        while ((node = min_pq.top())->del) {
             min_pq.pop();
         }
-        ans.emplace_back(min_pq.top()->num);
+        ans.emplace_back(node->num);
     }
     return ans;
 }
