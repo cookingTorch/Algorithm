@@ -6,32 +6,32 @@ class Solution {
         int c;
         int i;
         int j;
+        int col;
+        int row;
         int cnt;
-        int cur;
         int mask;
-        int first;
 
         r = beginning.length;
         c = beginning[0].length;
         cnt = 0;
-        first = 0;
+        col = 0;
         for (i = 0; i < c; i++) {
             if (beginning[0][i] != target[0][i]) {
-                first |= 1 << i;
+                col |= 1 << i;
                 cnt++;
             }
         }
         mask = (1 << c) - 1;
         for (i = 1; i < r; i++) {
-            cur = first;
+            row = col;
             for (j = 0; j < c; j++) {
                 if (beginning[i][j] != target[i][j]) {
-                    cur ^= 1 << j;
+                    row ^= 1 << j;
                 }
             }
-            if (cur == mask) {
+            if (row == mask) {
                 cnt++;
-            } else if (cur != 0) {
+            } else if (row != 0) {
                 return FAIL;
             }
         }
