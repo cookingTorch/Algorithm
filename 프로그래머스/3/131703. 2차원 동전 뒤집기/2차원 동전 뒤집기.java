@@ -7,8 +7,7 @@ class Solution {
         int i;
         int j;
         int res;
-        int row;
-        int col;
+        int cnt;
         int mask;
         int first;
         int[] src;
@@ -16,11 +15,12 @@ class Solution {
         r = beginning.length;
         c = beginning[0].length;
         src = new int[r];
-        col = 0;
+        cnt = 0;
+        first = 0;
         for (i = 0; i < c; i++) {
             if (beginning[0][i] != target[0][i]) {
-                src[0] |= 1 << i;
-                col++;
+                first |= 1 << i;
+                cnt++;
             }
         }
         for (i = 1; i < r; i++) {
@@ -30,17 +30,15 @@ class Solution {
                 }
             }
         }
-        row = 0;
-        first = src[0];
         mask = (1 << c) - 1;
         for (i = 1; i < r; i++) {
             res = src[i] ^ first;
             if (res == mask) {
-                row++;
+                cnt++;
             } else if (res != 0) {
                 return FAIL;
             }
         }
-        return Math.min(row + col, r - row + c - col);
+        return Math.min(cnt, r + c - cnt);
     }
 }
