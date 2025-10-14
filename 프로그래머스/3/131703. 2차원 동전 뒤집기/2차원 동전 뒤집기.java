@@ -6,15 +6,13 @@ class Solution {
         int c;
         int i;
         int j;
-        int res;
         int cnt;
+        int cur;
         int mask;
         int first;
-        int[] src;
 
         r = beginning.length;
         c = beginning[0].length;
-        src = new int[r];
         cnt = 0;
         first = 0;
         for (i = 0; i < c; i++) {
@@ -23,19 +21,17 @@ class Solution {
                 cnt++;
             }
         }
-        for (i = 1; i < r; i++) {
-            for (j = 0; j < c; j++) {
-                if (beginning[i][j] != target[i][j]) {
-                    src[i] |= 1 << j;
-                }
-            }
-        }
         mask = (1 << c) - 1;
         for (i = 1; i < r; i++) {
-            res = src[i] ^ first;
-            if (res == mask) {
+            cur = first;
+            for (j = 0; j < c; j++) {
+                if (beginning[i][j] != target[i][j]) {
+                    cur ^= 1 << j;
+                }
+            }
+            if (cur == mask) {
                 cnt++;
-            } else if (res != 0) {
+            } else if (cur != 0) {
                 return FAIL;
             }
         }
