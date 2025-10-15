@@ -3,22 +3,21 @@ class Solution {
 
     public int solution(int n) {
         int i;
-        int half;
-        long cur;
-        long prev1;
-        long prev2;
-
-        if ((n & 1) == 1) {
+        int j;
+        long[] dp;
+        
+        if ((n & 1) != 0) {
             return 0;
         }
-        half = n >>> 1;
-        prev2 = 1L;
-        prev1 = 3L;
-        for (i = 2; i <= half; i++) {
-            cur = ((prev1 << 2) - prev2 + MOD) % MOD;
-            prev2 = prev1;
-            prev1 = cur;
+        dp = new long[n + 1];
+        dp[0] = 1L;
+        dp[2] = 3L;
+        for (i = 4; i <= n; i += 2) {
+            dp[i] = (3L * dp[i - 2]) % MOD;
+            for (j = i - 4; j >= 0; j -= 2) {
+                dp[i] = (dp[i] + (dp[j] << 1)) % MOD;
+            }
         }
-        return (int) prev1;
+        return (int) dp[n];
     }
 }
