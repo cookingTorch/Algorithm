@@ -1,21 +1,28 @@
 class Solution {
     public long solution(int cap, int n, int[] deliveries, int[] pickups) {
-        int i;
-        int cnt;
-        int pickupCap;
-        int deliveryCap;
+        int pIdx;
+        int dIdx;
+        int remain;
         long dist;
-        
-        for (dist = 0L, deliveryCap = 0, pickupCap = 0, i = n - 1; i >= 0; i--) {
-            deliveryCap -= deliveries[i];
-            pickupCap -= pickups[i];
-            if (deliveryCap < 0 || pickupCap < 0) {
-                cnt = (-Math.min(deliveryCap, pickupCap) + cap - 1) / cap;
-                deliveryCap += cnt * cap;
-                pickupCap += cnt * cap;
-                dist += (i + 1) * cnt;
+
+        for (dIdx = n - 1; dIdx >= 0 && deliveries[dIdx] == 0; dIdx--);
+        for (pIdx = n - 1; pIdx >= 0 && pickups[pIdx] == 0; pIdx--);
+        dist = 0;
+        while (dIdx >= 0 || pIdx >= 0) {
+            dist += Math.max(dIdx, pIdx) + 1 << 1;
+            for (remain = cap; dIdx >= 0; remain -= deliveries[dIdx--]) {
+                if (deliveries[dIdx] > remain) {
+                    deliveries[dIdx] -= remain;
+                    break;
+                }
+            }
+            for (remain = cap; pIdx >= 0; remain -= pickups[pIdx--]) {
+                if (pickups[pIdx] > remain) {
+                    pickups[pIdx] -= remain;
+                    break;
+                }
             }
         }
-        return dist << 1;
+        return dist;
     }
 }
