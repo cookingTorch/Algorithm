@@ -1,86 +1,115 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.StringTokenizer;
 
 class Solution {
-    private static final int CNT = 4;
-    private static final int MAX = 1 << CNT;
-    private static final char WILD = '-';
-    private static final char SPACE = ' ';
-    private static final String AND = " and ";
-    private static final String DELIM = " ";
+	private static final int C0 = 'c';
+	private static final int J0 = 'j';
+	private static final int P0 = 'p';
+	private static final int B1 = 1 << 7 | 'b';
+	private static final int F1 = 1 << 7 | 'f';
+	private static final int J2 = 2 << 7 | 'j';
+	private static final int S2 = 2 << 7 | 's';
+	private static final int C3 = 3 << 7 | 'c';
+	private static final int P3 = 3 << 7 | 'p';
+	private static final int SIZE = 4 * 3 * 3 * 3;
+	private static final int RADIX = 10;
 
-    private static int count(ArrayList<Integer> list, int score) {
-        int l;
-        int r;
-        int mid;
+	private static int score;
+	private static int[] idxs;
+	private static ArrayList<Integer>[] arr;
 
-        l = 0;
-        r = list.size();
-        while (l < r) {
-            mid = l + r >>> 1;
-            if (list.get(mid) < score) {
-                l = mid + 1;
-            } else {
-                r = mid;
-            }
-        }
-        return list.size() - r;
-    }
+	private static int getIdx(int i, char key) {
+		return switch (i << 7 | key) {
+			case C0, B1, J2, C3 -> 1;
+			case J0, F1, S2, P3 -> 2;
+			case P0 -> 3;
+			default -> 0;
+		};
+	}
 
-    public int[] solution(String[] info, String[] query) {
-        int i;
-        int j;
-        int idx;
-        int size;
-        int mask;
-        int score;
-        int[] ans;
-        String str;
-        String key;
-        String[] arr;
-        HashMap<String, ArrayList<Integer>> map;
-        StringBuilder sb;
-        StringTokenizer st;
+	private static int next(int i, char key) {
+		return switch (i << 7 | key) {
+			case C0 -> 4;
+			case J0 -> 5;
+			case P3 -> 6;
+			case P0, J2, S2 -> 7;
+			case B1, C3 -> 8;
+			case F1 -> 9;
+			default -> 2;
+		};
+	}
 
-        arr = new String[CNT];
-        map = new HashMap<>();
-        size = info.length;
-        for (i = 0; i < size; i++) {
-            str = info[i];
-            st = new StringTokenizer(str, DELIM, false);
-            for (j = 0; j < CNT; j++) {
-                arr[j] = st.nextToken();
-            }
-            score = Integer.parseInt(st.nextToken());
-            for (mask = 0; mask < MAX; mask++) {
-                sb = new StringBuilder();
-                sb.append((mask & 1) == 0 ? WILD : arr[0]);
-                for (j = 1; j < CNT; j++) {
-                    sb.append(AND).append((mask & (1 << j)) == 0 ? WILD : arr[j]);
-                }
-                key = sb.toString();
-                if (!map.containsKey(key)) {
-                    map.put(key, new ArrayList<>());
-                }
-                map.get(key).add(score);
-            }
-        }
-        for (ArrayList<Integer> list : map.values()) {
-            Collections.sort(list);
-        }
-        size = query.length;
-        ans = new int[size];
-        for (i = 0; i < size; i++) {
-            str = query[i];
-            idx = str.lastIndexOf(SPACE);
-            key = str.substring(0, idx);
-            score = Integer.parseInt(str.substring(idx + 1));
-            if (map.containsKey(key)) {
-                ans[i] = count(map.get(key), score);
-            }
-        }
-        return ans;
-    }
+	private static void dfs(int num, int depth) {
+		if (depth == 4) {
+			arr[num].add(score);
+			return;
+		}
+		num *= 3;
+		dfs(num, depth + 1);
+		dfs(num + idxs[depth], depth + 1);
+	}
+
+	private static int count(ArrayList<Integer> list, int score) {
+		int l;
+		int r;
+		int mid;
+
+		l = 0;
+		r = list.size();
+		while (l < r) {
+			mid = l + r >>> 1;
+			if (list.get(mid) < score) {
+				l = mid + 1;
+			} else {
+				r = mid;
+			}
+		}
+		return list.size() - r;
+	}
+
+	public int[] solution(String[] info, String[] query) {
+		char ch;
+		int i;
+		int j;
+		int len;
+		int cur;
+		int idx;
+		int[] ans;
+		String str;
+
+		idxs = new int[4];
+		arr = new ArrayList[SIZE];
+		for (i = 0; i < SIZE; i++) {
+			arr[i] = new ArrayList<>();
+		}
+		len = info.length;
+		for (i = 0; i < len; i++) {
+			str = info[i];
+			cur = 0;
+			for (j = 0; j < 4; j++) {
+				ch = str.charAt(cur);
+				idxs[j] = getIdx(j, ch);
+				cur += next(j, ch);
+			}
+			score = Integer.parseInt(str, cur, str.length(), RADIX);
+			dfs(0, 0);
+		}
+		for (i = 0; i < SIZE; i++) {
+			Collections.sort(arr[i]);
+		}
+		len = query.length;
+		ans = new int[len];
+		for (i = 0; i < len; i++) {
+			str = query[i];
+			idx = 0;
+			cur = 0;
+			for (j = 0; j < 4; j++) {
+				ch = str.charAt(cur);
+				idx = idx * 3 + getIdx(j, ch);
+				cur += next(j, ch) + 4;
+			}
+			ans[i] = count(arr[idx], Integer.parseInt(str, cur - 4, str.length(), RADIX));
+		}
+		return ans;
+	}
 }
