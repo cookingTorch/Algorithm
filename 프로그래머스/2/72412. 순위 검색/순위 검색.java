@@ -17,20 +17,20 @@ class Solution {
 
 	private static int score;
 	private static int[] idxs;
-	private static int[][] arr;
+	private static int[][] cnt;
 
 	private static int getIdx(int i, char key) {
 		return switch (i << 7 | key) {
 			case C0, B1, J2, C3 -> 0;
 			case J0, F1, S2, P3 -> 1;
 			case P0 -> 2;
-			default -> 3;
+			default -> WILD;
 		};
 	}
 
 	private static int dfs(int idx, int depth) {
 		if (depth == 4) {
-			return arr[score][idx];
+			return cnt[score][idx];
 		}
 		idx <<= 1;
 		if (idxs[depth] == WILD) {
@@ -48,7 +48,7 @@ class Solution {
 		int[] ans;
 		StringTokenizer st;
 
-		arr = new int[MAX + 1][SIZE];
+		cnt = new int[MAX + 1][SIZE];
 		len = info.length;
 		for (i = 0; i < len; i++) {
 			st = new StringTokenizer(info[i], DELIM, false);
@@ -56,11 +56,11 @@ class Solution {
 			for (j = 0; j < 4; j++) {
 				idx = (idx << 1) | getIdx(j, st.nextToken().charAt(0));
 			}
-			arr[Integer.parseInt(st.nextToken())][idx]++;
+			cnt[Integer.parseInt(st.nextToken())][idx]++;
 		}
 		for (i = MAX - 1; i > 0; i--) {
 			for (j = 0; j < SIZE; j++) {
-				arr[i][j] += arr[i + 1][j];
+				cnt[i][j] += cnt[i + 1][j];
 			}
 		}
 		len = query.length;
