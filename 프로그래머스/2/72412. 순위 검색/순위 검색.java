@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Collections;
-
 class Solution {
 	private static final int C0 = 'c';
 	private static final int J0 = 'j';
@@ -11,19 +8,21 @@ class Solution {
 	private static final int S2 = 2 << 7 | 's';
 	private static final int C3 = 3 << 7 | 'c';
 	private static final int P3 = 3 << 7 | 'p';
-	private static final int SIZE = 4 * 3 * 3 * 3;
+	private static final int MAX = 100_000;
+	private static final int SIZE = 3 * 2 * 2 * 2;
+	private static final int WILD = 3;
 	private static final int RADIX = 10;
 
 	private static int score;
 	private static int[] idxs;
-	private static ArrayList<Integer>[] arr;
+	private static int[][] arr;
 
 	private static int getIdx(int i, char key) {
 		return switch (i << 7 | key) {
-			case C0, B1, J2, C3 -> 1;
-			case J0, F1, S2, P3 -> 2;
-			case P0 -> 3;
-			default -> 0;
+			case C0, B1, J2, C3 -> 0;
+			case J0, F1, S2, P3 -> 1;
+			case P0 -> 2;
+			default -> 3;
 		};
 	}
 
@@ -39,32 +38,16 @@ class Solution {
 		};
 	}
 
-	private static void dfs(int idx, int depth) {
+	private static int dfs(int idx, int depth) {
 		if (depth == 4) {
-			arr[idx].add(score);
-			return;
+			return arr[score][idx];
 		}
-		idx *= 3;
-		dfs(idx, depth + 1);
-		dfs(idx + idxs[depth], depth + 1);
-	}
-
-	private static int count(ArrayList<Integer> list, int score) {
-		int l;
-		int r;
-		int mid;
-
-		l = 0;
-		r = list.size();
-		while (l < r) {
-			mid = l + r >>> 1;
-			if (list.get(mid) < score) {
-				l = mid + 1;
-			} else {
-				r = mid;
-			}
+		idx <<= 1;
+		if (idxs[depth] == WILD) {
+			return dfs(idx, depth + 1) + dfs(idx + 1, depth + 1);
+		} else {
+			return dfs(idx + idxs[depth], depth + 1);
 		}
-		return list.size() - r;
 	}
 
 	public int[] solution(String[] info, String[] query) {
@@ -77,38 +60,41 @@ class Solution {
 		int[] ans;
 		String str;
 
-		arr = new ArrayList[SIZE];
-		for (i = 0; i < SIZE; i++) {
-			arr[i] = new ArrayList<>();
-		}
+		arr = new int[MAX + 1][SIZE];
 		len = info.length;
-        idxs = new int[4];
 		for (i = 0; i < len; i++) {
 			str = info[i];
-			cur = 0;
-			for (j = 0; j < 4; j++) {
-				ch = str.charAt(cur);
-				idxs[j] = getIdx(j, ch);
-				cur += next(j, ch);
-			}
-			score = Integer.parseInt(str, cur, str.length(), RADIX);
-			dfs(0, 0);
-		}
-		for (i = 0; i < SIZE; i++) {
-			Collections.sort(arr[i]);
-		}
-		len = query.length;
-		ans = new int[len];
-		for (i = 0; i < len; i++) {
-			str = query[i];
 			idx = 0;
 			cur = 0;
 			for (j = 0; j < 4; j++) {
 				ch = str.charAt(cur);
-				idx = idx * 3 + getIdx(j, ch);
+				idx = (idx << 1) + getIdx(j, ch);
+				cur += next(j, ch);
+			}
+			arr[Integer.parseInt(str, cur, str.length(), RADIX)][idx]++;
+		}
+		for (i = MAX - 1; i > 0; i--) {
+			for (j = 0; j < SIZE; j++) {
+				arr[i][j] += arr[i + 1][j];
+			}
+		}
+		len = query.length;
+		ans = new int[len];
+		idxs = new int[4];
+		for (i = 0; i < len; i++) {
+			str = query[i];
+			cur = 0;
+			for (j = 0; j < 4; j++) {
+				ch = str.charAt(cur);
+				idxs[j] = getIdx(j, ch);
 				cur += next(j, ch) + 4;
 			}
-			ans[i] = count(arr[idx], Integer.parseInt(str, cur - 4, str.length(), RADIX));
+			score = Integer.parseInt(str, cur - 4, str.length(), RADIX);
+			if (idxs[0] == WILD) {
+				ans[i] = dfs(0, 1) + dfs(1, 1) + dfs(2, 1);
+			} else {
+				ans[i] = dfs(idxs[0], 1);
+			}
 		}
 		return ans;
 	}
