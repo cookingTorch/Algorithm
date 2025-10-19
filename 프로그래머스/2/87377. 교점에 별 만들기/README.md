@@ -1,6 +1,6 @@
 # [level 2] 교점에 별 만들기 - 87377 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/87377) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/87377?gad_source=1&gad_campaignid=22366107751&gbraid=0AAAAAC_c4nDviw1zxzEC1_KiTexSJ-i1g&gclid=Cj0KCQjw9czHBhCyARIsAFZlN8Stv_Cp5et8gwPTj_Tm7YBEkE6BWBZCCZVEmm5V9GWl2SC0-IP4u7AaArnEEALw_wcB) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 08월 11일 13:19:24
+2025년 10월 19일 23:03:25
 
 ### 문제 설명
 
