@@ -39,14 +39,14 @@ class Solution {
 		};
 	}
 
-	private static void dfs(int num, int depth) {
+	private static void dfs(int idx, int depth) {
 		if (depth == 4) {
-			arr[num].add(score);
+			arr[idx].add(score);
 			return;
 		}
-		num *= 3;
-		dfs(num, depth + 1);
-		dfs(num + idxs[depth], depth + 1);
+		idx *= 3;
+		dfs(idx, depth + 1);
+		dfs(idx + idxs[depth], depth + 1);
 	}
 
 	private static int count(ArrayList<Integer> list, int score) {
@@ -77,12 +77,12 @@ class Solution {
 		int[] ans;
 		String str;
 
-		idxs = new int[4];
 		arr = new ArrayList[SIZE];
 		for (i = 0; i < SIZE; i++) {
 			arr[i] = new ArrayList<>();
 		}
 		len = info.length;
+        idxs = new int[4];
 		for (i = 0; i < len; i++) {
 			str = info[i];
 			cur = 0;
