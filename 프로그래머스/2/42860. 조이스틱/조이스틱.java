@@ -7,13 +7,16 @@ class Solution {
 		int min;
 		int len;
 		int last;
+		int move;
 		char[] str;
-		
+
 		str = name.toCharArray();
 		len = str.length;
+		move = 0;
 		last = 0;
 		for (i = 0; i < len; i++) {
 			if (str[i] != A) {
+				move += Math.min(str[i] - A, LEN - str[i]);
 				last = i;
 				break;
 			}
@@ -24,16 +27,12 @@ class Solution {
 		min = len - last;
 		for (++i; i < len; i++) {
 			if (str[i] != A) {
+				move += Math.min(str[i] - A, LEN - str[i]);
 				min = Math.min(min, Math.min((last << 1) + len - i, ((len - i) << 1) + last));
 				last = i;
 			}
 		}
 		min = Math.min(min, last);
-		for (i = 0; i < len; i++) {
-			if (str[i] != A) {
-				min += Math.min(str[i] - A, LEN - str[i]);
-			}
-		}
-		return min;
+		return move + min;
 	}
 }
