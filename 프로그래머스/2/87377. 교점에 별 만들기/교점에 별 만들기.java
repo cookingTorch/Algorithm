@@ -6,6 +6,16 @@ class Solution {
 	private static final char DOT = '.';
 	private static final char STAR = '*';
 
+	private static final class Point {
+		long x;
+		long y;
+
+		Point(long x, long y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+
 	public String[] solution(int[][] line) {
 		int i;
 		int j;
@@ -27,16 +37,14 @@ class Solution {
 		long maxY;
 		char[][] res;
 		String[] ans;
-		ArrayList<Long> xs;
-		ArrayList<Long> ys;
+		ArrayList<Point> points;
 
 		minX = INF;
 		minY = INF;
 		maxX = MIN;
 		maxY = MIN;
 		len = line.length;
-		xs = new ArrayList<>();
-		ys = new ArrayList<>();
+		points = new ArrayList<>();
 		for (i = 0; i < len; i++) {
 			a = line[i][0];
 			b = line[i][1];
@@ -52,8 +60,7 @@ class Solution {
 				minY = Math.min(minY, y /= div);
 				maxX = Math.max(maxX, x);
 				maxY = Math.max(maxY, y);
-				xs.add(x);
-				ys.add(y);
+				points.add(new Point(x, y));
 			}
 		}
 		row = (int) (maxY - minY) + 1;
@@ -65,9 +72,9 @@ class Solution {
 		for (i = 1; i < row; i++) {
 			System.arraycopy(res[0], 0, res[i], 0, col);
 		}
-		len = xs.size();
+		len = points.size();
 		for (i = 0; i < len; i++) {
-			res[row - 1 - (int) (ys.get(i) - minY)][(int) (xs.get(i) - minX)] = STAR;
+			res[row - 1 - (int) (points.get(i).y - minY)][(int) (points.get(i).x - minX)] = STAR;
 		}
 		ans = new String[row];
 		for (i = 0; i < row; i++) {
