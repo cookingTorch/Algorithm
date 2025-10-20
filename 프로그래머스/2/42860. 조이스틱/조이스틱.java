@@ -1,6 +1,6 @@
 class Solution {
 	private static final int A = 'A';
-	private static final int LEN = 'A' + 26;
+	private static final int LEN = A + 26;
 
 	public int solution(String name) {
 		int i;
