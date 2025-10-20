@@ -1,47 +1,39 @@
 class Solution {
-    private static final int ALPH = 26;
-    private static final char A = 'A';
+	private static final int A = 'A';
+	private static final int LEN = 'A' + 26;
 
-    public int solution(String name) {
-        int l;
-        int r;
-        int i;
-        int len;
-        int cnt;
-        int min;
-        int ans;
-        int diff;
-
-        len = name.length();
-        for (i = 0; i < len; i++) {
-            if (name.charAt(i) != A) {
-                break;
-            }
-        }
-        l = i;
-        if (l == len) {
-            return 0;
-        }
-        for (i = len - 1; i > l; i--) {
-            if (name.charAt(i) != A) {
-                break;
-            }
-        }
-        r = i;
-        diff = name.charAt(l) - A;
-        ans = Math.min(diff, ALPH - diff);
-        min = Math.min(l, len - r) + r - l;
-        cnt = 0;
-        for (i = l + 1; i <= r; i++) {
-            if (name.charAt(i) == A) {
-                cnt++;
-            } else {
-                min = Math.min(min, Math.min(i - 1 - cnt, len - i) + len - 1 - cnt);
-                cnt = 0;
-                diff = name.charAt(i) - A;
-                ans += Math.min(diff, ALPH - diff);
-            }
-        }
-        return ans + min;
-    }
+	public int solution(String name) {
+		int i;
+		int min;
+		int len;
+		int last;
+		char[] str;
+		
+		str = name.toCharArray();
+		len = str.length;
+		last = 0;
+		for (i = 0; i < len; i++) {
+			if (str[i] != A) {
+				last = i;
+				break;
+			}
+		}
+		if (i == len) {
+			return 0;
+		}
+		min = len - last;
+		for (i = ++i; i < len; i++) {
+			if (str[i] != A) {
+				min = Math.min(min, Math.min((last << 1) + len - i, ((len - i) << 1) + last));
+				last = i;
+			}
+		}
+		min = Math.min(min, last);
+		for (i = 0; i < len; i++) {
+			if (str[i] != A) {
+				min += Math.min(str[i] - A, LEN - str[i]);
+			}
+		}
+		return min;
+	}
 }
