@@ -22,7 +22,7 @@ class Solution {
 			return 0;
 		}
 		min = len - last;
-		for (i = ++i; i < len; i++) {
+		for (++i; i < len; i++) {
 			if (str[i] != A) {
 				min = Math.min(min, Math.min((last << 1) + len - i, ((len - i) << 1) + last));
 				last = i;
