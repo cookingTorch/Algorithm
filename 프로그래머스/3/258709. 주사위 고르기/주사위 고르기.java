@@ -1,93 +1,106 @@
-import java.util.Arrays;
+import java.util.ArrayDeque;
 
 class Solution {
+    private static final int MAX = 100;
     private static final int NUMS = 6;
 
-    private static int idx;
-    private static int[] arr;
+    private static int max;
+    private static int res;
+    private static int full;
+    private static int half;
+    private static int range;
+    private static int offset;
+    private static int[] empty;
     private static int[][] dices;
+    private static ArrayDeque<int[]> bin;
 
-    private static void dfs(int mask, int sum) {
+    private static int[] getArr() {
+        int[] arr;
+
+        if (bin.isEmpty()) {
+            return new int[range];
+        }
+        arr = bin.pollFirst();
+        System.arraycopy(empty, 0, arr, 0, range);
+        return arr;
+    }
+
+    private static void dfs(int[] cur, int cnt, int bits, int depth) {
         int i;
+        int j;
+        int num;
+        int[] next;
         int[] dice;
 
-        if (mask == 0) {
-            arr[idx++] = sum;
+        if (depth == full) {
+            num = 0;
+            for (i = offset + 1; i < range; i++) {
+                num += cur[i];
+            }
+            if (num > max) {
+                res = bits;
+                max = num;
+            }
+            num = 0;
+            for (i = offset - 1; i >= 0; i--) {
+                num += cur[i];
+            }
+            if (num > max) {
+                res = ~bits;
+                max = num;
+            }
+            bin.addLast(cur);
             return;
         }
-        dice = dices[Integer.numberOfTrailingZeros(mask)];
-        mask &= mask - 1;
-        for (i = 0; i < NUMS; i++) {
-            dfs(mask, sum + dice[i]);
+        dice = dices[depth];
+        if (cnt < half) {
+            next = getArr();
+            for (i = 0; i < NUMS; i++) {
+                num = dice[i];
+                for (j = num; j < range; j++) {
+                    next[j] += cur[j - num];
+                }
+            }
+            dfs(next, cnt + 1, bits << 1 | 1, depth + 1);
         }
+        if (depth - cnt < half) {
+            next = getArr();
+            for (i = 0; i < NUMS; i++) {
+                num = dice[i];
+                for (j = num; j < range; j++) {
+                    next[j - num] += cur[j];
+                }
+            }
+            dfs(next, cnt, bits << 1, depth + 1);
+        }
+        bin.addLast(cur);
     }
 
     public int[] solution(int[][] dice) {
-        int n;
-        int r;
-        int c;
         int i;
         int j;
-        int thr;
-        int cnt;
-        int max;
-        int ans;
-        int half;
-        int full;
-        int mask;
-        int size;
-        int[] a;
-        int[] b;
-        int[] res;
+        int[] cur;
+        int[] ans;
 
         dices = dice;
-        n = dice.length;
-        half = n >>> 1;
-        size = (int) Math.pow(NUMS, half);
-        a = new int[size];
-        b = new int[size];
-        full = (1 << n) - 1;
-        thr = 1 << n >> 1;
-        max = 0;
-        ans = 0;
-        for (mask = (1 << half) - 1; mask < thr;) {
-            arr = a;
-            idx = 0;
-            dfs(mask, 0);
-            arr = b;
-            idx = 0;
-            dfs(~mask & full, 0);
-            Arrays.sort(a);
-            Arrays.sort(b);
-            cnt = 0;
-            for (i = 0, j = 0; i < size; i++) {
-                for (; j < size && a[i] > b[j]; j++);
-                cnt += j;
-            }
-            if (cnt > max) {
-                max = cnt;
-                ans = mask;
-            }
-            cnt = 0;
-            for (i = 0, j = 0; i < size; i++) {
-                for (; j < size && b[i] > a[j]; j++);
-                cnt += j;
-            }
-            if (cnt > max) {
-                max = cnt;
-                ans = ~mask & full;
-            }
-            c = mask & -mask;
-            r = mask + c;
-            mask = ((r ^ mask) >>> 2) / c | r;
+        max = -1;
+        full = dice.length;
+        half = full >> 1;
+        offset = half * MAX - half;
+        range = offset << 1 | 1;
+        bin = new ArrayDeque<>();
+        ans = new int[half];
+        cur = new int[range];
+        empty = new int[range];
+        for (i = 0; i < NUMS; i++) {
+            cur[offset + dice[0][i]]++;
         }
-        res = new int[half];
-        idx = 0;
-        for (i = 0; i < n; i++) {
-            if ((ans & 1 << i) != 0) {
-                res[idx++] = i + 1;
+        dfs(cur, 1, 1, 1);
+        for (i = full, j = half - 1; i > 0; res >>= 1, i--) {
+            if ((res & 1) != 0) {
+                ans[j--] = i;
             }
         }
-        return res;
+        return ans;
     }
 }
