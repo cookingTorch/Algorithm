@@ -3,45 +3,38 @@ class Solution {
         int i;
         int j;
         int k;
-        int max;
-        int thr;
-        int cnt;
+        int num;
         int len;
-        int ans;
-        int size;
-        int prev;
+        int res;
+        int min;
         char[] str;
-
+        
         str = s.toCharArray();
-        size = str.length;
-        ans = size;
-        max = size >>> 1;
-        for (i = 1; i <= max; i++) {
-            thr = size - size % i;
-            len = size;
-            cnt = 1;
-            prev = 0;
-            for (j = i; j < thr; j += i) {
+        len = str.length;
+        min = len;
+        for (i = 1; i <= len >> 1; i++) {
+            res = len;
+            num = 1;
+            for (j = i; j <= len - i; j += i) {
                 for (k = 0; k < i; k++) {
-                    if (str[prev + k] != str[j + k]) {
+                    if (str[j + k] != str[j - i + k]) {
                         break;
                     }
                 }
-                if (k == i) {
-                    cnt++;
-                } else {
-                    if (cnt > 1) {
-                        len += (cnt < 10 ? 1 : cnt < 100 ? 2 : cnt < 1000 ? 3 : 4) - (cnt - 1) * i;
-                        cnt = 1;
+                if (k < i) {
+                    if (num > 1) {
+                        res = res - ((num - 1) * i) + (num < 10 ? 1 : num < 100 ? 2 : num < 1000 ? 3 : 4);
+                        num = 1;
                     }
-                    prev = j;
+                } else {
+                    num++;
                 }
             }
-            if (cnt > 1) {
-                len += (cnt < 10 ? 1 : cnt < 100 ? 2 : cnt < 1000 ? 3 : 4) - (cnt - 1) * i;
+            if (num > 1) {
+                res = res - ((num - 1) * i) + (num < 10 ? 1 : num < 100 ? 2 : num < 1000 ? 3 : 4);
             }
-            ans = Math.min(ans, len);
+            min = Math.min(min, res);
         }
-        return ans;
+        return min;
     }
 }
