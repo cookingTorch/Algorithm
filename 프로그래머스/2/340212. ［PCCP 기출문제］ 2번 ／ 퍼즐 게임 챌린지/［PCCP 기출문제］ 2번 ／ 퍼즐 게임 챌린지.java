@@ -34,12 +34,12 @@ class Solution {
 		int max;
 
 		len = times.length;
-		total = times[0];
-		max = diffs[0];
+		max = 1;
+        total = times[0];
 		retry = new int[len];
 		for (i = 1; i < len; i++) {
-			total += times[i];
 			max = Math.max(max, diffs[i]);
+            total += times[i];
 			retry[i] = times[i - 1] + times[i];
 		}
 		lmt = limit;
