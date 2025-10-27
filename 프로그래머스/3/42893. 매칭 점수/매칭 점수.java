@@ -101,6 +101,7 @@ class Solution {
         double max;
         double linkScore;
         double[] scores;
+        boolean hasUrl;
         ArrayList<String>[] links;
         HashMap<String, Integer> map;
 
@@ -119,18 +120,20 @@ class Solution {
             pages[idx].getChars(0, pageLen, page, 0); // 페이지 내용 복사
             page[pageLen++] = NULL; // 마지막에 NULL 문자 삽입
             links[idx] = new ArrayList<>(); // 페이지의 링크들
-            strStart = NONE;
+            hasUrl = false; // url 탐색 여부 초기화
+            strStart = NONE; // 단어 시작 위치 초기화
             for (i = 0; i < pageLen; i++) { // 페이지 내용 읽기
                 if (isStr(i)) { // 검색어이면
                     strCnt[idx]++; // 검색어 개수 추가
                 }
-                if (isPattern(i, META, META_LEN)) { // meta 태그이면
+                if (!hasUrl && isPattern(i, META, META_LEN)) { // meta 태그이면
                     for (j = i + META_LEN; j < pageLen; j++) { // meta 태그 이후부터 순회
                         if (page[j] == BRACE) { // 태그 닫힘
                             break;
                         }
                         if (isPattern(j, CONTENT, CONTENT_LEN)) { // content가 존재하면
                             map.put(getUrl(j + CONTENT_LEN), idx); // 현재 페이지의 URL 저장
+                            hasUrl = true; // 해당 페이지 url 탐색 완료
                             break;
                         }
                     }
