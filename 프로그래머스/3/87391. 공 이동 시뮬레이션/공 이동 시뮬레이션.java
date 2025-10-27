@@ -8,6 +8,8 @@ class Solution {
         int dx;
         int len;
 
+        n--;
+        m--;
         x1 = x2 = x;
         y1 = y2 = y;
         len = queries.length;
@@ -17,14 +19,14 @@ class Solution {
             switch (queries[i][0]) {
                 case 0:
                     if (y1 != 0) {
-                        if ((y1 += dx) >= m) {
+                        if ((y1 += dx) > m) {
                             break loop;
                         }
                     }
-                    y2 = Math.min(y2 + dx, m - 1);
+                    y2 = Math.min(y2 + dx, m);
                     break;
                 case 1:
-                    if (y2 != m - 1) {
+                    if (y2 != m) {
                         if ((y2 -= dx) < 0) {
                             break loop;
                         }
@@ -33,14 +35,14 @@ class Solution {
                     break;
                 case 2:
                     if (x1 != 0) {
-                        if ((x1 += dx) >= n) {
+                        if ((x1 += dx) > n) {
                             break loop;
                         }
                     }
-                    x2 = Math.min(x2 + dx, n - 1);
+                    x2 = Math.min(x2 + dx, n);
                     break;
                 case 3:
-                    if (x2 != n - 1) {
+                    if (x2 != n) {
                         if ((x2 -= dx) < 0) {
                             break loop;
                         }
