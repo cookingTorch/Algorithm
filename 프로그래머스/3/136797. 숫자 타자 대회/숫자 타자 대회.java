@@ -1,75 +1,83 @@
 class Solution {
-    private static final int INF = Integer.MAX_VALUE >>> 1;
-    private static final int NUM = 10;
-    private static final int DIFF = '0';
-    private static final int[] NIL = new int[] {INF, INF, INF, INF, INF, INF, INF, INF, INF, INF};
-    private static final int[][] POS = {
-            {3, 1},
-            {0, 0}, {0, 1}, {0, 2},
-            {1, 0}, {1, 1}, {1, 2},
-            {2, 0}, {2, 1}, {2, 2},
-    };
+	private static final int INF = Integer.MAX_VALUE >>> 1;
+	private static final int DIFF = '0';
+	private static final int SIZE = 10;
 
-    public int solution(String numbers) {
-        int i;
-        int j;
-        int x;
-        int y;
-        int nx;
-        int ny;
-        int len;
-        int ans;
-        int cur;
-        int prev;
-        int[] tmp;
-        int[] curRes;
-        int[] prevRes;
-        char[] nums;
+	private static int getWeight(int dx, int dy) {
+		return (dx + dy << 1) - Math.min(dx, dy);
+	}
 
-        nums = numbers.toCharArray();
-        len = nums.length;
-        prev = 4;
-        prevRes = new int[NUM];
-        System.arraycopy(NIL, 0, prevRes, 0, NUM);
-        prevRes[6] = 0;
-        curRes = new int[NUM];
-        for (i = 0; i < len; i++) {
-            cur = nums[i] - DIFF;
-            if (cur == prev) {
-                for (j = 0; j < NUM; j++) {
-                    if (prevRes[j] != INF) {
-                        prevRes[j]++;
-                    }
-                }
-                continue;
-            }
-            nx = POS[cur][0];
-            ny = POS[cur][1];
-            System.arraycopy(NIL, 0, curRes, 0, NUM);
-            for (j = 0; j < NUM; j++) {
-                if (prevRes[j] == INF) {
-                    continue;
-                }
-                if (j == cur) {
-                    curRes[prev] = Math.min(curRes[prev], prevRes[j] + 1);
-                    continue;
-                }
-                x = POS[j][0];
-                y = POS[j][1];
-                curRes[prev] = Math.min(curRes[prev], prevRes[j] + (Math.abs(nx - x) + Math.abs(ny - y) << 1) - Math.min(Math.abs(nx - x), Math.abs(ny - y)));
-                x = POS[prev][0];
-                y = POS[prev][1];
-                curRes[j] = Math.min(curRes[j], prevRes[j] + (Math.abs(nx - x) + Math.abs(ny - y) << 1) - Math.min(Math.abs(nx - x), Math.abs(ny - y)));
-            }
-            prev = cur;
-            tmp = prevRes;
-            prevRes = curRes;
-            curRes = tmp;
-        }
-        ans = prevRes[0];
-        for (i = 1; i < NUM; i++) {
-            ans = Math.min(ans, prevRes[i]);
-        }
-        return ans;
-    }
+	private static int[][] buildWeights() {
+		int i;
+		int j;
+		int[][] pos;
+		int[][] weights;
+
+		pos = new int[][] {
+						{3, 1},
+				{0, 0}, {0, 1}, {0, 2},
+				{1, 0}, {1, 1}, {1, 2},
+				{2, 0}, {2, 1}, {2, 2},
+		};
+		weights = new int[SIZE][SIZE];
+		for (i = 0; i < SIZE; i++) {
+			for (j = 0; j < i; j++) {
+				weights[i][j] = weights[j][i] = getWeight(Math.abs(pos[i][0] - pos[j][0]), Math.abs(pos[i][1] - pos[j][1]));
+			}
+			weights[i][i] = 1;
+		}
+		return weights;
+	}
+
+	public int solution(String numbers) {
+		int i;
+		int j;
+		int len;
+		int cur;
+		int num;
+		int ans;
+		int weight;
+		int[] dp;
+		int[] tmp;
+		int[] next;
+		int[] init;
+		int[][] weights;
+
+		weights = buildWeights();
+		init = new int[SIZE];
+		for (i = 0; i < SIZE; i++) {
+			init[i] = INF;
+		}
+		dp = new int[SIZE];
+		next = new int[SIZE];
+		System.arraycopy(init, 0, dp, 0, SIZE);
+		dp[4] = 0;
+		cur = 6;
+		len = numbers.length();
+		for (i = 0; i < len; i++) {
+			num = numbers.charAt(i) - DIFF;
+			if (num == cur) {
+				for (j = 0; j < SIZE; j++) {
+					dp[j]++;
+				}
+				continue;
+			}
+			System.arraycopy(init, 0, next, 0, SIZE);
+			weight = weights[cur][num];
+			for (j = 0; j < SIZE; j++) {
+				next[cur] = Math.min(next[cur], dp[j] + weights[j][num]);
+				next[j] = Math.min(next[j], dp[j] + weight);
+			}
+            next[num] = INF;
+			tmp = dp;
+			dp = next;
+			next = tmp;
+			cur = num;
+		}
+		ans = INF;
+		for (i = 0; i < SIZE; i++) {
+			ans = Math.min(ans, dp[i]);
+		}
+		return ans;
+	}
 }
