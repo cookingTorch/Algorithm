@@ -36,12 +36,12 @@ class Solution {
                 continue;
             }
             if (dir < 2) {
-                if (visited[x][y][dir] != true) {
+                if (!visited[x][y][dir]) {
                     visited[x][y][dir] = true;
                     cnt++;
                 }
             } else {
-                if (visited[nx][ny][dir + 2 & 3] != true) {
+                if (!visited[nx][ny][dir + 2 & 3]) {
                     visited[nx][ny][dir + 2 & 3] = true;
                     cnt++;
                 }
