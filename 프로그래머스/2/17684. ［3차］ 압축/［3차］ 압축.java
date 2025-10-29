@@ -1,46 +1,54 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
 class Solution {
     private static final int ALPH = 26;
-    private static final int DIFF = 'A' - 1;
-    private static final String EMPTY = "";
+    private static final int DIFF = 'A';
+
+    private static final class Trie {
+        private static int idx = 0;
+
+        int res;
+        Trie[] next;
+
+        Trie() {
+            res = idx++;
+            next = new Trie[ALPH];
+        }
+    }
 
     public int[] solution(String msg) {
         int i;
-        int j;
+        int ch;
         int len;
-        int size;
-        String str;
-        String tmp;
-        String[] chars;
-        HashMap<String, Integer> map;
-        ArrayList<Integer> ans;
+        int[] ans;
+        Trie cur;
+        Trie root;
+        ArrayList<Integer> res;
 
+        res = new ArrayList<>();
+        root = new Trie();
+        for (i = 0; i < ALPH; i++) {
+            root.next[i] = new Trie();
+        }
+        cur = root;
         len = msg.length();
-        chars = new String[len];
         for (i = 0; i < len; i++) {
-            chars[i] = new String(new char[] {msg.charAt(i)});
-        }
-        map = new HashMap<>();
-        for (i = 1; i <= ALPH; i++) {
-            map.put(new String(new char[] {(char) (i + DIFF)}), i);
-        }
-        size = ALPH;
-        ans = new ArrayList<>();
-        for (i = 0; i < len;) {
-            str = EMPTY;
-            for (j = i; j < len; j++) {
-                tmp = str + chars[j];
-                if (!map.containsKey(tmp)) {
-                    map.put(tmp, ++size);
-                    break;
-                }
-                str = tmp;
+            ch = msg.charAt(i) - DIFF;
+            if (cur.next[ch] == null) {
+                res.add(cur.res);
+                cur.next[ch] = new Trie();
+                cur = root;
+                i--;
+            } else {
+                cur = cur.next[ch];
             }
-            ans.add(map.get(str));
-            i = j;
         }
-        return ans.stream().mapToInt(Integer::intValue).toArray();
+        res.add(cur.res);
+        len = res.size();
+        ans = new int[len];
+        for (i = 0; i < len; i++) {
+            ans[i] = res.get(i);
+        }
+        return ans;
     }
 }
