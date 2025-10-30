@@ -111,9 +111,7 @@ class Solution {
         int deleteBackward(int x, int y) {
             int cnt;
 
-            cnt = bfs(x, y, x2, y2);
-            cnt += bfs(x2, y2, x1, y1);
-            cnt += 2;
+            cnt = bfs(x, y, x2, y2) + bfs(x2, y2, x1, y1) + 2;
             map[x1][y1] = EMPTY;
             map[x2][y2] = EMPTY;
             return cnt;
