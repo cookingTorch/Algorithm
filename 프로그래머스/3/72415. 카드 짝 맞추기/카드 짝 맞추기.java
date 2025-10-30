@@ -1,194 +1,146 @@
 import java.util.ArrayDeque;
 
 class Solution {
-    private static final int NIL = -1;
-    private static final int NUM = 6;
-    private static final int SIZE = 4;
-    private static final int EMPTY = 0;
     private static final int INF = Integer.MAX_VALUE;
+    private static final int SIZE = 4;
+    private static final int MAX_CARD = 6;
+    private static final int[] dx = {-1, 0, 1, 0};
+    private static final int[] dy = {0, 1, 0, -1};
 
-    private static final class Card {
-        private static final int[] dx = {-1, 0, 1, 0};
-        private static final int[] dy = {0, 1, 0, -1};
+    private static int min;
+    private static int cards;
+    private static int visit;
+    private static int[][] visited;
+    private static int[][][] pos;
+    private static boolean[] del;
+    private static boolean[][] map;
+    private static ArrayDeque<int[]> q;
 
-        private static boolean[][] visited;
-        private static boolean[][] initialVisited;
-        private static ArrayDeque<int[]> q;
+    private static int bfs(int x1, int y1, int x2, int y2) {
+        int x;
+        int y;
+        int i;
+        int nx;
+        int ny;
+        int dist;
+        int[] cur;
 
+        if (x1 == x2 && y1 == y2) {
+            return 1;
+        }
+        visit++;
+        q.clear();
+        q.addLast(new int[] {x1, y1, 0});
+        visited[x1][y1] = visit;
+        while (!q.isEmpty()) {
+            cur = q.pollFirst();
+            x = cur[0];
+            y = cur[1];
+            dist = cur[2] + 1;
+            for (i = 0; i < 4; i++) {
+                nx = x + dx[i];
+                ny = y + dy[i];
+                if (nx < 0 || nx >= SIZE || ny < 0 || ny >= SIZE) {
+                    continue;
+                }
+                if (visited[nx][ny] != visit) {
+                    if (nx == x2 && ny == y2) {
+                        return dist + 1;
+                    }
+                    q.addLast(new int[] {nx, ny, dist});
+                    visited[nx][ny] = visit;
+                }
+                while (!map[nx][ny]) {
+                    nx += dx[i];
+                    ny += dy[i];
+                    if (nx < 0 || nx >= SIZE || ny < 0 || ny >= SIZE) {
+                        nx -= dx[i];
+                        ny -= dy[i];
+                        break;
+                    }
+                }
+                if (visited[nx][ny] != visit) {
+                    if (nx == x2 && ny == y2) {
+                        return dist + 1;
+                    }
+                    q.addLast(new int[] {nx, ny, dist});
+                    visited[nx][ny] = visit;
+                }
+            }
+        }
+        return INF;
+    }
+
+    private static void dfs(int x, int y, int cnt, int depth) {
+        int i;
         int x1;
         int y1;
         int x2;
         int y2;
-        int idx;
+        int sum;
 
-        Card(int idx) {
-            this.idx = idx;
-            x1 = NIL;
-        }
-
-        static void init() {
-            q = new ArrayDeque<>();
-            initialVisited = new boolean[SIZE][SIZE];
-            visited = new boolean[SIZE][SIZE];
-        }
-
-        private static int bfs(int x1, int y1, int x2, int y2) {
-            int i;
-            int x;
-            int y;
-            int nx;
-            int ny;
-            int cnt;
-            int[] cur;
-
-            if (x1 == x2 && y1 == y2) {
-                return 0;
-            }
-            q.clear();
-            for (i = 0; i < SIZE; i++) {
-                System.arraycopy(initialVisited[i], 0, visited[i], 0, SIZE);
-            }
-            q.addLast(new int[] {x1, y1, 0});
-            visited[x1][y1] = true;
-            while (!q.isEmpty()) {
-                cur = q.pollFirst();
-                x = cur[0];
-                y = cur[1];
-                cnt = cur[2] + 1;
-                for (i = 0; i < 4; i++) {
-                    nx = x + dx[i];
-                    ny = y + dy[i];
-                    if (nx < 0 || nx >= SIZE || ny < 0 || ny >= SIZE) {
-                        continue;
-                    }
-                    if (!visited[nx][ny] && map[nx][ny] == EMPTY) {
-                        if (nx == x2 && ny == y2) {
-                            return cnt;
-                        }
-                        q.addLast(new int[] {nx, ny, cnt});
-                        visited[nx][ny] = true;
-                    }
-                    while (map[nx][ny] == EMPTY) {
-                        nx += dx[i];
-                        ny += dy[i];
-                        if (nx < 0 || nx >= SIZE || ny < 0 || ny >= SIZE) {
-                            nx -= dx[i];
-                            ny -= dy[i];
-                            break;
-                        }
-                    }
-                    if (!visited[nx][ny]) {
-                        if (nx == x2 && ny == y2) {
-                            return cnt;
-                        }
-                        q.addLast(new int[] {nx, ny, cnt});
-                        visited[nx][ny] = true;
-                    }
-                }
-            }
-            return NIL;
-        }
-
-        void add(int x, int y) {
-            if (x1 == NIL) {
-                x1 = x;
-                y1 = y;
-            } else {
-                x2 = x;
-                y2 = y;
-            }
-        }
-
-        int deleteForward(int x, int y) {
-            int cnt;
-
-            cnt = bfs(x, y, x1, y1) + bfs(x1, y1, x2, y2) + 2;
-            map[x1][y1] = EMPTY;
-            map[x2][y2] = EMPTY;
-            return cnt;
-        }
-
-        int deleteBackward(int x, int y) {
-            int cnt;
-
-            cnt = bfs(x, y, x2, y2) + bfs(x2, y2, x1, y1) + 2;
-            map[x1][y1] = EMPTY;
-            map[x2][y2] = EMPTY;
-            return cnt;
-        }
-
-        void restore() {
-            map[x1][y1] = idx;
-            map[x2][y2] = idx;
-        }
-    }
-
-    private static int min;
-    private static int size;
-    private static int[] arr;
-    private static int[][] map;
-    private static boolean[] visited;
-    private static Card[] cards;
-
-    private static void dfs(int x, int y, int cnt, int depth) {
-        int i;
-        int move;
-        Card card;
-
-        if (depth == size) {
+        if (depth == cards) {
             min = Math.min(min, cnt);
             return;
         }
-        depth++;
-        for (i = 0; i < size; i++) {
-            if (visited[i]) {
+        for (i = 0; i < cards; i++) {
+            if (del[i]) {
                 continue;
             }
-            card = cards[arr[i]];
-            visited[i] = true;
-            move = card.deleteForward(x, y);
-            if (cnt + move < min) {
-                dfs(card.x2, card.y2, cnt + move, depth);
+            del[i] = true;
+            x1 = pos[i][0][0];
+            y1 = pos[i][0][1];
+            x2 = pos[i][1][0];
+            y2 = pos[i][1][1];
+            sum = cnt + bfs(x, y, x1, y1) + bfs(x1, y1, x2, y2);
+            if (sum < min) {
+                map[x1][y1] = false;
+                map[x2][y2] = false;
+                dfs(x2, y2, sum, depth + 1);
+                map[x1][y1] = true;
+                map[x2][y2] = true;
             }
-            card.restore();
-            move = card.deleteBackward(x, y);
-            if (cnt + move < min) {
-                dfs(card.x1, card.y1, cnt + move, depth);
+            sum = cnt + bfs(x, y, x2, y2) + bfs(x2, y2, x1, y1);
+            if (sum < min) {
+                map[x1][y1] = false;
+                map[x2][y2] = false;
+                dfs(x1, y1, sum, depth + 1);
+                map[x1][y1] = true;
+                map[x2][y2] = true;
             }
-            card.restore();
-            visited[i] = false;
+            del[i] = false;
         }
     }
 
     public int solution(int[][] board, int r, int c) {
         int i;
         int j;
-        int idx;
+        int[] idx;
 
-        map = board;
-        size = 0;
-        cards = new Card[NUM + 1];
+        cards = 0;
+        idx = new int[MAX_CARD + 1];
+        for (i = 0; i <= MAX_CARD; i++) {
+            idx[i] = INF;
+        }
+        pos = new int[MAX_CARD][][];
+        map = new boolean[SIZE][SIZE];
         for (i = 0; i < SIZE; i++) {
             for (j = 0; j < SIZE; j++) {
-                if ((idx = board[i][j]) != EMPTY) {
-                    if (cards[idx] == null) {
-                        cards[idx] = new Card(idx);
-                        size++;
+                if (board[i][j] != 0) {
+                    if (idx[board[i][j]] == INF) {
+                        idx[board[i][j]] = cards++;
+                        pos[idx[board[i][j]]] = new int[][] {{i, j}, null};
+                    } else {
+                        pos[idx[board[i][j]]][1] = new int[] {i, j};
                     }
-                    cards[idx].add(i, j);
+                    map[i][j] = true;
                 }
             }
         }
-        arr = new int[size];
-        visited = new boolean[size];
-        idx = 0;
-        for (i = 1; i <= NUM; i++) {
-            if (cards[i] != null) {
-                arr[idx++] = i;
-            }
-        }
+        del = new boolean[cards];
+        visited = new int[SIZE][SIZE];
+        q = new ArrayDeque<>();
         min = INF;
-        Card.init();
         dfs(r, c, 0, 0);
         return min;
     }
