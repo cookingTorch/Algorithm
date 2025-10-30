@@ -147,10 +147,14 @@ class Solution {
             card = cards[arr[i]];
             visited[i] = true;
             move = card.deleteForward(x, y);
-            dfs(card.x2, card.y2, cnt + move, depth);
+            if (cnt + move < min) {
+                dfs(card.x2, card.y2, cnt + move, depth);
+            }
             card.restore();
             move = card.deleteBackward(x, y);
-            dfs(card.x1, card.y1, cnt + move, depth);
+            if (cnt + move < min) {
+                dfs(card.x1, card.y1, cnt + move, depth);
+            }
             card.restore();
             visited[i] = false;
         }
