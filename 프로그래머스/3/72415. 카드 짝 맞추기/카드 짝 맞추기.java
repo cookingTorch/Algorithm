@@ -10,8 +10,10 @@ class Solution {
     private static int min;
     private static int cards;
     private static int visit;
+    private static int[][] dists;
     private static int[][] visited;
     private static int[][][] pos;
+    private static int[][][] node;
     private static boolean[] del;
     private static boolean[][] map;
     private static ArrayDeque<int[]> q;
@@ -30,13 +32,14 @@ class Solution {
         }
         visit++;
         q.clear();
-        q.addLast(new int[] {x1, y1, 0});
+        dists[x1][y1] = 0;
+        q.addLast(node[x1][y1]);
         visited[x1][y1] = visit;
         while (!q.isEmpty()) {
             cur = q.pollFirst();
             x = cur[0];
             y = cur[1];
-            dist = cur[2] + 1;
+            dist = dists[x][y] + 1;
             for (i = 0; i < 4; i++) {
                 nx = x + dx[i];
                 ny = y + dy[i];
@@ -47,7 +50,8 @@ class Solution {
                     if (nx == x2 && ny == y2) {
                         return dist + 1;
                     }
-                    q.addLast(new int[] {nx, ny, dist});
+                    dists[nx][ny] = dist;
+                    q.addLast(node[nx][ny]);
                     visited[nx][ny] = visit;
                 }
                 while (!map[nx][ny]) {
@@ -63,7 +67,8 @@ class Solution {
                     if (nx == x2 && ny == y2) {
                         return dist + 1;
                     }
-                    q.addLast(new int[] {nx, ny, dist});
+                    dists[nx][ny] = dist;
+                    q.addLast(node[nx][ny]);
                     visited[nx][ny] = visit;
                 }
             }
@@ -124,6 +129,7 @@ class Solution {
         }
         pos = new int[MAX_CARD][][];
         map = new boolean[SIZE][SIZE];
+        node = new int[SIZE][SIZE][2];
         for (i = 0; i < SIZE; i++) {
             for (j = 0; j < SIZE; j++) {
                 if (board[i][j] != 0) {
@@ -135,9 +141,12 @@ class Solution {
                     }
                     map[i][j] = true;
                 }
+                node[i][j][0] = i;
+                node[i][j][1] = j;
             }
         }
         del = new boolean[cards];
+        dists = new int[SIZE][SIZE];
         visited = new int[SIZE][SIZE];
         q = new ArrayDeque<>();
         min = INF;
