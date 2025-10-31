@@ -1,125 +1,103 @@
 import java.util.ArrayDeque;
 
 class Solution {
-    private static final int EMPTY = 0;
-    private static final int RED = 1;
-    private static final int BLUE = 2;
-    private static final int END_R = 3;
-    private static final int END_B = 4;
-    private static final int WALL = 5;
+    private static final int FAIL = 0;
 
-    private static final class Node {
-        int cnt;
-        int red;
-        int blue;
-        long visR;
-        long visB;
-
-        Node(int red, int blue, long visR, long visB, int cnt) {
-            this.cnt = cnt;
-            this.red = red;
-            this.blue = blue;
-            this.visR = visR;
-            this.visB = visB;
-        }
-    }
-
-    private static int bfs(int red, int blue, int endR, int endB, long map, int[] d) {
+    private static int bfs(long sr, long sb, long er, long eb, long wall, int c) {
         int i;
         int j;
-        int cnt;
-        int nred;
-        int nblue;
-        long visR;
-        long visB;
-        Node node;
-        ArrayDeque<Node> q;
+        int[] d;
+        long r;
+        long b;
+        long nr;
+        long nb;
+        long vr;
+        long vb;
+        long dist;
+        long[] cur;
+        ArrayDeque<long[]> q;
 
+        d = new int[] {-c, 1, c, -1, 0};
         q = new ArrayDeque<>();
-        q.addLast(new Node(red, blue, map | 1L << red, map | 1L << blue, 0));
+        q.add(new long[] {sr, sb, wall, wall, 0});
         while (!q.isEmpty()) {
-            node = q.pollFirst();
-            red = node.red;
-            blue = node.blue;
-            visR = node.visR;
-            visB = node.visB;
-            cnt = node.cnt + 1;
+            cur = q.pollFirst();
+            r = cur[0];
+            b = cur[1];
+            vr = r == er ? cur[2] : cur[2] | r;
+            vb = b == eb ? cur[3] : cur[3] | b;
+            dist = cur[4] + 1L;
             for (i = 0; i < 4; i++) {
-                if (red == endR) {
-                    i = 3;
-                    nred = red;
-                } else {
-                    nred = red + d[i];
-                    if ((visR & (1L << nred)) != 0L) {
-                        continue;
-                    }
+                if (r == er) {
+                    i = 4;
+                }
+                nr = d[i] < 0 ? r >> -d[i] : r << d[i];
+                if ((nr & vr) != 0) {
+                    continue;
                 }
                 for (j = 0; j < 4; j++) {
-                    if (blue == endB) {
-                        j = 3;
-                        nblue = blue;
-                    } else {
-                        nblue = blue + d[j];
-                        if ((visB & (1L << nblue)) != 0L || (nred == blue && nblue == red)) {
-                            continue;
-                        }
+                    if (b == eb) {
+                        j = 4;
                     }
-                    if (nred == nblue) {
+                    nb = d[j] < 0 ? b >> -d[j] : b << d[j];
+                    if ((nb & vb) != 0 || (nr == nb) || (nr == b && nb == r)) {
                         continue;
                     }
-                    if (nred == endR && nblue == endB) {
-                        return cnt;
+                    if (nr == er && nb == eb) {
+                        return (int) dist;
                     }
-                    q.addLast(new Node(nred, nblue, visR | 1L << nred, visB | 1L << nblue, cnt));
+                    q.addLast(new long[] {nr, nb, vr, vb, dist});
                 }
             }
         }
-        return 0;
+        return FAIL;
     }
 
     public int solution(int[][] maze) {
-        int r;
-        int c;
         int i;
         int j;
-        int red;
-        int blue;
-        int endR;
-        int endB;
-        int size;
-        long map;
+        int n;
+        int m;
+        int c;
+        long sr;
+        long sb;
+        long er;
+        long eb;
+        long side;
+        long wall;
 
-        r = maze.length;
-        c = maze[0].length;
-        size = c + 2;
-        red = 0;
-        blue = 0;
-        endR = 0;
-        endB = 0;
-        map = (1L << size) - 1L | (1L << size) - 1L << (r + 1) * size;
-        for (i = 1; i <= r; i++) {
-            map |= (1L << (size - 1) | 1L) << i * size;
-            for (j = 1; j <= c; j++) {
-                switch (maze[i - 1][j - 1]) {
-                    case EMPTY:
+        n = maze.length;
+        m = maze[0].length;
+        c = m + 2;
+        side = 1L << m + 1 | 1L;
+        wall = (1L << c) - 1L;
+        for (i = 0; i < n; i++) {
+            wall = wall << c | side;
+        }
+        wall = wall << c | (1L << c) - 1L;
+        sr = sb = er = eb = 0;
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < m; j++) {
+                switch (maze[i][j]) {
+                    case 1:
+                        sr = 1L << (i + 1) * c + j + 1;
                         break;
-                    case RED:
-                        red = i * size + j;
+                    case 2:
+                        sb = 1L << (i + 1) * c + j + 1;
                         break;
-                    case BLUE:
-                        blue = i * size + j;
+                    case 3:
+                        er = 1L << (i + 1) * c + j + 1;
                         break;
-                    case END_R:
-                        endR = i * size + j;
+                    case 4:
+                        eb = 1L << (i + 1) * c + j + 1;
                         break;
-                    case END_B:
-                        endB = i * size + j;
+                    case 5:
+                        wall |= 1L << (i + 1) * c + j + 1;
                         break;
-                    case WALL:
-                        map |= 1L << i * size + j;
+                    default:
                 }
             }
         }
-        return bfs(red, blue, endR, endB, map, new int[] {-size, 1, size, -1});
+        return bfs(sr, sb, er, eb, wall, c);
     }
 }
