@@ -3,7 +3,7 @@ class Solution {
     private static final int E = 10;
     private static final int R = 10;
     private static final int IN = 13;
-    private static final int SIZE = 10000;
+    private static final int SIZE = 10_000;
 
     private static final class Car {
         private static final int NIL = 0;
@@ -74,3 +74,7 @@ class Solution {
         return ans;
     }
 }
+
+
+
+
