@@ -4,7 +4,7 @@ class Solution {
 	private static final int LEN = 13;
 	private static final int DIFF = '0';
 	private static final int PLUS = '+';
-	private static final int EMPTY = ' ' - DIFF;
+	private static final int SPACE = ' ' - DIFF;
 	private static final int ERASED = 'X' - DIFF;
 
 	private static final class Exp {
@@ -123,7 +123,7 @@ class Solution {
 			idx = 0;
 			a10 = str.charAt(idx++) - DIFF;
 			a1 = str.charAt(idx++) - DIFF;
-			if (a1 == EMPTY) {
+			if (a1 == SPACE) {
 				a1 = a10;
 				a10 = 0;
 			} else {
@@ -133,7 +133,7 @@ class Solution {
 			idx += 2;
 			b10 = str.charAt(idx++) - DIFF;
 			b1 = str.charAt(idx) - DIFF;
-			if (b1 == EMPTY) {
+			if (b1 == SPACE) {
 				b1 = b10;
 				b10 = 0;
 			}
@@ -145,7 +145,7 @@ class Solution {
 				exps.add(new Exp(a10, a1, plus, b10, b1));
 			} else {
 				c10 = str.charAt(str.length() - 2) - DIFF;
-				if (c10 == EMPTY) {
+				if (c10 == SPACE) {
 					c10 = 0;
 				}
 				if (min != radix) {
@@ -176,4 +176,3 @@ class Solution {
 		return ans;
 	}
 }
-
