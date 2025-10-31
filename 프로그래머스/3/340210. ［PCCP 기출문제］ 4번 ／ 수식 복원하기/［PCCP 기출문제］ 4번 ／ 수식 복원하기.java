@@ -1,165 +1,178 @@
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 class Solution {
-    private static final int X = 'X';
-    private static final int MAX = 9;
-    private static final int DIFF = '0';
-    private static final char PLUS = '+';
-    private static final char MINUS = '-';
-    private static final char EQUAL = '=';
-    private static final char SPACE = ' ';
-    private static final char QUESTION_MARK = '?';
+	private static final int LEN = 13;
+	private static final int DIFF = '0';
+	private static final int PLUS = '+';
+	private static final int EMPTY = ' ' - DIFF;
+	private static final int ERASED = 'X' - DIFF;
 
-    private static final class Exp {
-        private static int min;
-        private static int radix;
+	private static final class Exp {
+		private static final char PLUS = '+';
+		private static final char MINUS = '-';
+		private static final char SPACE = ' ';
+		private static final char EQUALS = '=';
+		private static final char QUESTION_MARK = '?';
 
-        int[] a;
-        int[] b;
-        int[] c;
-        boolean op;
+		private static int min;
+		private static int radix;
+		private static char[] res = new char[LEN];
 
-        Exp(String expression) {
-            String num;
-            StringTokenizer st;
+		int a1;
+		int b1;
+		int a10;
+		int b10;
+		boolean plus;
 
-            st = new StringTokenizer(expression);
-            num = st.nextToken();
-            a = new int[2];
-            if (num.length() == 1) {
-                a[0] = num.charAt(0) - DIFF;
-            } else {
-                a[0] = num.charAt(1) - DIFF;
-                a[1] = num.charAt(0) - DIFF;
-            }
-            op = st.nextToken().charAt(0) == PLUS;
-            num = st.nextToken();
-            b = new int[2];
-            if (num.length() == 1) {
-                b[0] = num.charAt(0) - DIFF;
-            } else {
-                b[0] = num.charAt(1) - DIFF;
-                b[1] = num.charAt(0) - DIFF;
-            }
-            st.nextToken();
-            num = st.nextToken();
-            c = new int[3];
-            if (num.length() == 1) {
-                if (num.charAt(0) != X) {
-                    c[0] = num.charAt(0) - DIFF;
-                } else {
-                    c = null;
-                }
-            } else if (num.length() == 2) {
-                c[0] = num.charAt(1) - DIFF;
-                c[1] = num.charAt(0) - DIFF;
-            } else {
-                c[0] = num.charAt(2) - DIFF;
-                c[1] = num.charAt(1) - DIFF;
-                c[2] = num.charAt(0) - DIFF;
-            }
-            calc();
-        }
+		Exp(int a10, int a1, boolean plus, int b10, int b1) {
+			this.a10 = a10;
+			this.a1 = a1;
+			this.plus = plus;
+			this.b10 = b10;
+			this.b1 = b1;
+		}
 
-        private void calc() {
-            if (radix != 0) {
-                return;
-            }
-            min = Math.max(min, Math.max(Math.max(a[0], a[1]), Math.max(b[0], b[1])) + 1);
-            if (c == null) {
-                return;
-            }
-            min = Math.max(min, Math.max(Math.max(c[0], c[1]), c[2]) + 1);
-            if (op) {
-                if (a[0] + b[0] != c[0]) {
-                    radix = a[0] + b[0] - c[0];
-                } else if (a[1] + b[1] != c[1]) {
-                    radix = a[1] + b[1] - c[1];
-                }
-            } else {
-                if (c[0] + b[0] != a[0]) {
-                    radix = c[0] + b[0] - a[0];
-                } else if (c[1] + b[1] != a[1]) {
-                    radix = c[1] + b[1] - a[1];
-                }
-            }
-        }
+		String calc() {
+			int c1;
+			int c10;
+			int c100;
+			int idx;
 
-        String eval() {
-            int i;
-            int num1;
-            int num2;
-            String res;
-            String str;
-            StringBuilder sb;
+			idx = 0;
+			if (a10 != 0) {
+				res[idx++] = (char) (a10 + DIFF);
+			}
+			res[idx++] = (char) (a1 + DIFF);
+			res[idx++] = SPACE;
+			res[idx++] = plus ? PLUS : MINUS;
+			res[idx++] = SPACE;
+			if (b10 != 0) {
+				res[idx++] = (char) (b10 + DIFF);
+			}
+			res[idx++] = (char) (b1 + DIFF);
+			res[idx++] = SPACE;
+			res[idx++] = EQUALS;
+			res[idx++] = SPACE;
+			c10 = 0;
+			c100 = 0;
+			if (plus) {
+				c1 = a1 + b1;
+				if (c1 >= min) {
+					if (min != radix) {
+						res[idx++] = QUESTION_MARK;
+						return new String(res, 0, idx);
+					}
+					c1 -= min;
+					c10++;
+				}
+				c10 += a10 + b10;
+				if (c10 >= min) {
+					if (min != radix) {
+						res[idx++] = QUESTION_MARK;
+						return new String(res, 0, idx);
+					}
+					c10 -= min;
+					c100++;
+				}
+			} else {
+				c1 = a1 - b1;
+				if (c1 < 0) {
+					if (min != radix) {
+						res[idx++] = QUESTION_MARK;
+						return new String(res, 0, idx);
+					}
+					c1 += min;
+					a10--;
+				}
+				c10 = a10 - b10;
+			}
+			if (c100 != 0) {
+				res[idx++] = (char) (c100 + DIFF);
+				res[idx++] = (char) (c10 + DIFF);
+			} else if (c10 != 0) {
+				res[idx++] = (char) (c10 + DIFF);
+			}
+			res[idx++] = (char) (c1 + DIFF);
+			return new String(res, 0, idx);
+		}
+	}
 
-            sb = new StringBuilder();
-            if (a[1] == 0) {
-                sb.append(a[0]);
-            } else {
-                sb.append(a[1]).append(a[0]);
-            }
-            sb.append(SPACE).append(op ? PLUS : MINUS).append(SPACE);
-            if (b[1] == 0) {
-                sb.append(b[0]);
-            } else {
-                sb.append(b[1]).append(b[0]);
-            }
-            sb.append(SPACE).append(EQUAL).append(SPACE);
-            if (radix == 0) {
-                num1 = a[1] * min + a[0];
-                num2 = b[1] * min + b[0];
-                if (op) {
-                    res = Integer.toString(num1 + num2, min);
-                } else {
-                    res = Integer.toString(num1 - num2, min);
-                }
-                for (i = min + 1; i <= MAX; i++) {
-                    num1 = a[1] * i + a[0];
-                    num2 = b[1] * i + b[0];
-                    if (op) {
-                        str = Integer.toString(num1 + num2, i);
-                    } else {
-                        str = Integer.toString(num1 - num2, i);
-                    }
-                    if (!res.equals(str)) {
-                        return sb.append(QUESTION_MARK).toString();
-                    }
-                }
-            } else {
-                num1 = a[1] * radix + a[0];
-                num2 = b[1] * radix + b[0];
-                if (op) {
-                    res = Integer.toString(num1 + num2, radix);
-                } else {
-                    res = Integer.toString(num1 - num2, radix);
-                }
-            }
-            return sb.append(res).toString();
-        }
-    }
+	public String[] solution(String[] expressions) {
+		int i;
+		int a1;
+		int b1;
+		int c1;
+		int a10;
+		int b10;
+		int c10;
+		int idx;
+		int min;
+		int size;
+		int radix;
+		boolean plus;
+		String str;
+		String[] ans;
+		ArrayList<Exp> exps;
 
-    public String[] solution(String[] expressions) {
-        int i;
-        int len;
-        Exp exp;
-        String[] ans;
-        ArrayList<Exp> results;
-
-        Exp.min = 2;
-        results = new ArrayList();
-        for (String expression : expressions) {
-            exp = new Exp(expression);
-            if (exp.c == null) {
-                results.add(exp);
-            }
-        }
-        len = results.size();
-        ans = new String[len];
-        for (i = 0; i < len; i++) {
-            ans[i] = results.get(i).eval();
-        }
-        return ans;
-    }
+		min = 2;
+		radix = 9;
+		exps = new ArrayList<>();
+		size = expressions.length;
+		for (i = 0; i < size; i++) {
+			str = expressions[i];
+			idx = 0;
+			a10 = str.charAt(idx++) - DIFF;
+			a1 = str.charAt(idx++) - DIFF;
+			if (a1 == EMPTY) {
+				a1 = a10;
+				a10 = 0;
+			} else {
+				idx++;
+			}
+			plus = str.charAt(idx) == PLUS;
+			idx += 2;
+			b10 = str.charAt(idx++) - DIFF;
+			b1 = str.charAt(idx) - DIFF;
+			if (b1 == EMPTY) {
+				b1 = b10;
+				b10 = 0;
+			}
+			if (min != radix) {
+				min = Math.max(min, Math.max(a1, Math.max(a10, Math.max(b1, b10))) + 1);
+			}
+			c1 = str.charAt(str.length() - 1) - DIFF;
+			if (c1 == ERASED) {
+				exps.add(new Exp(a10, a1, plus, b10, b1));
+			} else {
+				c10 = str.charAt(str.length() - 2) - DIFF;
+				if (c10 == EMPTY) {
+					c10 = 0;
+				}
+				if (min != radix) {
+					min = Math.max(min, Math.max(c1, c10) + 1);
+				}
+				if (min != radix) {
+					if (plus) {
+						if (a1 + b1 != c1) {
+							radix = min = a1 + b1 - c1;
+						} else if (a10 + b10 != c10) {
+							radix = min = a10 + b10 - c10;
+						}
+					} else {
+						if (a1 - b1 != c1) {
+							radix = min = c1 + b1 - a1;
+						}
+					}
+				}
+			}
+		}
+		Exp.min = min;
+		Exp.radix = radix;
+		size = exps.size();
+		ans = new String[size];
+		for (i = 0; i < size; i++) {
+			ans[i] = exps.get(i).calc();
+		}
+		return ans;
+	}
 }
