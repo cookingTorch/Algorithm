@@ -1,90 +1,75 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-
 class Solution {
-    private static final String DELIM = " :";
+    private static final int B = 6;
+    private static final int E = 10;
+    private static final int R = 10;
+    private static final int IN = 13;
+    private static final int SIZE = 10000;
 
-    private static final class Car implements Comparable<Car> {
-        private static final int IN = 2;
-        private static final int NIL = -1;
-        private static final int MAX = timeToInt("23", "59");
+    private static final class Car {
+        private static final int NIL = 0;
+        private static final int MAX = timeToInt("23:59");
 
-        int in;
+        int out;
         int sum;
-        int num;
 
-        Car(String h, String m, int num) {
-            in = timeToInt(h, m);
-            this.num = num;
-        }
-
-        private static int timeToInt(String h, String m) {
-            return Integer.parseInt(h) * 60 + Integer.parseInt(m);
-        }
-
-        private void in(String h, String m) {
-            in = timeToInt(h, m);
-        }
-
-        private void out(String h, String m) {
-            sum += timeToInt(h, m) - in;
-            in = NIL;
-        }
-
-        void inOut(String h, String m, int io) {
-            if (io == IN) {
-                in(h, m);
+        Car(int time, boolean in) {
+            if (in) {
+                sum = MAX - time;
             } else {
-                out(h, m);
+                out = time;
             }
         }
 
-        int getSum() {
-            if (in != NIL) {
-                sum += MAX - in;
+        void inOut(int time) {
+            if (out == NIL) {
+                out = time;
+            } else {
+                sum += out - time;
+                out = NIL;
             }
-            return sum;
-        }
-
-        @Override
-        public int compareTo(Car o) {
-            return num - o.num;
         }
     }
+
+    private static int timeToInt(String time) {
+        return time.charAt(0) * 600 + time.charAt(1) * 60 + time.charAt(3) * 10 + time.charAt(4);
+    }
+
     public int[] solution(int[] fees, String[] records) {
         int i;
-        int io;
+        int j;
         int len;
         int num;
+        int cnt;
+        int time;
+        int base;
+        int unit;
+        int baseFee;
+        int unitFee;
         int[] ans;
-        String h;
-        String m;
-        HashMap<Integer, Car> map;
-        ArrayList<Car> cars;
-        StringTokenizer st;
+        Car[] cars;
 
-        map = new HashMap<>();
+        cnt = 0;
+        cars = new Car[SIZE];
         len = records.length;
-        for (i = 0; i < len; i++) {
-            st = new StringTokenizer(records[i], DELIM, false);
-            h = st.nextToken();
-            m = st.nextToken();
-            num = Integer.parseInt(st.nextToken());
-            io = st.nextToken().length();
-            if (map.containsKey(num)) {
-                map.get(num).inOut(h, m, io);
+        for (i = len - 1; i >= 0; i--) {
+            time = timeToInt(records[i]);
+            num = Integer.parseInt(records[i], B, E, R);
+            if (cars[num] == null) {
+                cars[num] = new Car(time, records[i].length() == IN);
+                cnt++;
             } else {
-                map.put(num, new Car(h, m, num));
+                cars[num].inOut(time);
             }
         }
-        cars = new ArrayList<>(map.values());
-        Collections.sort(cars);
-        len = cars.size();
-        ans = new int[len];
-        for (i = 0; i < len; i++) {
-            ans[i] = fees[1] + (int) Math.ceil((double) Math.max(0, (cars.get(i).getSum() - fees[0])) / fees[2]) * fees[3];
+        base = fees[0];
+        baseFee = fees[1];
+        unit = fees[2];
+        unitFee = fees[3];
+        ans = new int[cnt];
+        for (i = 0, j = 0; i < SIZE; i++) {
+            if (cars[i] != null) {
+                ans[j++] = baseFee + (int) Math.ceil((double) Math.max(0, (cars[i].sum - base)) / unit) * unitFee;
+            }
         }
         return ans;
     }
