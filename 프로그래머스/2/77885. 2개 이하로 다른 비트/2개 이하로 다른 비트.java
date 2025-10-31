@@ -1,6 +1,6 @@
 class Solution {
     private static long f(long x) {
-        return (x & 1L) == 0 ? x | 1L : x ^ 3L << Long.numberOfTrailingZeros(~x & x + 1L) - 1;
+        return x ^ (~x & x + 1L) * 3L >>> 1;
     }
 
     public long[] solution(long[] numbers) {
