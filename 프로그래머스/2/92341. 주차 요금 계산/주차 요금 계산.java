@@ -68,7 +68,7 @@ class Solution {
         ans = new int[cnt];
         for (i = 0, j = 0; i < SIZE; i++) {
             if (cars[i] != null) {
-                ans[j++] = baseFee + (int) Math.ceil((double) Math.max(0, (cars[i].sum - base)) / unit) * unitFee;
+                ans[j++] = baseFee + Math.max(0, (cars[i].sum - base + unit - 1)) / unit * unitFee;
             }
         }
         return ans;
