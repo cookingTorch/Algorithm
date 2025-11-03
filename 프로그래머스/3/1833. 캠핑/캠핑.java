@@ -10,12 +10,13 @@ class Solution {
 		int y1;
 		int x2;
 		int y2;
+		int len;
 		int cnt;
 		int[][] dp;
 
-		n--;
-		Arrays.sort(data, 0, n + 1, (o1, o2) -> o1[0] - o2[0]);
-		for (i = 0, r = 1; i < n; i++) {
+		len = data.length - 1;
+		Arrays.sort(data, 0, len + 1, (o1, o2) -> o1[0] - o2[0]);
+		for (i = 0, r = 1; i < len; i++) {
 			if (data[i][0] == data[i + 1][0]) {
 				data[i][0] = r;
 			} else {
@@ -23,8 +24,8 @@ class Solution {
 			}
 		}
 		data[i][0] = r;
-		Arrays.sort(data, 0, n + 1, (o1, o2) -> o1[1] - o2[1]);
-		for (i = 0, c = 1; i < n; i++) {
+		Arrays.sort(data, 0, len + 1, (o1, o2) -> o1[1] - o2[1]);
+		for (i = 0, c = 1; i < len; i++) {
 			if (data[i][1] == data[i + 1][1]) {
 				data[i][1] = c;
 			} else {
@@ -33,7 +34,7 @@ class Solution {
 		}
 		data[i][1] = c;
 		dp = new int[r + 1][c + 1];
-		for (i = 0; i <= n; i++) {
+		for (i = 0; i <= len; i++) {
 			dp[data[i][0]][data[i][1]]++;
 		}
 		for (i = 1; i <= r; i++) {
@@ -42,7 +43,7 @@ class Solution {
 			}
 		}
 		cnt = 0;
-		for (i = 1; i <= n; i++) {
+		for (i = 1; i < n; i++) {
 			for (j = 0; j < i; j++) {
 				if (data[i][0] == data[j][0] || data[i][1] == data[j][1]) {
 					continue;
