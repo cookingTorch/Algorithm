@@ -21,7 +21,7 @@ class Solution {
             gs[i] = g[i] + s[i];
         }
         l = 0L;
-        r = MAX + 1L;
+        r = MAX;
         while (l < r) {
             mid = l + r >>> 1;
             gold = 0L;
