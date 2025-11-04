@@ -1,9 +1,10 @@
-import java.util.HashMap;
-
 class Solution {
+    private static final int SIZE = 1_000_001;
+
+    private static int[] same;
+    private static int[] diff;
     private static int[] roots;
-    private static int[][] cnt;
-    private static boolean[] reverse;
+    private static boolean[] isSame;
 
     private static int find(int v) {
         if (roots[v] <= 0) {
@@ -12,66 +13,71 @@ class Solution {
         return roots[v] = find(roots[v]);
     }
 
+    private static int addEdge(int v) {
+        if (isSame[v]) {
+            isSame[v] = false;
+            v = find(v);
+            same[v]--;
+            diff[v]++;
+        } else {
+            isSame[v] = true;
+            v = find(v);
+            diff[v]--;
+            same[v]++;
+        }
+        return v;
+    }
+
     private static void union(int u, int v) {
+        u = addEdge(u);
+        v = addEdge(v);
         if (roots[u] > roots[v]) {
             roots[u] = v;
-            cnt[v][0] += cnt[u][0];
-            cnt[v][1] += cnt[u][1];
+            same[v] += same[u];
+            diff[v] += diff[u];
         } else {
             if (roots[u] == roots[v]) {
                 roots[u]--;
             }
             roots[v] = u;
-            cnt[u][0] += cnt[v][0];
-            cnt[u][1] += cnt[v][1];
+            same[u] += same[v];
+            diff[u] += diff[v];
         }
-    }
-
-    private static int addEdge(int v) {
-        if (reverse[v]) {
-            reverse[v] = false;
-            v = find(v);
-            cnt[v][1]--;
-            cnt[v][0]++;
-        } else {
-            reverse[v] = true;
-            v = find(v);
-            cnt[v][0]--;
-            cnt[v][1]++;
-        }
-        return v;
     }
 
     public int[] solution(int[] nodes, int[][] edges) {
         int i;
         int len;
+        int size;
+        int[] idx;
         int[] ans;
-        HashMap<Integer,Integer> map;
 
+        idx = new int[SIZE];
         len = nodes.length;
-        map = new HashMap<>((int) Math.ceil(len / 0.75));
-        reverse = new boolean[len + 1];
-        cnt = new int[len + 1][2];
+        same = new int[len + 1];
+        diff = new int[len + 1];
+        isSame = new boolean[len + 1];
         for (i = 1; i <= len; i++) {
-            map.put(nodes[i - 1], i);
+            idx[nodes[i - 1]] = i;
             if ((nodes[i - 1] & 1) == 0) {
-                cnt[i][0]++;
+                same[i]++;
+                isSame[i] = true;
             } else {
-                reverse[i] = true;
-                cnt[i][1]++;
+                diff[i]++;
             }
         }
         roots = new int[len + 1];
-        for (int[] edge : edges) {
-            union(addEdge(map.get(edge[0])), addEdge(map.get(edge[1])));
+        size = edges.length;
+        for (i = 0; i < size; i++) {
+            union(idx[edges[i][0]], idx[edges[i][1]]);
         }
         ans = new int[2];
         for (i = 1; i <= len; i++) {
             if (roots[i] <= 0) {
-                if (cnt[i][0] == 1) {
+                if (same[i] == 1) {
                     ans[0]++;
                 }
-                if (cnt[i][1] == 1) {
+                if (diff[i] == 1) {
                     ans[1]++;
                 }
             }
