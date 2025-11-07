@@ -1,65 +1,79 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 class Solution {
-    private static final int A = 'A';
-    private static final int MIN = 2;
-    private static final int MAX = 11;
+    private static final int DIFF = 'A';
+    private static final int SIZE = 11;
 
     public String[] solution(String[] orders, int[] course) {
         int i;
+        int j;
         int len;
+        int bit;
         int sub;
         int cnt;
-        int mask;
-        int bitCnt;
-        int[] cnts;
+        int size;
+        int[] max;
+        int[] order;
+        boolean[] lens;
+        String str;
         String[] ans;
-        HashMap<Integer, Integer> map;
-        ArrayList<String> res;
-        ArrayList<Integer>[] lists;
         StringBuilder sb;
+        HashMap<Integer, Integer> map;
+        ArrayList<Integer> courses;
 
-        cnts = new int[MAX];
-        map = new HashMap<>();
-        lists = new ArrayList[MAX];
-        for (int num : course) {
-            cnts[num] = MIN;
-            lists[num] = new ArrayList<>();
+        lens = new boolean[SIZE];
+        size = course.length;
+        for (i = 0; i < size; i++) {
+            lens[course[i]] = true;
         }
-        for (String order : orders) {
-            mask = 0;
-            len = order.length();
-            for (i = 0; i < len; i++) {
-                mask |= 1 << order.charAt(i) - A;
+        size = orders.length;
+        order = new int[size];
+        for (i = 0; i < size; i++) {
+            bit = 0;
+            str = orders[i];
+            len = str.length();
+            for (j = 0; j < len; j++) {
+                bit |= 1 << str.charAt(j) - DIFF;
             }
-            for (sub = mask; sub != 0; sub = sub - 1 & mask) {
-                bitCnt = Integer.bitCount(sub);
-                if (lists[bitCnt] != null) {
+            order[i] = bit;
+        }
+        max = new int[SIZE];
+        map = new HashMap<>();
+        for (i = 0; i < size; i++) {
+            for (j = 0; j < i; j++) {
+                bit = order[i] & order[j];
+                for (sub = bit; sub != 0; sub = sub - 1 & bit) {
+                    len = Integer.bitCount(sub);
+                    if (!lens[len]) {
+                        continue;
+                    }
                     cnt = map.getOrDefault(sub, 0) + 1;
                     map.put(sub, cnt);
-                    if (cnt > cnts[bitCnt]) {
-                        cnts[bitCnt] = cnt;
-                        lists[bitCnt].clear();
-                        lists[bitCnt].add(sub);
-                    } else if (cnt == cnts[bitCnt]) {
-                        lists[bitCnt].add(sub);
-                    }
+                    max[len] = Math.max(max[len], cnt);
                 }
             }
         }
-        res = new ArrayList<>();
-        for (int num : course) {
-            for (int menu : lists[num]) {
-                sb = new StringBuilder();
-                for (; menu != 0; menu = menu & menu - 1) {
-                    sb.append((char) (Integer.numberOfTrailingZeros(menu) + A));
-                }
-                res.add(sb.toString());
+        courses = new ArrayList<>();
+        for (Entry<Integer, Integer> entry : map.entrySet()) {
+            bit = entry.getKey();
+            if (entry.getValue() == max[Integer.bitCount(bit)]) {
+                courses.add(bit);
             }
         }
-        res.toArray(ans = new String[res.size()]);
+        size = courses.size();
+        ans = new String[size];
+        for (i = 0; i < size; i++) {
+            sb = new StringBuilder();
+            bit = courses.get(i);
+            for (; bit != 0; bit ^= 1 << cnt) {
+                cnt = Integer.numberOfTrailingZeros(bit);
+                sb.append((char) (cnt + DIFF));
+            }
+            ans[i] = sb.toString();
+        }
         Arrays.sort(ans);
         return ans;
     }
