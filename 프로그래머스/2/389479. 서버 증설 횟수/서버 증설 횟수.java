@@ -1,23 +1,19 @@
 class Solution {
-    private static final int LEN = 24;
+    private static final int DAY = 24;
 
     public int solution(int[] players, int m, int k) {
         int i;
         int cnt;
         int cur;
-        int player;
-        int[] servers;
+        int[] off;
 
         cnt = 0;
         cur = 0;
-        servers = new int[LEN + k];
-        for (i = 0; i < LEN; i++) {
-            if ((player = players[i] / m) > (cur -= servers[i])) {
-                player -= cur;
-                servers[i + k] = player;
-                cur += player;
-                cnt += player;
-            }
+        off = new int[DAY << 1];
+        for (i = 0; i < DAY; i++) {
+            cur -= off[i];
+            cur += off[i + k] = Math.max(0, players[i] / m - cur);
+            cnt += off[i + k];
         }
         return cnt;
     }
