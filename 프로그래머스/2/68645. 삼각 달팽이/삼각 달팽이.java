@@ -62,9 +62,8 @@ class Solution {
         ans = new int[n * (n + 1) >>> 1];
         idx = 0;
         for (i = 0; i < n; i++) {
-            for (j = 0; j <= i; j++) {
-                ans[idx++] = arr[i][j];
-            }
+            System.arraycopy(arr[i], 0, ans, idx, i + 1);
+            idx += i + 1;
         }
         return ans;
     }
