@@ -31,10 +31,10 @@ class Solution {
             };
         }
 
-        boolean match(int[] locs) {
+        boolean match(int[] loc) {
             int dist;
 
-            dist = Math.abs(locs[a] - locs[b]);
+            dist = Math.abs(loc[a] - loc[b]);
             return switch (op) {
                 case LT -> dist < this.dist;
                 case GT -> dist > this.dist;
