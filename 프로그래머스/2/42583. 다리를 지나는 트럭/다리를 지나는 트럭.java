@@ -1,27 +1,27 @@
-import java.util.ArrayDeque;
-
 class Solution {
     public int solution(int bridge_length, int weight, int[] truck_weights) {
         int i;
         int len;
+        int head;
         int time;
-        ArrayDeque<int[]> dq;
+        int[] start;
 
         len = truck_weights.length;
-        dq = new ArrayDeque<>(len);
-        dq.add(new int[] {time = 1, truck_weights[0]});
+        start = new int[len];
+        start[0] = time = 1;
         weight -= truck_weights[0];
+        head = 0;
         for (i = 1; i < len; i++) {
-            if (++time - dq.peekLast()[0] == bridge_length) {
-                weight += dq.pollLast()[1];
+            if (++time - start[head] == bridge_length) {
+                weight += truck_weights[head++];
             }
             while (weight < truck_weights[i]) {
-                time = dq.peekLast()[0] + bridge_length;
-                weight += dq.pollLast()[1];
+                time = start[head] + bridge_length;
+                weight += truck_weights[head++];
             }
-            dq.addFirst(new int[] {time, truck_weights[i]});
+            start[i] = time;
             weight -= truck_weights[i];
         }
-        return dq.peekFirst()[0] + bridge_length;
+        return start[len - 1] + bridge_length;
     }
 }
