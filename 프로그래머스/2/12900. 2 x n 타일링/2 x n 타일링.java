@@ -23,7 +23,7 @@ class Solution {
             sqrt = power(matrix, n >> 1);
             return multiply(sqrt, sqrt);
         }
-        return multiply(power(matrix, n - 1), FIRST);
+        return multiply(power(matrix, n - 1), matrix);
     }
 
     public int solution(int n) {
