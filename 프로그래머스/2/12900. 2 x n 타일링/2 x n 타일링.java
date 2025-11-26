@@ -1,32 +1,26 @@
 class Solution {
-    private static final long MOD = 1_000_000_007L;
-    private static final long[][] FIRST = {{1L, 1L}, {1L, 0L}};
-
-    private static long[][] multiply(long[][] a, long[][] b) {
-        long[][] c;
-
-        c = new long[2][2];
-        c[0][0] = ((a[0][0] * b[0][0]) + (a[0][1] * b[1][0])) % MOD;
-        c[0][1] = ((a[0][0] * b[0][1]) + (a[0][1] * b[1][1])) % MOD;
-        c[1][0] = ((a[1][0] * b[0][0]) + (a[1][1] * b[1][0])) % MOD;
-        c[1][1] = ((a[1][0] * b[0][1]) + (a[1][1] * b[1][1])) % MOD;
-        return c;
-    }
-
-    private static long[][] power(long[][] matrix, long n) {
-        long[][] sqrt;
-
-        if (n == 1) {
-            return matrix;
-        }
-        if ((n & 1) == 0) {
-            sqrt = power(matrix, n >> 1);
-            return multiply(sqrt, sqrt);
-        }
-        return multiply(power(matrix, n - 1), matrix);
-    }
+    private static final long MOD = 1_000_000_007;
 
     public int solution(int n) {
-        return (int) power(FIRST, n + 1)[0][1];
+        int i;
+        long fk;
+        long fk1;
+        long tmp;
+        long tmp1;
+
+        fk = 0L;
+        fk1 = 1L;
+        for (i = Integer.highestOneBit(n); i != 0; i >>= 1) {
+            tmp = fk * ((fk1 << 1) - fk) % MOD;
+            tmp1 = (fk1 * fk1 + fk * fk) % MOD;
+            fk = tmp;
+            fk1 = tmp1;
+            if ((n & i) != 0) {
+                tmp = fk1 + fk;
+                fk = fk1;
+                fk1 = tmp;
+            }
+        }
+        return (int) (fk1 % MOD);
     }
 }
