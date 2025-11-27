@@ -40,8 +40,8 @@ class Solution {
         for (i = 0; i < m; i++) {
             for (j = 0; j < n; j++) {
                 if (picture[i][j] != EMPTY) {
-                    size = 0;
                     color = picture[i][j];
+                    size = 0;
                     dfs(i, j);
                     cnt++;
                     max = Math.max(max, size);
