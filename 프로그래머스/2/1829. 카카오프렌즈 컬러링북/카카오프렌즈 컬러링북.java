@@ -43,8 +43,8 @@ class Solution {
                     size = 0;
                     color = picture[i][j];
                     dfs(i, j);
-                    max = Math.max(max, size);
                     cnt++;
+                    max = Math.max(max, size);
                 }
             }
         }
