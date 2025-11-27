@@ -9,7 +9,7 @@ class Solution {
             return 0;
         }
         if (left <= start && end <= right) {
-            return (int) Math.pow(4, n);
+            return 1 << (n << 1);
         }
         len = (end - start) / 5;
         n--;
