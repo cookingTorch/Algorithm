@@ -7,7 +7,23 @@ class Solution {
     private static int last;
     private static int[] nums;
     private static boolean[] used;
-    private static boolean[] notPrime;
+
+    private static boolean isPrime(int n) {
+        int i;
+
+        if (n == 3) {
+            return true;
+        }
+        if (n % 3 == 0) {
+            return false;
+        }
+        for (i = 5; i * i <= n; i += 6) {
+            if (n % i == 0 || n % (i + 2) == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     private static void dfs(int depth) {
         int i;
@@ -25,7 +41,7 @@ class Solution {
                 visited |= 1 << num;
                 used[i] = true;
                 cur += num;
-                if (!notPrime[cur * 10 + last]) {
+                if (isPrime(cur * 10 + last)) {
                     cnt++;
                 }
                 dfs(depth + 1);
@@ -38,31 +54,12 @@ class Solution {
 
     public int solution(String numbers) {
         int i;
-        int j;
-        int max;
-        int limit;
         int visited;
 
         len = numbers.length();
         nums = new int[len];
         for (i = 0; i < len; i++) {
             nums[i] = numbers.charAt(i) - DIFF;
-        }
-        max = 1;
-        for (i = 0; i < len; i++) {
-            max *= 10;
-        }
-        max -= 1;
-        notPrime = new boolean[max + 1];
-        notPrime[0] = true;
-        notPrime[1] = true;
-        limit = (int) Math.sqrt(max);
-        for (i = 2; i <= limit; i++) {
-            if (!notPrime[i]) {
-                for (j = i * i; j <= max; j += i) {
-                    notPrime[j] = true;
-                }
-            }
         }
         visited = 0;
         used = new boolean[len];
