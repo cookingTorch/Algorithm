@@ -14,7 +14,7 @@ class Solution {
         if (n == 3) {
             return true;
         }
-        if (n % 3 == 0) {
+        if (n == 1 || n % 3 == 0) {
             return false;
         }
         for (i = 5; i * i <= n; i += 6) {
@@ -74,7 +74,6 @@ class Solution {
                 }
             }
         }
-        cnt += Integer.bitCount(visited & (1 << 2 | 1 << 3 | 1 << 5 | 1 << 7));
-        return cnt;
+        return cnt + Integer.bitCount(visited & (1 << 2 | 1 << 3 | 1 << 5 | 1 << 7));
     }
 }
