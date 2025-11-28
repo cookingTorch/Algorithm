@@ -1,96 +1,82 @@
-import java.util.ArrayDeque;
-
 class Solution {
     private static final int SIZE = 101;
 
+    private static int ans;
+    private static int time;
+    private static int[][] point;
+
     private static final class Robot {
-        private static int[][] map;
-        private static int[][] poses;
-        private static int[][] visited;
+        private static int[][] map = new int[SIZE][SIZE];
+        private static int[][] visited = new int[SIZE][SIZE];
 
         int x;
         int y;
-        int nx;
-        int ny;
+        int ex;
+        int ey;
         int idx;
-        int size;
+        int len;
         int[] route;
 
         Robot(int[] route) {
-            int[] pos;
-
-            this.route = route;
-            size = route.length;
-            pos = poses[route[0] - 1];
-            x = pos[0];
-            y = pos[1];
+            x = point[route[0] - 1][0];
+            y = point[route[0] - 1][1];
+            ex = point[route[1] - 1][0];
+            ey = point[route[1] - 1][1];
             idx = 1;
-            pos = poses[route[idx] - 1];
-            nx = pos[0];
-            ny = pos[1];
+            len = route.length;
+            this.route = route;
         }
 
-        static void init(int[][] points) {
-            poses = points;
-            map = new int[SIZE][SIZE];
-            visited = new int[SIZE][SIZE];
-        }
-
-        boolean move(int time) {
-            int[] pos;
-
-            if (map[x][y] == time && visited[x][y] != time) {
-                cnt++;
-                visited[x][y] = time;
+        boolean move() {
+            if (map[x][y] == time) {
+                if (visited[x][y] != time) {
+                    ans++;
+                    visited[x][y] = time;
+                }
             } else {
                 map[x][y] = time;
             }
-            if (x == nx && y == ny) {
-                if (++idx == size) {
-                    return false;
+            if (x == ex && y == ey) {
+                if (++idx == len) {
+                    return true;
                 }
-                pos = poses[route[idx] - 1];
-                nx = pos[0];
-                ny = pos[1];
+                ex = point[route[idx] - 1][0];
+                ey = point[route[idx] - 1][1];
             }
-            if (x < nx) {
+            if (x < ex) {
                 x++;
-            } else if (x > nx) {
+            } else if (x > ex) {
                 x--;
-            } else if (y < ny) {
+            } else if (y < ey) {
                 y++;
-            } else if (y > ny) {
+            } else if (y > ey) {
                 y--;
             }
-            return true;
+            return false;
         }
     }
 
-    private static int cnt;
-
     public int solution(int[][] points, int[][] routes) {
         int i;
-        int j;
-        int size;
-        Robot robot;
-        ArrayDeque<Robot> dq;
+        int len;
+        int cnt;
+        Robot[] robots;
 
-        Robot.init(points);
-        size = routes.length;
-        dq = new ArrayDeque<>(size);
-        for (i = 0; i < size; i++) {
-            dq.addLast(new Robot(routes[i]));
+        ans = 0;
+        point = points;
+        len = routes.length;
+        robots = new Robot[len];
+        for (i = 0; i < len; i++) {
+            robots[i] = new Robot(routes[i]);
         }
-        cnt = 0;
-        for (i = 1; !dq.isEmpty(); i++) {
-            size = dq.size();
-            for (j = 0; j < size; j++) {
-                robot = dq.pollFirst();
-                if (robot.move(i)) {
-                    dq.addLast(robot);
+        for (time = 1, cnt = len; cnt > 1; time++) {
+            for (i = 0; i < len; i++) {
+                if (robots[i] != null && robots[i].move()) {
+                    cnt--;
+                    robots[i] = null;
                 }
             }
         }
-        return cnt;
+        return ans;
     }
 }
