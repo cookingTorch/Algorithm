@@ -14,7 +14,7 @@ class Solution {
         if (n == 3) {
             return true;
         }
-        if (n == 1 || n % 3 == 0) {
+        if (n % 3 == 0) {
             return false;
         }
         for (i = 5; i * i <= n; i += 6) {
