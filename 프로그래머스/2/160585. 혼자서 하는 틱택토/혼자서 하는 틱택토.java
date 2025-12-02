@@ -8,14 +8,14 @@ class Solution {
         int j;
         int ch;
         int cnt;
+        boolean hO;
+        boolean hX;
+        boolean vO;
+        boolean vX;
         boolean lO;
         boolean lX;
         boolean rO;
         boolean rX;
-        boolean rowO;
-        boolean rowX;
-        boolean colO;
-        boolean colX;
         boolean winO;
         boolean winX;
 
@@ -27,17 +27,17 @@ class Solution {
         rO = true;
         rX = true;
         for (i = 0; i < SIZE; i++) {
-            rowO = true;
-            rowX = true;
-            colO = true;
-            colX = true;
+            hO = true;
+            hX = true;
+            vO = true;
+            vX = true;
             for (j = 0; j < SIZE; j++) {
                 ch = board[i].charAt(j);
-                rowO &= ch == O;
-                rowX &= ch == X;
+                hO &= ch == O;
+                hX &= ch == X;
                 ch = board[j].charAt(i);
-                colO &= ch == O;
-                colX &= ch == X;
+                vO &= ch == O;
+                vX &= ch == X;
                 if (ch == O) {
                     cnt++;
                 } else if (ch == X) {
@@ -50,8 +50,8 @@ class Solution {
             ch = board[i].charAt(2 - i);
             rO &= ch == O;
             rX &= ch == X;
-            winO |= rowO || colO;
-            winX |= rowX || colX;
+            winO |= hO || vO;
+            winX |= hX || vX;
         }
         winO |= lO || rO;
         winX |= lX || rX;
