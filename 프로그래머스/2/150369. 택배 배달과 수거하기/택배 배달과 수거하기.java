@@ -3,7 +3,7 @@ class Solution {
         int i;
         int cnt;
         int max;
-        int diff;
+        int prev;
         int dCnt;
         int pCnt;
         int dTmp;
@@ -11,29 +11,25 @@ class Solution {
         long dist;
 
         dist = 0L;
-        cnt = 0;
+        prev = 0;
         dCnt = 0;
         dTmp = 0;
         pCnt = 0;
         pTmp = 0;
         for (i = n - 1; i >= 0; i--) {
-            dTmp -= deliveries[i];
-            if (dTmp < 0) {
-                dTmp = -dTmp;
-                diff = (dTmp + cap - 1) / cap;
-                dCnt += diff;
-                dTmp = diff * cap - dTmp;
+            if ((dTmp -= deliveries[i]) < 0) {
+                cnt = (-dTmp + cap - 1) / cap;
+                dCnt += cnt;
+                dTmp = cnt * cap + dTmp;
             }
-            pTmp -= pickups[i];
-            if (pTmp < 0) {
-                pTmp = -pTmp;
-                diff = (pTmp + cap - 1) / cap;
-                pCnt += diff;
-                pTmp = diff * cap - pTmp;
+            if ((pTmp -= pickups[i]) < 0) {
+                cnt = (-pTmp + cap - 1) / cap;
+                pCnt += cnt;
+                pTmp = cnt * cap + pTmp;
             }
             max = Math.max(dCnt, pCnt);
-            dist += (long) (max - cnt) * (i + 1 << 1);
-            cnt = max;
+            dist += (long) (max - prev) * (i + 1 << 1);
+            prev = max;
         }
         return dist;
     }
