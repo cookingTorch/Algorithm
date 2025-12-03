@@ -6,6 +6,7 @@ class Solution {
         int e;
         int i;
         int j;
+        int sqrt;
         int size;
         int[] ans;
 
@@ -13,17 +14,18 @@ class Solution {
         e = (int) end;
         size = e - s + 1;
         ans = new int[size];
-        for (i = 2; i * i <= e; i++) {
+        sqrt = (int) Math.sqrt(e);
+        for (i = 2; i <= sqrt; i++) {
             for (j = ((s - 1) / i + 1) * i; j <= e; j += i) {
                 if (ans[j - s] == 0 && j / i <= MAX) {
                     ans[j - s] = j / i;
                 }
             }
         }
-        for (--i; i >= 2; i--) {
-            for (j = ((s - 1) / i + 1) * i; j <= e; j += i) {
-                if (ans[j - s] == 0) {
-                    ans[j - s] = i;
+        for (i = sqrt; i >= 2; i--) {
+            for (j = ((s - 1) / i + 1) * i - s; j < size; j += i) {
+                if (ans[j] == 0) {
+                    ans[j] = i;
                 }
             }
         }
