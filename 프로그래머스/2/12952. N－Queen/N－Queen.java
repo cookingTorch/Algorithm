@@ -16,12 +16,22 @@ class Solution {
             dfs((l | i) << 1, m | i, (r | i) >>> 1, depth + 1);
         }
     }
-    
+
     public int solution(int n) {
+        int i;
+        int mid;
+
         cnt = 0;
         size = n;
         range = (1 << n) - 1;
-        dfs(0, 0, 0, 0);
+        mid = 1 << (n >> 1);
+        for (i = 1; i < mid; i <<= 1) {
+            dfs(i << 1, i, i >>> 1, 1);
+        }
+        cnt <<= 1;
+        if ((n & 1) != 0) {
+            dfs(mid << 1, mid, mid >>> 1, 1);
+        }
         return cnt;
     }
 }
