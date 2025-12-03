@@ -13,7 +13,7 @@ class Solution {
         }
         e = ~(l | m | r) & range;
         for (i = e & -e; e != 0; e ^= i, i = e & -e) {
-            dfs((l | i) << 1, m | i, (r | i) >> 1, depth + 1);
+            dfs((l | i) << 1, m | i, (r | i) >>> 1, depth + 1);
         }
     }
     
