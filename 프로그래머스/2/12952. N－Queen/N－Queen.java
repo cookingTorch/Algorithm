@@ -24,7 +24,7 @@ class Solution {
         cnt = 0;
         size = n;
         range = (1 << n) - 1;
-        mid = 1 << (n >> 1);
+        mid = 1 << (n >>> 1);
         for (i = 1; i < mid; i <<= 1) {
             dfs(i << 1, i, i >>> 1, 1);
         }
