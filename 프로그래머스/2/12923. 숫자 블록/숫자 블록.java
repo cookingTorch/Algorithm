@@ -6,6 +6,7 @@ class Solution {
         int e;
         int i;
         int j;
+        int num;
         int sqrt;
         int size;
         int[] ans;
@@ -16,9 +17,10 @@ class Solution {
         ans = new int[size];
         sqrt = (int) Math.sqrt(e);
         for (i = 2; i <= sqrt; i++) {
-            for (j = ((s - 1) / i + 1) * i; j <= e; j += i) {
-                if (ans[j - s] == 0 && j / i <= MAX) {
-                    ans[j - s] = j / i;
+            num = (s - 1) / i + 1;
+            for (j = num * i; j <= e && num <= MAX; j += i, num++) {
+                if (ans[j - s] == 0) {
+                    ans[j - s] = num;
                 }
             }
         }
