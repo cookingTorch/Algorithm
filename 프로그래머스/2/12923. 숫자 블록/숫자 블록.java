@@ -1,15 +1,15 @@
 class Solution {
     private static final int MAX = 10_000_000;
     
-    private static int calc(long n) {
+    private static int calc(int n) {
         int i;
         int res;
         
         res = 1;
-        for (i = 2; i <= MAX && i * i <= n; i++) {
+        for (i = 2; i * i <= n; i++) {
             if (n % i == 0) {
                 if (n / i <= MAX) {
-                    return (int) (n / i);
+                    return n / i;
                 } else {
                     res = i;
                 }
@@ -19,16 +19,20 @@ class Solution {
     }
 
     public int[] solution(long begin, long end) {
+        int s;
+        int e;
         int i;
         int size;
         int[] ans;
 
-        size = (int) (end - begin + 1);
+        s = (int) begin;
+        e = (int) end;
+        size = e - s + 1;
         ans = new int[size];
         for (i = 0; i < size; i++) {
-            ans[i] = calc(begin + i);
+            ans[i] = calc(s + i);
         }
-        if (begin == 1L) {
+        if (s == 1) {
             ans[0] = 0;
         }
         return ans;
