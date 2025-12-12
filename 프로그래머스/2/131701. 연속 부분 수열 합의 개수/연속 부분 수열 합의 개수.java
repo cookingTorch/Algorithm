@@ -18,14 +18,13 @@ class Solution {
         for (i = 1; i < len; i++) {
             cur = 0;
             for (j = i; j < len; j++) {
-                cur += elements[j];
-                if (!visited[cur]) {
-                    cnt++;
+                if (!visited[cur += elements[j]]) {
                     visited[cur] = true;
+                    cnt++;
                 }
                 if (!visited[sum - cur]) {
-                    cnt++;
                     visited[sum - cur] = true;
+                    cnt++;
                 }
             }
         }
