@@ -1,0 +1,62 @@
+import java.util.ArrayDeque;
+
+class Solution {
+	private static final int O1 = '(';
+	private static final int C1 = ')';
+	private static final int O2 = '[';
+	private static final int C2 = ']';
+	private static final int O3 = '{';
+	private static final int C3 = '}';
+	
+	private static ArrayDeque<int[]> dq;
+	
+	private static boolean match(int ch) {
+		if (dq.isEmpty()) {
+			return false;
+		}
+		return switch (ch) {
+			case C1 -> dq.peekLast()[1] == O1;
+			case C2 -> dq.peekLast()[1] == O2;
+			case C3 -> dq.peekLast()[1] == O3;
+			default -> false;
+		};
+	}
+
+	public int solution(String s) {
+		int i;
+		int ch;
+		int len;
+		int cnt;
+
+		len = s.length();
+		dq = new ArrayDeque<>(len);
+		for (i = 0; i < len; i++) {
+			ch = s.charAt(i);
+			if (match(ch)) {
+				dq.pollLast();
+			} else {
+				dq.addLast(new int[] {i, ch});
+			}
+		}
+		cnt = 0;
+		for (i = 0; i < len; i++) {
+			ch = s.charAt(i);
+			if (dq.isEmpty()) {
+				dq.addLast(new int[]{i, ch});
+			} else {
+				if (dq.peekFirst()[0] == i) {
+					dq.pollFirst();
+				}
+				if (match(ch)) {
+					dq.pollLast();
+				} else {
+					dq.addLast(new int[] {i, ch});
+				}
+				if (dq.isEmpty()) {
+					cnt++;
+				}
+			}
+		}
+		return cnt;
+	}
+}
