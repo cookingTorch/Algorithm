@@ -7,12 +7,9 @@ class Solution {
         if (dq.isEmpty()) {
             return false;
         }
-        return switch (ch) {
-            case ')' -> dq.peekLast()[1] == '(';
-            case ']' -> dq.peekLast()[1] == '[';
-            case '}' -> dq.peekLast()[1] == '{';
-            default -> false;
-        };
+		return (ch == ')' && dq.peekLast()[1] == '(')
+				|| (ch == ']' && dq.peekLast()[1] == '[')
+				|| (ch == '}' && dq.peekLast()[1] == '{');
     }
 
     public int solution(String s) {
