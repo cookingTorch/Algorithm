@@ -22,7 +22,6 @@ class Solution {
 			num[i] = number[i];
 			map.put(want[i], i);
 		}
-		num[len] = -1;
 		arr = new int[RANGE];
 		cnt = new int[len + 1];
 		match = 0;
@@ -39,6 +38,7 @@ class Solution {
 			if (cnt[item]-- == num[item]) {
 				match--;
 			}
+			map.get(discount[i]);
 			item = arr[i % RANGE] = map.getOrDefault(discount[i], len);
 			if (++cnt[item] == num[item]) {
 				if (++match == len) {
