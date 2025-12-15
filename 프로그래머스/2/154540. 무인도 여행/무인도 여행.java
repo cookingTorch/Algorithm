@@ -52,8 +52,7 @@ class Solution {
                 }
             }
         }
-        len = list.size();
-        if (len == 0) {
+        if ((len = list.size()) == 0) {
             return FAIL;
         }
         ans = new int[len];
