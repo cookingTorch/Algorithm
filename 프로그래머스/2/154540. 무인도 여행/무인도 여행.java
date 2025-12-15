@@ -3,9 +3,9 @@ import java.util.Arrays;
 
 class Solution {
     private static final int DIFF = '0';
-    private static final int[] FAIL = {-1};
     private static final int[] dx = {-1, 0, 1, 0};
     private static final int[] dy = {0, 1, 0, -1};
+    private static final int[] FAIL = {-1};
     private static final char SEA = 'X';
 
     private static int r;
