@@ -22,7 +22,6 @@ class Solution {
         time = 0;
         for (r = 0; r < len; r++) {
             idx = map.getOrDefault(cities[r] = cities[r].toLowerCase(), len);
-            map.put(cities[r], r);
             if (out[idx]) {
                 if (cnt == cacheSize) {
                     for (; out[l]; l++);
@@ -35,6 +34,7 @@ class Solution {
                 out[idx] = true;
                 time++;
             }
+            map.put(cities[r], r);
         }
         return time;
     }
