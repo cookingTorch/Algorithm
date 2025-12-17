@@ -19,6 +19,7 @@ class Solution {
         int size;
 		Trie cur;
         Trie root;
+		Trie[] next;
 		String num;
 
         size = phone_book.length;
@@ -28,19 +29,21 @@ class Solution {
 	        len = num.length() - 1;
 	        cur = root;
 	        for (j = 0; j < len; j++) {
+		        next = cur.next;
 		        idx = num.charAt(j) - DIFF;
-		        if (cur.next[idx] == null) {
-			        cur.next[idx] = new Trie();
+		        if (next[idx] == null) {
+			        next[idx] = new Trie();
 		        }
-		        cur = cur.next[idx];
+		        cur = next[idx];
 		        if (cur.end) {
 			        return false;
 		        }
 	        }
+	        next = cur.next;
 	        idx = num.charAt(len) - DIFF;
-	        if (cur.next[idx] == null) {
-		        cur.next[idx] = new Trie();
-		        cur.next[idx].end = true;
+	        if (next[idx] == null) {
+		        next[idx] = new Trie();
+		        next[idx].end = true;
 	        } else {
 		        return false;
 	        }
