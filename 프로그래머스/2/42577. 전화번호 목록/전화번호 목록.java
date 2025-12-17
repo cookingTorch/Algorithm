@@ -9,47 +9,41 @@ class Solution {
         Trie() {
             next = new Trie[SIZE];
         }
-
-        boolean insert(String word) {
-            int i;
-            int idx;
-            int len;
-            Trie cur;
-
-			cur = this;
-            len = word.length() - 1;
-            for (i = 0; i < len; i++) {
-                idx = word.charAt(i) - DIFF;
-                if (cur.next[idx] == null) {
-                    cur.next[idx] = new Trie();
-                }
-	            cur = cur.next[idx];
-	            if (cur.end) {
-		            return true;
-	            }
-            }
-            idx = word.charAt(len) - DIFF;
-            if (cur.next[idx] == null) {
-                cur.next[idx] = new Trie();
-                cur.next[idx].end = true;
-            } else {
-                return true;
-            }
-            return false;
-        }
     }
 
     public boolean solution(String[] phone_book) {
         int i;
-        int len;
-        Trie trie;
+		int j;
+		int len;
+		int idx;
+        int size;
+		Trie cur;
+        Trie root;
+		String num;
 
-        len = phone_book.length;
-        trie = new Trie();
-        for (i = 0; i < len; i++) {
-            if (trie.insert(phone_book[i])) {
-                return false;
-            }
+        size = phone_book.length;
+        root = new Trie();
+        for (i = 0; i < size; i++) {
+			num = phone_book[i];
+	        len = num.length() - 1;
+	        cur = root;
+	        for (j = 0; j < len; j++) {
+		        idx = num.charAt(j) - DIFF;
+		        if (cur.next[idx] == null) {
+			        cur.next[idx] = new Trie();
+		        }
+		        cur = cur.next[idx];
+		        if (cur.end) {
+			        return false;
+		        }
+	        }
+	        idx = num.charAt(len) - DIFF;
+	        if (cur.next[idx] == null) {
+		        cur.next[idx] = new Trie();
+		        cur.next[idx].end = true;
+	        } else {
+		        return false;
+	        }
         }
         return true;
     }
