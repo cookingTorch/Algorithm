@@ -1,5 +1,5 @@
 class Solution {
-    private static final int MAX = 10_001;
+    private static final int RANGE = 10_001;
 
     public int solution(int[] topping) {
         int i;
@@ -12,7 +12,7 @@ class Solution {
 
         len = topping.length;
         sufCnt = 0;
-        suf = new int[MAX];
+        suf = new int[RANGE];
         for (i = len - 1; i >= 0; i--) {
             if (suf[topping[i]]++ == 0) {
                 sufCnt++;
@@ -20,7 +20,7 @@ class Solution {
         }
         ans = 0;
         preCnt = 0;
-        pre = new int[MAX];
+        pre = new int[RANGE];
         for (i = 0; i < len; i++) {
             if (pre[topping[i]]++ == 0) {
                 preCnt++;
