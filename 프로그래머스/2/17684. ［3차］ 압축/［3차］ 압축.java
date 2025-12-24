@@ -7,11 +7,11 @@ class Solution {
     private static final class Trie {
         private static int idx = 0;
 
-        int res;
+        int num;
         Trie[] next;
 
         Trie() {
-            res = idx++;
+            num = idx++;
             next = new Trie[ALPH];
         }
     }
@@ -25,17 +25,17 @@ class Solution {
         Trie root;
         ArrayList<Integer> res;
 
-        res = new ArrayList<>();
         root = new Trie();
         for (i = 0; i < ALPH; i++) {
             root.next[i] = new Trie();
         }
-        cur = root;
+        res = new ArrayList<>();
         len = msg.length();
+        cur = root;
         for (i = 0; i < len; i++) {
             ch = msg.charAt(i) - DIFF;
             if (cur.next[ch] == null) {
-                res.add(cur.res);
+                res.add(cur.num);
                 cur.next[ch] = new Trie();
                 cur = root;
                 i--;
@@ -43,7 +43,7 @@ class Solution {
                 cur = cur.next[ch];
             }
         }
-        res.add(cur.res);
+        res.add(cur.num);
         len = res.size();
         ans = new int[len];
         for (i = 0; i < len; i++) {
