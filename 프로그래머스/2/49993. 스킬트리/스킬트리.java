@@ -1,52 +1,43 @@
 class Solution {
-    private static final int SIZE = 'Z' + 1;
-    private static final int OFFSET = 'A';
-    private static final int LENGTH = SIZE - OFFSET;
+	private static final int SIZE = 26;
+	private static final int DIFF = 'A';
 
-    public int solution(String skill, String[] skill_trees) {
-        int i;
-        int j;
-        int ch;
-        int len;
-        int idx;
-        int cur;
-        int cnt;
-        int size;
-        int[] pat;
-        boolean[] init;
-        boolean[] check;
-        String str;
+	public int solution(String skill, String[] skill_trees) {
+		int i;
+		int j;
+		int len;
+		int idx;
+		int cur;
+		int ans;
+		int size;
+		int[] idxs;
+		String tree;
 
-        len = skill.length();
-        init = new boolean[SIZE];
-        check = new boolean[SIZE];
-        pat = new int[len + 1];
-        pat[0] = skill.charAt(0);
-        for (i = 1; i < len; i++) {
-            init[pat[i] = skill.charAt(i)] = true;
-        }
-        cnt = 0;
-        size = skill_trees.length;
-        for (i = 0; i < size; i++) {
-            str = skill_trees[i];
-            len = str.length();
-            idx = 0;
-            cur = pat[idx];
-            System.arraycopy(init, OFFSET, check, OFFSET, LENGTH);
-            for (j = 0; j < len; j++) {
-                ch = str.charAt(j);
-                if (check[ch]) {
-                    break;
-                }
-                if (ch == cur) {
-                    cur = pat[++idx];
-                    check[cur] = false;
-                }
-            }
-            if (j == len) {
-                cnt++;
-            }
-        }
-        return cnt;
-    }
+		idx = 1;
+		idxs = new int[SIZE];
+		len = skill.length();
+		for (i = 0; i < len; i++) {
+			idxs[skill.charAt(i) - DIFF] = idx++;
+		}
+		ans = 0;
+		size = skill_trees.length;
+		for (i = 0; i < size; i++) {
+			cur = 1;
+			tree = skill_trees[i];
+			len = tree.length();
+			for (j = 0; j < len; j++) {
+				idx = idxs[tree.charAt(j) - DIFF];
+				if (idx > cur) {
+					break;
+				}
+				if (idx == cur) {
+					cur++;
+				}
+			}
+			if (j == len) {
+				ans++;
+			}
+		}
+		return ans;
+	}
 }
