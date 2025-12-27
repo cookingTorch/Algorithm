@@ -1,80 +1,65 @@
 class Solution {
-    private static final int B = 6;
-    private static final int E = 10;
-    private static final int R = 10;
-    private static final int IN = 13;
-    private static final int SIZE = 10_000;
+	private static final int IN = 13;
+	private static final int SIZE = 10_000;
+	private static final int NUM = '0' * 1_111;
+	private static final int TIME = '0' * 671;
+	private static final int INIT = getTime("23:59");
 
-    private static final class Car {
-        private static final int NIL = 0;
-        private static final int MAX = timeToInt("23:59");
+	private static int getNum(String record) {
+		return record.charAt(6) * 1_000 + record.charAt(7) * 100 + record.charAt(8) * 10 + record.charAt(9) - NUM;
+	}
 
-        int out;
-        int sum;
+	private static int getTime(String record) {
+		return record.charAt(0) * 600 + record.charAt(1) * 60 + record.charAt(3) * 10 + record.charAt(4) - TIME;
+	}
 
-        Car(int time, boolean in) {
-            if (in) {
-                sum = MAX - time;
-            } else {
-                out = time;
-            }
-        }
+	public int[] solution(int[] fees, String[] records) {
+		int i;
+		int len;
+		int num;
+		int cnt;
+		int idx;
+		int base;
+		int unit;
+		int baseFee;
+		int unitFee;
+		int[] ans;
+		int[] sum;
+		int[] last;
+		String record;
 
-        void inOut(int time) {
-            if (out == NIL) {
-                out = time;
-            } else {
-                sum += out - time;
-                out = NIL;
-            }
-        }
-    }
-
-    private static int timeToInt(String time) {
-        return time.charAt(0) * 600 + time.charAt(1) * 60 + time.charAt(3) * 10 + time.charAt(4);
-    }
-
-    public int[] solution(int[] fees, String[] records) {
-        int i;
-        int j;
-        int len;
-        int num;
-        int cnt;
-        int time;
-        int base;
-        int unit;
-        int baseFee;
-        int unitFee;
-        int[] ans;
-        Car[] cars;
-
-        cnt = 0;
-        cars = new Car[SIZE];
-        len = records.length;
-        for (i = len - 1; i >= 0; i--) {
-            time = timeToInt(records[i]);
-            num = Integer.parseInt(records[i], B, E, R);
-            if (cars[num] == null) {
-                cars[num] = new Car(time, records[i].length() == IN);
-                cnt++;
-            } else {
-                cars[num].inOut(time);
-            }
-        }
-        base = fees[0];
-        baseFee = fees[1];
-        unit = fees[2];
-        unitFee = fees[3];
-        ans = new int[cnt];
-        for (i = 0, j = 0; i < SIZE; i++) {
-            if (cars[i] != null) {
-                ans[j++] = baseFee + Math.max(0, (cars[i].sum - base + unit - 1)) / unit * unitFee;
-            }
-        }
-        return ans;
-    }
+		cnt = 0;
+		sum = new int[SIZE];
+		last = new int[SIZE];
+		len = records.length;
+		for (i = len - 1; i >= 0; i--) {
+			record = records[i];
+			num = getNum(record);
+			if (record.length() == IN) {
+				if (last[num] == 0) {
+					cnt++;
+					sum[num] += INIT - getTime(record);
+				} else {
+					sum[num] += last[num] - getTime(record);
+				}
+			} else {
+				if (sum[num] == 0) {
+					cnt++;
+				}
+				last[num] = getTime(record);
+			}
+		}
+		base = fees[0];
+		baseFee = fees[1];
+		unit = fees[2];
+		unitFee = fees[3];
+		ans = new int[cnt];
+		idx = 0;
+		for (i = 0; i < SIZE; i++) {
+			if (sum[i] != 0) {
+				ans[idx++] = baseFee + (Math.max(0, sum[i] - base) + unit - 1) / unit * unitFee;
+			}
+		}
+		return ans;
+	}
 }
-
-
-
-
