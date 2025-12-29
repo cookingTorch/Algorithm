@@ -6,10 +6,10 @@ class Solution {
         int len;
         int cur;
         ArrayDeque<Integer> stack;
-
-        stack = new ArrayDeque<>();
+        
         cur = 0;
         len = order.length;
+        stack = new ArrayDeque<>(len);
         for (i = 0; i < len; i++) {
             if (order[i] > cur) {
                 for (++cur; cur < order[i]; cur++) {
