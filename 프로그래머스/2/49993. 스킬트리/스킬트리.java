@@ -13,13 +13,13 @@ class Solution {
 		int[] idxs;
 		String tree;
 
-		idx = 1;
 		idxs = new int[SIZE];
 		len = skill.length();
 		for (i = 0; i < len; i++) {
-			idxs[skill.charAt(i) - DIFF] = idx++;
+			idxs[skill.charAt(i) - DIFF] = i + 1;
 		}
 		ans = 0;
+        idx = 1;
 		size = skill_trees.length;
 		for (i = 0; i < size; i++) {
 			cur = 1;
