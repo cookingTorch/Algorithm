@@ -19,7 +19,6 @@ class Solution {
 			idxs[skill.charAt(i) - DIFF] = i + 1;
 		}
 		ans = 0;
-        idx = 1;
 		size = skill_trees.length;
 		for (i = 0; i < size; i++) {
 			cur = 1;
