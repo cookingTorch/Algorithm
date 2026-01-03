@@ -67,7 +67,7 @@ class Solution {
             if (cnts[i] != 0) {
                 cnts[i]--;
                 for (j = 0; j < size; j++) {
-                    if ((nums[j] & 1) != 0 && cnts[j] > 0) {
+                    if ((nums[j] & 1) != 0 && cnts[j] != 0) {
                         cnts[j]--;
                         last = nums[j];
                         dfs(nums[i], 2);
