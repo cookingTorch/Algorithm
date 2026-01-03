@@ -4,9 +4,7 @@ class Solution {
 
     private static int ans;
     private static int len;
-    private static int size;
     private static int last;
-    private static int[] nums;
     private static int[] cnts;
 
     private static boolean isPrime(int n) {
@@ -33,10 +31,10 @@ class Solution {
         if (depth++ == len) {
             return;
         }
-        for (i = 0; i < size; i++) {
+        for (i = 0; i < RADIX; i++) {
             if (cnts[i] != 0) {
                 cnts[i]--;
-                dfs(num + nums[i], depth);
+                dfs(num + i, depth);
                 cnts[i]++;
             }
         }
@@ -46,31 +44,24 @@ class Solution {
         int i;
         int j;
 
+        ans = 0;
         cnts = new int[RADIX];
         len = numbers.length();
         for (i = 0; i < len; i++) {
-            cnts[numbers.charAt(i) - DIFF]++;
-        }
-        ans = 0;
-        size = 0;
-        nums = new int[len];
-        for (i = 0; i < RADIX; i++) {
-            if (cnts[i] != 0) {
-                nums[size] = i;
-                cnts[size++] = cnts[i];
-                if (i == 2 || i == 3 || i == 5 || i == 7) {
+            if (cnts[j = numbers.charAt(i) - DIFF]++ == 0) {
+                if (j == 2 || j == 3 || j == 5 || j == 7) {
                     ans++;
                 }
             }
         }
-        for (i = nums[0] == 0 ? 1 : 0; i < size; i++) {
+        for (i = 1; i < RADIX; i++) {
             if (cnts[i] != 0) {
                 cnts[i]--;
-                for (j = 0; j < size; j++) {
-                    if ((nums[j] & 1) != 0 && cnts[j] != 0) {
+                for (j = 1; j < RADIX; j += 2) {
+                    if (cnts[j] != 0) {
                         cnts[j]--;
-                        last = nums[j];
-                        dfs(nums[i], 2);
+                        last = j;
+                        dfs(i, 2);
                         cnts[j]++;
                     }
                 }
