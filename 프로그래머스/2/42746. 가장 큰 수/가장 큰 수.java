@@ -1,29 +1,41 @@
 import java.util.Arrays;
 
 class Solution {
-	public String solution(int[] numbers) {
-		int i;
-		int len;
-		int[] size;
-		Integer[] idx;
-		StringBuilder sb;
+    private static final class Num implements Comparable<Num> {
+        int num;
+        int size;
 
-		len = numbers.length;
-		idx = new Integer[len];
-		size = new int[len];
-		for (i = 0; i < len; i++) {
-			idx[i] = i;
-			size[i] = numbers[i] == 0 ? 10 : (int) Math.pow(10, (int) Math.log10(numbers[i]) + 1);
-		}
-		Arrays.sort(idx, 0, len, (o1, o2) -> numbers[o2] * size[o1] + numbers[o1] - (numbers[o1] * size[o2] + numbers[o2]));
-		sb = new StringBuilder();
-		if (numbers[idx[0]] == 0) {
-			sb.append(0);
-		} else {
-			for (i = 0; i < len; i++) {
-				sb.append(numbers[idx[i]]);
-			}
-		}
-		return sb.toString();
-	}
+        Num(int num) {
+            this.num = num;
+            size = num == 0 ? 10 : (int) Math.pow(10, (int) Math.log10(num) + 1);
+        }
+
+        @Override
+        public int compareTo(Num o) {
+            return o.num * size + num - (num * o.size + o.num);
+        }
+    }
+
+    public String solution(int[] numbers) {
+        int i;
+        int len;
+        Num[] nums;
+        StringBuilder sb;
+
+        len = numbers.length;
+        nums = new Num[len];
+        for (i = 0; i < len; i++) {
+            nums[i] = new Num(numbers[i]);
+        }
+        Arrays.sort(nums, 0, len);
+        sb = new StringBuilder();
+        if (nums[0].num == 0) {
+            sb.append(0);
+        } else {
+            for (i = 0; i < len; i++) {
+                sb.append(nums[i].num);
+            }
+        }
+        return sb.toString();
+    }
 }
