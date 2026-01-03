@@ -24,7 +24,7 @@ class Solution {
         System.arraycopy(queue2, 0, arr, len, len);
         l = 0;
         r = len;
-        thr = len * 3;
+        thr = len * 3 - 2;
         len <<= 1;
         for (i = 0; i < thr; i++) {
             if (diff > 0L) {
