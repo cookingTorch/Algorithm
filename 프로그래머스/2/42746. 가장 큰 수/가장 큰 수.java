@@ -1,28 +1,29 @@
 import java.util.Arrays;
 
 class Solution {
-    private static final char ZERO = '0';
+	public String solution(int[] numbers) {
+		int i;
+		int len;
+		int[] size;
+		Integer[] idx;
+		StringBuilder sb;
 
-    public String solution(int[] numbers) {
-        int i;
-        int len;
-        String[] arr;
-        StringBuilder sb;
-
-        len = numbers.length;
-        arr = new String[len];
-        for (i = 0; i < len; i++) {
-            arr[i] = Integer.toString(numbers[i]);
-        }
-        Arrays.sort(arr, 0, len, (o1, o2) -> (o2 + o1).compareTo(o1 + o2));
-        sb = new StringBuilder();
-        if (arr[0].charAt(0) == ZERO) {
-            sb.append(ZERO);
-        } else {
-            for (i = 0; i < len; i++) {
-                sb.append(arr[i]);
-            }
-        }
-        return sb.toString();
-    }
+		len = numbers.length;
+		idx = new Integer[len];
+		size = new int[len];
+		for (i = 0; i < len; i++) {
+			idx[i] = i;
+			size[i] = numbers[i] == 0 ? 10 : (int) Math.pow(10, (int) Math.log10(numbers[i]) + 1);
+		}
+		Arrays.sort(idx, 0, len, (o1, o2) -> numbers[o2] * size[o1] + numbers[o1] - (numbers[o1] * size[o2] + numbers[o2]));
+		sb = new StringBuilder();
+		if (numbers[idx[0]] == 0) {
+			sb.append(0);
+		} else {
+			for (i = 0; i < len; i++) {
+				sb.append(numbers[idx[i]]);
+			}
+		}
+		return sb.toString();
+	}
 }
