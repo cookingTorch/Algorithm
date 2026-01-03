@@ -18,6 +18,7 @@ class Solution {
         if ((diff & 1) != 0) {
             return FAIL;
         }
+        diff >>= 1;
         arr = new int[len << 1];
         System.arraycopy(queue1, 0, arr, 0, len);
         System.arraycopy(queue2, 0, arr, len, len);
@@ -27,13 +28,13 @@ class Solution {
         len <<= 1;
         for (i = 0; i < thr; i++) {
             if (diff > 0L) {
-                diff -= arr[l++] << 1;
-                if (l == len) {
+                diff -= arr[l];
+                if (++l == len) {
                     l = 0;
                 }
             } else if (diff < 0L) {
-                diff += arr[r++] << 1;
-                if (r == len) {
+                diff += arr[r];
+                if (++r == len) {
                     r = 0;
                 }
             } else {
