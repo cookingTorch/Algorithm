@@ -1,11 +1,12 @@
 class Solution {
     private static final int DIFF = '0';
+    private static final int RADIX = 10;
+    private static final int[] PRIMES = new int[] {2, 3, 5, 7};
 
-    private static int cnt;
+    private static int ans;
     private static int len;
     private static int last;
-    private static int[] nums;
-    private static boolean[] used;
+    private static int[] cnts;
 
     private static boolean isPrime(int n) {
         int i;
@@ -21,26 +22,21 @@ class Solution {
         return true;
     }
 
-    private static void dfs(int cur, int depth) {
+    private static void dfs(int num, int depth) {
         int i;
-        int num;
-        int visited;
 
-        cur *= 10;
-        if (isPrime(cur + last)) {
-            cnt++;
+        num *= RADIX;
+        if (isPrime(num + last)) {
+            ans++;
         }
-        if (depth == len) {
+        if (depth++ == len) {
             return;
         }
-        visited = 0;
-        for (i = 0; i < len; i++) {
-            num = nums[i];
-            if (!used[i] && (visited & 1 << num) == 0) {
-                visited |= 1 << num;
-                used[i] = true;
-                dfs(cur + num, depth + 1);
-                used[i] = false;
+        for (i = 0; i < RADIX; i++) {
+            if (cnts[i] > 0) {
+                cnts[i]--;
+                dfs(num + i, depth);
+                cnts[i]++;
             }
         }
     }
@@ -48,40 +44,32 @@ class Solution {
     public int solution(String numbers) {
         int i;
         int j;
-        int first;
-        int visLast;
-        int visFirst;
 
+        ans = 0;
+        cnts = new int[RADIX];
         len = numbers.length();
-        nums = new int[len];
         for (i = 0; i < len; i++) {
-            nums[i] = numbers.charAt(i) - DIFF;
+            cnts[numbers.charAt(i) - DIFF]++;
         }
-        visLast = 0;
-        used = new boolean[len];
-        for (i = 0; i < len; i++) {
-            last = nums[i];
-            if ((visLast & 1 << last) != 0) {
-                continue;
+        for (int k : PRIMES) {
+            if (cnts[k] > 0) {
+                ans++;
             }
-            visLast |= 1 << last;
-            if ((last & 1) == 0) {
-                continue;
-            }
-            used[i] = true;
-            visFirst = 1;
-            for (j = 0; j < len; j++) {
-                first = nums[j];
-                if (j == i || (visFirst & 1 << first) != 0) {
-                    continue;
+        }
+        for (i = 1; i < RADIX; i++) {
+            if (cnts[i] > 0) {
+                cnts[i]--;
+                for (j = 1; j < RADIX; j += 2) {
+                    if (cnts[j] > 0) {
+                        cnts[j]--;
+                        last = j;
+                        dfs(i, 2);
+                        cnts[j]++;
+                    }
                 }
-                visFirst |= 1 << first;
-                used[j] = true;
-                dfs(first, 2);
-                used[j] = false;
+                cnts[i]++;
             }
-            used[i] = false;
         }
-        return cnt + Integer.bitCount(visLast & (1 << 2 | 1 << 3 | 1 << 5 | 1 << 7));
+        return ans;
     }
 }
