@@ -34,7 +34,7 @@ class Solution {
             return;
         }
         for (i = 0; i < size; i++) {
-            if (cnts[i] > 0) {
+            if (cnts[i] != 0) {
                 cnts[i]--;
                 dfs(num + nums[i], depth);
                 cnts[i]++;
@@ -55,7 +55,7 @@ class Solution {
         size = 0;
         nums = new int[len];
         for (i = 0; i < RADIX; i++) {
-            if (cnts[i] > 0) {
+            if (cnts[i] != 0) {
                 nums[size] = i;
                 cnts[size++] = cnts[i];
                 if (i == 2 || i == 3 || i == 5 || i == 7) {
@@ -64,7 +64,7 @@ class Solution {
             }
         }
         for (i = nums[0] == 0 ? 1 : 0; i < size; i++) {
-            if (cnts[i] > 0) {
+            if (cnts[i] != 0) {
                 cnts[i]--;
                 for (j = 0; j < size; j++) {
                     if ((nums[j] & 1) != 0 && cnts[j] > 0) {
