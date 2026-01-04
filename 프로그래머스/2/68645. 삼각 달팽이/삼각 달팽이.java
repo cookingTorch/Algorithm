@@ -24,7 +24,7 @@ class Solution {
             if (--len == 0) {
                 break;
             }
-            for (i = len; i > 0; i--) {
+            for (i = 0; i < len; i++) {
                 ans[idx -= level--] = ++num;
             }
         }
