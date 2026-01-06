@@ -5,7 +5,7 @@ class Solution {
 
 		cnt = 0;
 		for (; storey != 0; storey = storey / 10) {
-			if ((digit = storey % 10) > 5 || digit == 5 && storey % 100 >= 55) {
+			if ((digit = storey % 10) > 5 || digit == 5 && storey % 100 >= 50) {
 				cnt += 10 - digit;
 				storey += 10;
 			} else {
