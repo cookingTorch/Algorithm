@@ -1,16 +1,17 @@
 class Solution {
-    public int solution(int storey) {
-        int ans;
-        int num;
+	public int solution(int storey) {
+		int cnt;
+		int digit;
 
-        for (ans = 0; storey != 0; storey /= 10) {
-            if ((num = storey % 10) > 5 || (num == 5 && storey % 100 > 50)) {
-                ans += 10 - num;
-                storey += 10;
-            } else {
-                ans += num;
-            }
-        }
-        return ans;
-    }
+		cnt = 0;
+		for (; storey != 0; storey = storey / 10) {
+			if ((digit = storey % 10) > 5 || digit == 5 && storey % 100 >= 55) {
+				cnt += 10 - digit;
+				storey += 10;
+			} else {
+				cnt += digit;
+			}
+		}
+		return cnt;
+	}
 }
