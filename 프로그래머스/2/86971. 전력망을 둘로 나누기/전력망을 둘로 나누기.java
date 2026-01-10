@@ -1,48 +1,48 @@
 class Solution {
-	private static final class Edge {
-		int to;
-		Edge next;
-		
-		Edge(int to, Edge next) {
-			this.to = to;
-			this.next = next;
-		}
-	}
-	
-	private static int num;
-	private static int min;
-	private static Edge[] adj;
-	
-	private static int dfs(int parent, int node) {
-		int cnt;
-		Edge edge;
-		
-		cnt = 1;
-		for (edge = adj[node]; edge != null; edge = edge.next) {
-			if (edge.to != parent) {
-				cnt += dfs(node, edge.to);
-			}
-		}
-		min = Math.min(min, Math.abs(num - (cnt << 1)));
-		return cnt;
-	}
+    private static int num;
+    private static int min;
+    private static int[] to;
+	private static int[] adj;
+    private static int[] next;
 
-	public int solution(int n, int[][] wires) {
-		int u;
-		int v;
-		int i;
+    private static int dfs(int parent, int node) {
+        int cnt;
+        int edge;
 
-		adj = new Edge[n + 1];
-		num = n - 1;
-		for (i = 0; i < num; i++) {
-			u = wires[i][0];
-			v = wires[i][1];
-			adj[u] = new Edge(v, adj[u]);
-			adj[v] = new Edge(u, adj[v]);
-		}
-		num = n;
-		min = n;
-		dfs(0, 1);
-		return min;
-	}
+        cnt = 1;
+        for (edge = adj[node]; edge != 0; edge = next[edge]) {
+            if (to[edge] != parent) {
+                cnt += dfs(node, to[edge]);
+            }
+        }
+        min = Math.min(min, Math.abs(num - (cnt << 1)));
+        return cnt;
+    }
+
+    public int solution(int n, int[][] wires) {
+        int u;
+        int v;
+        int i;
+        int len;
+        int edge;
+
+        adj = new int[n + 1];
+        len = n - 1;
+        to = new int[len << 1 | 1];
+        next = new int[len << 1 | 1];
+        for (i = 0; i < len; i++) {
+            u = wires[i][0];
+            v = wires[i][1];
+            to[edge = i + 1] = v;
+            next[edge] = adj[u];
+            adj[u] = edge;
+            to[edge += len] = u;
+            next[edge] = adj[v];
+            adj[v] = edge;
+        }
+        num = n;
+        min = n;
+        dfs(0, 1);
+        return min;
+    }
 }
