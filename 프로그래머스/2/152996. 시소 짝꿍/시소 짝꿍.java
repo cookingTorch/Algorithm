@@ -1,27 +1,26 @@
-import java.util.HashMap;
-
 class Solution {
-    public long solution(int[] weights) {
-        int i;
-        int len;
-        long num;
-        long cnt;
-        HashMap<Integer, Integer> map;
+	private static final int MIN = 100;
+	private static final int MAX = 1_000;
 
-        map = new HashMap<>();
-        cnt = 0L;
-        len = weights.length;
-        for (i = 0; i < len; i++) {
-            map.put(weights[i], map.getOrDefault(weights[i], 0) + 1);
-        }
-        for (int weight : map.keySet()) {
-            num = map.get(weight);
-            cnt += (num * (num - 1L) >> 1)
-                    + num * (
-                    ((weight & 1) == 0 ? map.getOrDefault((weight >> 1) * 3, 0) : 0)
-                    + (weight % 3 == 0 ? map.getOrDefault(weight / 3 << 2, 0) : 0)
-                    + map.getOrDefault(weight << 1, 0));
-        }
-        return cnt;
-    }
+	public long solution(int[] weights) {
+		int i;
+		int len;
+		long ans;
+		long[] cnt;
+
+		cnt = new long[MAX + 1];
+		len = weights.length;
+		for (i = 0; i < len; i++) {
+			cnt[weights[i]]++;
+		}
+		ans = 0L;
+		for (i = MIN; i <= MAX; i++) {
+			ans += (cnt[i] * (cnt[i] - 1L) >>> 1)
+					+ cnt[i]
+					* (((i & 1) == 0 ? cnt[i >>> 1] : 0L)
+					+ ((i & 3) == 0 ? cnt[(i >>> 2) * 3] : 0L)
+					+ (i % 3 == 0 ? cnt[i / 3 << 1] : 0L));
+		}
+		return ans;
+	}
 }
