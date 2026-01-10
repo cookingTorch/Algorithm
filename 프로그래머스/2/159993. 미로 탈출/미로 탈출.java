@@ -5,11 +5,11 @@ class Solution {
     private static final int L = 'L';
     private static final int E = 'E';
     private static final int WALL = 'X';
-    private static final int NULL = -1;
+    private static final int FAIL = -1;
     private static final int[] dx = {-1, 0, 1, 0};
     private static final int[] dy = {0, 1, 0, -1};
 
-    private static int bfs(char[][] map, int r, int c, int x, int y) {
+    private static int bfs(int[][] map, int r, int c, int x, int y) {
         int i;
         int nx;
         int ny;
@@ -55,7 +55,7 @@ class Solution {
                 }
             }
         }
-        return NULL;
+        return FAIL;
     }
 
     public int solution(String[] maps) {
@@ -65,22 +65,22 @@ class Solution {
         int c;
         int x;
         int y;
-        char[] row;
-        char[][] map;
+        int[] row;
+        int[][] map;
+        String str;
 
-        x = NULL;
-        y = NULL;
+        x = 0;
+        y = 0;
         r = maps.length;
         c = maps[0].length();
-        map = new char[r][];
+        map = new int[r][c];
         for (i = 0; i < r; i++) {
-            map[i] = row = maps[i].toCharArray();
-            if (x == NULL) {
-                for (j = 0; j < c; j++) {
-                    if (row[j] == L) {
-                        x = i;
-                        y = j;
-                    }
+            str = maps[i];
+            row = map[i];
+            for (j = 0; j < c; j++) {
+                if ((row[j] = str.charAt(j)) == L) {
+                    x = i;
+                    y = j;
                 }
             }
         }
