@@ -1,5 +1,5 @@
 class Solution {
-	private static int getGcd(int a, int b) {
+	private static int gcd(int a, int b) {
 		int r;
 
 		while (b != 0) {
@@ -9,32 +9,28 @@ class Solution {
 		};
 		return a;
 	}
-
-	public int solution(int[] arrayA, int[] arrayB) {
+	
+	private static int calc(int[] arr1, int[] arr2) {
 		int a;
-		int b;
 		int i;
 		int len;
 
-		len = arrayA.length;
-		a = arrayA[0];
-		b = arrayB[0];
+		len = arr1.length;
+		a = arr1[0];
 		for (i = 1; i < len; i++) {
-			a = getGcd(arrayA[i], a);
-			b = getGcd(arrayB[i], b);
-		}
-		for (i = 0; i < len; i++) {
-			if (arrayB[i] % a == 0) {
-				a = 0;
+			if ((a = gcd(arr1[i], a)) == 1) {
 				break;
 			}
 		}
 		for (i = 0; i < len; i++) {
-			if (arrayA[i] % b == 0) {
-				b = 0;
-				break;
+			if (arr2[i] % a == 0) {
+				return 0;
 			}
 		}
-		return Math.max(a, b);
+		return a;
+	}
+
+	public int solution(int[] arrayA, int[] arrayB) {
+		return Math.max(calc(arrayA, arrayB), calc(arrayB, arrayA));
 	}
 }
