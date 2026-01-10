@@ -14,18 +14,17 @@ class Solution {
         int nx;
         int ny;
         int dist;
-        int dest;
         int size;
+        int distS;
+        int distE;
         int[] cur;
-        boolean[][] visited;
         ArrayDeque<int[]> q;
 
         dist = 0;
-        dest = L;
+        distS = 0;
+        distE = 0;
         q = new ArrayDeque<>();
         q.addLast(new int[] {x, y});
-        visited = new boolean[r][c];
-        visited[x][y] = true;
         while (!q.isEmpty()) {
             dist++;
             size = q.size();
@@ -36,24 +35,23 @@ class Solution {
                 for (i = 0; i < 4; i++) {
                     nx = x + dx[i];
                     ny = y + dy[i];
-                    if (nx < 0 || nx >= r || ny < 0 || ny >= c || visited[nx][ny] || map[nx][ny] == WALL) {
+                    if (nx < 0 || nx >= r || ny < 0 || ny >= c || map[nx][ny] == WALL) {
                         continue;
                     }
-                    if (map[nx][ny] == dest) {
-                        if (dest == L) {
-                            dest = E;
-                            q.clear();
-                            q.addLast(new int[] {nx, ny});
-                            visited = new boolean[r][c];
-                            visited[nx][ny] = true;
-                            size = 0;
-                            break;
-                        } else {
-                            return dist;
+                    if (map[nx][ny] == S) {
+                        distS = dist;
+                        if (distE != 0) {
+                            return distS + distE;
+                        }
+                    }
+                    if (map[nx][ny] == E) {
+                        distE = dist;
+                        if (distS != 0) {
+                            return distS + distE;
                         }
                     }
                     q.addLast(new int[] {nx, ny});
-                    visited[nx][ny] = true;
+                    map[nx][ny] = WALL;
                 }
             }
         }
@@ -79,7 +77,7 @@ class Solution {
             map[i] = row = maps[i].toCharArray();
             if (x == NULL) {
                 for (j = 0; j < c; j++) {
-                    if (row[j] == S) {
+                    if (row[j] == L) {
                         x = i;
                         y = j;
                     }
