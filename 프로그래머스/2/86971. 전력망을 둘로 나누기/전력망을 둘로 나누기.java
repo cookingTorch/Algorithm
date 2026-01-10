@@ -24,21 +24,21 @@ class Solution {
         int v;
         int i;
         int len;
-        int edge;
+        int idx;
 
         adj = new int[n + 1];
         len = n - 1;
         to = new int[len << 1 | 1];
         next = new int[len << 1 | 1];
-        for (i = 0; i < len; i++) {
+        for (i = 0, idx = 0; i < len; i++) {
             u = wires[i][0];
             v = wires[i][1];
-            to[edge = i + 1] = v;
-            next[edge] = adj[u];
-            adj[u] = edge;
-            to[edge += len] = u;
-            next[edge] = adj[v];
-            adj[v] = edge;
+            to[++idx] = v;
+            next[idx] = adj[u];
+            adj[u] = idx;
+            to[++idx] = u;
+            next[idx] = adj[v];
+            adj[v] = idx;
         }
         num = n;
         min = n;
