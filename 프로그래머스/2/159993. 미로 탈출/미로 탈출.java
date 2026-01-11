@@ -43,8 +43,7 @@ class Solution {
                         if (distE != 0) {
                             return distS + distE;
                         }
-                    }
-                    if (map[nx][ny] == E) {
+                    } else if (map[nx][ny] == E) {
                         distE = dist;
                         if (distS != 0) {
                             return distS + distE;
