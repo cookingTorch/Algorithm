@@ -1,73 +1,74 @@
 import java.util.PriorityQueue;
 
 class Solution {
-    private static final class Edge implements Comparable<Edge> {
-        int to;
-        int weight;
-        Edge next;
+	private static final int INF = Integer.MAX_VALUE;
 
-        Edge(int to, int weight, Edge next) {
-            this.to = to;
-            this.weight = weight;
-            this.next = next;
-        }
+	private static int[] to;
+	private static int[] adj;
+	private static int[] next;
+	private static int[] weight;
 
-        @Override
-        public int compareTo(Edge o) {
-            return weight - o.weight;
-        }
-    }
+	private static int dijkstra(int n, int k) {
+		int v;
+		int cnt;
+		int dist;
+		int edge;
+		int[] cur;
+		int[] dists;
+		PriorityQueue<int[]> pq;
 
-    private static int dijkstra(int n, int k, Edge[] adj) {
-        int v;
-        int w;
-        int cnt;
-        int[] dist;
-        Edge node;
-        Edge edge;
-        PriorityQueue<Edge> pq;
+		k++;
+		dists = new int[n + 1];
+		for (v = 2; v <= n; v++) {
+			dists[v] = k;
+		}
+		cnt = 0;
+		pq = new PriorityQueue<>((o1, o2) -> o1[1] - o2[1]);
+		pq.offer(new int[] {1, 0});
+		while (pq.size() != 0) {
+			cur = pq.poll();
+			v = cur[0];
+			dist = cur[1];
+			if (dists[v] < dist) {
+				continue;
+			}
+			cnt++;
+			for (edge = adj[v]; edge != 0; edge = next[edge]) {
+				if (dist + weight[edge] < dists[to[edge]]) {
+					dists[to[edge]] = dist + weight[edge];
+					pq.offer(new int[] {to[edge], dists[to[edge]]});
+				}
+			}
+		}
+		return cnt;
+	}
 
-        pq = new PriorityQueue<>();
-        dist = new int[n + 1];
-        k++;
-        for (v = 2; v <= n; v++) {
-            dist[v] = k;
-        }
-        pq.offer(new Edge(1, 0, null));
-        cnt = 0;
-        while (!pq.isEmpty()) {
-            node = pq.poll();
-            v = node.to;
-            w = node.weight;
-            if (dist[v] < w) {
-                continue;
-            }
-            cnt++;
-            for (edge = adj[v]; edge != null; edge = edge.next) {
-                if (w + edge.weight < dist[edge.to]) {
-                    dist[edge.to] = w + edge.weight;
-                    edge.weight += w;
-                    pq.offer(edge);
-                }
-            }
-        }
-        return cnt;
-    }
+	public int solution(int N, int[][] road, int K) {
+		int u;
+		int v;
+		int w;
+		int i;
+		int len;
+		int idx;
 
-    public int solution(int N, int[][] road, int K) {
-        int u;
-        int v;
-        int w;
-        Edge[] adj;
-
-        adj = new Edge[N + 1];
-        for (int[] edge : road) {
-            u = edge[0];
-            v = edge[1];
-            w = edge[2];
-            adj[u] = new Edge(v, w, adj[u]);
-            adj[v] = new Edge(u, w, adj[v]);
-        }
-        return dijkstra(N, K, adj);
-    }
+		len = road.length;
+		adj = new int[N + 1];
+		to = new int[len << 1 | 1];
+		next = new int[len << 1 | 1];
+		weight = new int[len << 1 | 1];
+		for (i = 0, idx = 0; i < len; i++) {
+			u = road[i][0];
+			v = road[i][1];
+			w = road[i][2];
+			to[++idx] = v;
+			weight[idx] = w;
+			next[idx] = adj[u];
+			adj[u] = idx;
+			to[++idx] = u;
+			weight[idx] = w;
+			next[idx] = adj[v];
+			adj[v] = idx;
+		}
+		return dijkstra(N, K);
+	}
 }
