@@ -2,58 +2,54 @@ import java.util.StringTokenizer;
 
 class Solution {
     private static final int MAX = 24 * 60;
-    private static final int DIFF = 12;
-    private static final int ZERO = '0';
+    private static final int DIFF = '0' * 671;
+    private static final int UPPER = 12;
     private static final int SHARP = '#';
     private static final String NONE = "(None)";
     private static final String DELIM = ",";
 
-    private static int len;
-
-    private static int getTime(String time) {
-        return ((time.charAt(0) - ZERO) * 10 + time.charAt(1) - ZERO) * 60 + (time.charAt(3) - ZERO) * 10 + time.charAt(4) - ZERO;
+    private static int timeToInt(String time) {
+        return time.charAt(0) * 600 + time.charAt(1) * 60 + time.charAt(3) * 10 + time.charAt(4) - DIFF;
     }
 
-    private static int[] genMelody(String str, int size) {
+    private static int genPat(String str, int len, int[] pat) {
         int i;
-        int j;
         int ch;
-        int[] melody;
+        int idx;
 
-        len = size;
-        melody = new int[size];
-        for (i = 0, j = 0; i < len; i++, j++) {
-            ch = str.charAt(j);
-            if (ch == SHARP) {
-                melody[--i] += DIFF;
-                len--;
+        idx = 0;
+        for (i = 0; i < len; i++) {
+            if ((ch = str.charAt(i)) == SHARP) {
+                pat[idx - 1] += UPPER;
             } else {
-                melody[i] = ch;
+                pat[idx++] = ch;
             }
         }
-        return melody;
+        return idx;
     }
 
-    private static void fillMusic(String str, int[] music, int time) {
+    private static void genTxt(String str, int[] txt, int txtLen) {
         int i;
-        int j;
         int ch;
         int len;
+        int idx;
+        int size;
 
         len = str.length();
-        for (i = 0, j = 0; i < time; i++, j++) {
-            if (j == len) {
-                j = 0;
-            }
-            ch = str.charAt(j);
+        idx = 0;
+        for (i = 0; i < len && idx < txtLen; i++) {
+            ch = str.charAt(i);
             if (ch == SHARP) {
-                music[--i] += DIFF;
+                txt[idx - 1] += UPPER;
             } else {
-                music[i] = ch;
+                txt[idx++] = ch;
             }
         }
-        if (j < str.length() && str.charAt(j) == SHARP) {
-            music[time - 1] += DIFF;
+        if (i < len && str.charAt(i) == SHARP) {
+            txt[idx - 1] += UPPER;
+        }
+        for (size = idx; idx < txtLen; idx += size) {
+            System.arraycopy(txt, 0, txt, idx, Math.min(size, txtLen - idx));
         }
     }
 
@@ -70,11 +66,9 @@ class Solution {
                 len++;
                 lps[i] = len;
                 i++;
-            }
-            else if (len == 0) {
+            } else if (len == 0) {
                 i++;
-            }
-            else {
+            } else {
                 len = lps[len - 1];
             }
         }
@@ -93,11 +87,9 @@ class Solution {
                 if (++j == patLen) {
                     return true;
                 }
-            }
-            else if (j == 0) {
+            } else if (j == 0) {
                 i++;
-            }
-            else {
+            } else {
                 j = lps[j - 1];
             }
         }
@@ -105,31 +97,35 @@ class Solution {
     }
 
     public String solution(String m, String[] musicinfos) {
+        int i;
         int max;
-        int time;
+        int len;
+        int patLen;
+        int txtLen;
+        int[] pat;
+        int[] txt;
         int[] lps;
-        int[] music;
-        int[] melody;
         String ans;
         String name;
         StringTokenizer st;
 
-        melody = genMelody(m, m.length());
-        lps = genLps(melody, len);
-        music = new int[MAX];
+        pat = new int[m.length()];
+        patLen = genPat(m, m.length(), pat);
+        lps = genLps(pat, patLen);
+        txt = new int[MAX];
         max = 0;
         ans = NONE;
-        for (String musicinfo : musicinfos) {
-            st = new StringTokenizer(musicinfo, DELIM, false);
-            time = -getTime(st.nextToken()) + getTime(st.nextToken());
-            if (time < len) {
+        len = musicinfos.length;
+        for (i = 0; i < len; i++) {
+            st = new StringTokenizer(musicinfos[i], DELIM, false);
+            if ((txtLen = -timeToInt(st.nextToken()) + timeToInt(st.nextToken())) < patLen) {
                 continue;
             }
             name = st.nextToken();
-            fillMusic(st.nextToken(), music, time);
-            if (kmp(melody, len, music, time, lps)) {
-                if (time > max) {
-                    max = time;
+            genTxt(st.nextToken(), txt, txtLen);
+            if (kmp(pat, patLen, txt, txtLen, lps)) {
+                if (txtLen > max) {
+                    max = txtLen;
                     ans = name;
                 }
             }
