@@ -1,80 +1,78 @@
 class Solution {
-    private static final int PLUS = -1;
+	private static final int SIZE = 4;
 
-    private int len;
-    private int maxCnt;
-    private int maxSum;
-    private int[] cost;
-    private int[] emoticons;
-    private int[][] users;
+	private static int len;
+	private static int cnt;
+	private static int maxPlus;
+	private static int maxCost;
+	private static int[] sum;
+	private static int[] buyThr;
+	private static int[] plusThr;
+	private static int[][] costs;
 
-    private int getRes(int[] user) {
-        int i;
-        int res;
-        int thr;
+	private static void dfs(int depth) {
+		int i;
+		int j;
+		int plus;
+		int cost;
 
-        res = 0;
-        thr = user[0];
-        for (i = 0; i < len; i++) {
-            if (cost[i] <= thr) {
-                res += emoticons[i] * cost[i];
-            }
-        }
-        return res >= user[1] ? PLUS : res;
-    }
+		if (depth == cnt) {
+			plus = 0;
+			cost = 0;
+			for (i = 0; i < len; i++) {
+				if (sum[i] >= plusThr[i]) {
+					plus++;
+				} else {
+					cost += sum[i];
+				}
+			}
+			if (plus > maxPlus) {
+				maxPlus = plus;
+				maxCost = cost;
+			} else if (plus == maxPlus && cost > maxCost) {
+				maxCost = cost;
+			}
+			return;
+		}
+		for (i = 0; i < 4; i++) {
+			cost = costs[depth][i];
+			for (j = 0; j < len; j++) {
+				if (i >= buyThr[j]) {
+					sum[j] += cost;
+				}
+			}
+			dfs(depth + 1);
+			for (j = 0; j < len; j++) {
+				if (i >= buyThr[j]) {
+					sum[j] -= cost;
+				}
+			}
+		}
+	}
 
-    private void calc() {
-        int res;
-        int sum;
-        int cnt;
+	public int[] solution(int[][] users, int[] emoticons) {
+		int i;
+		int j;
 
-        sum = 0;
-        cnt = 0;
-        for (int[] user : users) {
-            res = getRes(user);
-            if (res == PLUS) {
-                cnt++;
-            } else {
-                sum += res;
-            }
-        }
-        if (cnt > maxCnt) {
-            maxCnt = cnt;
-            maxSum = sum;
-        } else if (cnt == maxCnt && sum > maxSum) {
-            maxSum = sum;
-        }
-    }
-
-    private void dfs(int depth) {
-        int i;
-
-        if (depth == len) {
-            calc();
-            return;
-        }
-        for (i = 90; i >= 60; i -= 10) {
-            cost[depth] = i;
-            dfs(depth + 1);
-        }
-    }
-
-    public int[] solution(int[][] users, int[] emoticons) {
-        int i;
-
-        this.users = users;
-        this.emoticons = emoticons;
-        len = emoticons.length;
-        for (int[] user : users) {
-            user[0] = 100 - user[0];
-        }
-        for (i = 0; i < len; i++) {
-            emoticons[i] /= 100;
-        }
-        cost = new int[len];
-        maxCnt = 0;
-        maxSum = 0;
-        dfs(0);
-        return new int[] {maxCnt, maxSum};
-    }
+		len = users.length;
+		buyThr = new int[len];
+		plusThr = new int[len];
+		for (i = 0; i < len; i++) {
+			buyThr[i] = (users[i][0] + 9) / 10 - 1;
+			plusThr[i] = users[i][1];
+		}
+		cnt = emoticons.length;
+		costs = new int[cnt][SIZE];
+		for (i = 0; i < cnt; i++) {
+			emoticons[i] /= 10;
+			for (j = 0; j < SIZE; j++) {
+				costs[i][j] = emoticons[i] * (9 - j);
+			}
+		}
+		maxPlus = 0;
+		maxCost = 0;
+		sum = new int[len];
+		dfs(0);
+		return new int[] {maxPlus, maxCost};
+	}
 }
