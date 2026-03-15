@@ -23,8 +23,7 @@ void poll(int*, int*);
 int min(int, int);
 
 int main() {
-    int e, u, v, w, tmp, i, l1, l2, r1, r2, mid;
-    Edge* edge;
+    int e, u, v, w, i, l1, l2, r1, r2, mid;
 
     scanf("%d %d", &n, &e);
     for (i = 1; i <= n; i++) {
