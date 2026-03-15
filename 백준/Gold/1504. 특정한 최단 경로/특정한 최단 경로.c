@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-typedef struct Edge {
+typedef struct edge {
     int v;
     int w;
-    struct Edge* next;
+    struct edge* next;
 } Edge;
 
 const int INF = 2147483647 >> 1;
@@ -17,12 +17,13 @@ Edge edges[400001];
 Edge* adj[801];
 
 Edge* new_edge(int, int, Edge*);
-int dijkstra(int, int);
+int dijkstra(int, int, int, int*, int*);
 void offer(int, int);
 void poll(int*, int*);
+int min(int, int);
 
 int main() {
-    int e, u, v, w, tmp, ans, ans2, i;
+    int e, u, v, w, tmp, i, l1, l2, r1, r2, mid;
     Edge* edge;
 
     scanf("%d %d", &n, &e);
@@ -35,38 +36,16 @@ int main() {
         adj[v] = new_edge(u, w, adj[v]);
     }
     scanf("%d %d", &u, &v);
-    if ((tmp = dijkstra(1, u)) != -1) {
-        ans = tmp;
-        if ((tmp = dijkstra(u, v)) != -1) {
-            ans += tmp;
-            if ((tmp = dijkstra(v, n)) != -1) {
-                ans += tmp;
-            } else {
-                ans = INF;
-            }
-        } else {
-            ans = INF;
-        }
-    } else {
-        ans = INF;
+    if (!dijkstra(1, u, v, &l1, &l2)) {
+        printf("-1");
+        return 0;
     }
-    if ((tmp = dijkstra(1, v)) != -1) {
-        ans2 = tmp;
-        if ((tmp = dijkstra(v, u)) != -1) {
-            ans2 += tmp;
-            if ((tmp = dijkstra(u, n)) != -1) {
-                ans2 += tmp;
-            } else {
-                ans2 = INF;
-            }
-        } else {
-            ans2 = INF;
-        }
-    } else {
-        ans2 = INF;
+    if (!dijkstra(n, u, v, &r1, &r2)) {
+        printf("-1");
+        return 0;
     }
-    ans = ans < ans2 ? ans : ans2;
-    printf("%d", ans == INF ? -1 : ans);
+    dijkstra(u, v, v, &mid, &mid);
+    printf("%d", min(l1 + mid + r2, l2 + mid + r1));
 }
 
 Edge* new_edge(int v, int w, Edge* next) {
@@ -76,7 +55,7 @@ Edge* new_edge(int v, int w, Edge* next) {
     return &edges[e_cnt++];
 }
 
-int dijkstra(int s, int e) {
+int dijkstra(int s, int v1, int v2, int* d1, int* d2) {
     int i, v, nv, d;
     Edge* edge;
 
@@ -84,6 +63,8 @@ int dijkstra(int s, int e) {
         dist[i] = INF;
         visited[i] = 0;
     }
+    *d1 = INF;
+    *d2 = INF;
     pq_size = 0;
     dist[s] = 0;
     offer(s, 0);
@@ -92,8 +73,17 @@ int dijkstra(int s, int e) {
         if (visited[v]) {
             continue;
         }
-        if (v == e) {
-            return dist[e];
+        if (v == v1) {
+            *d1 = dist[v1];
+            if (*d2 != INF) {
+                return 1;
+            }
+        }
+        if (v == v2) {
+            *d2 = dist[v2];
+            if (*d1 != INF) {
+                return 1;
+            }
         }
         visited[v] = 1;
         for (edge = adj[v]; edge; edge = edge->next) {
@@ -104,7 +94,7 @@ int dijkstra(int s, int e) {
             }
         }
     }
-    return -1;
+    return 0;
 }
 
 void offer(int v, int d) {
@@ -140,4 +130,8 @@ void poll(int* v, int* d) {
     }
     pq[parent][0] = last_v;
     pq[parent][1] = last_d;
+}
+
+int min(int num1, int num2) {
+    return num1 < num2 ? num1 : num2;
 }
